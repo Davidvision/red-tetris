@@ -9,25 +9,33 @@
     "client-dev": "webpack-dev-server --mode development --hot",
     "srv-dev": "DEBUG=tetris:* nodemon src/server/index.js",
     "srv-dist": "DEBUG=tetris:* babel src --out-dir dist",
-    "test": "mocha --require babel-core/register --reporter spec",
-    "coverage": "NODE_ENV=test nyc --include src --all -r text -r lcov -r text --require babel-core/register mocha "
+    "test": "mocha --require @babel/register --reporter spec",
+    "coverage": "NODE_ENV=test nyc --include src --all -r text -r lcov -r text yarn run test"
   },
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.11.5",
     "@hot-loader/react-dom": "^16.13.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "core-js": "^3.6.5",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.2",
+    "mongoose": "^5.10.8",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hot-loader": "4.12.21",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "validator": "^13.1.17"
   },
   "devDependencies": {
     "@babel/cli": "^7.11.0",
     "@babel/core": "^7.11.0",
     "@babel/preset-env": "7.11.5",
     "@babel/preset-react": "^7.10.4",
+    "@babel/register": "^7.11.5",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
