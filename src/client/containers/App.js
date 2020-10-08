@@ -1,7 +1,7 @@
 import { hot } from "react-hot-loader";
 import React, { useEffect } from "react";
-import { Router, Switch, Route, useParams, Redirect } from "react-router-dom";
-import Game from "./Game";
+import Game from "../containers/Game";
+import Home from "../containers/Home";
 import Link from "../components/Link";
 import useRouter from "../hooks/useRouter";
 // process.env.NODE_ENV === "production"
@@ -9,7 +9,7 @@ import useRouter from "../hooks/useRouter";
 //   : require("../sass/main.scss");
 
 const App = () => {
-  const [currentPage] = useRouter();
+  const [currentPage] = useRouter(pages);
   console.log(currentPage);
   return (
     <>
@@ -26,5 +26,19 @@ const App = () => {
     </>
   );
 };
+
+const pages = [
+  {
+    regex: /^\/{1}$/gm,
+    path: "/",
+    component: <Home />,
+    title: "Red Tetris"
+  },
+  {
+    regex: /^\/\#[a-zA-Z0-9]{10}\[[a-zA-Z0-9]{3,15}\]$/gm,
+    component: <Game />,
+    title: "Red Tetris - Game"
+  }
+];
 
 export default hot(module)(App);
