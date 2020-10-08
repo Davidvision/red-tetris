@@ -4,7 +4,8 @@ module.exports = {
   entry: "./src/client/index.js",
   output: {
     path: path.join(__dirname, "build"),
-    filename: "bundle.js"
+    publicPath: "/",
+    filename: "bundle.js",
   },
   module: {
     rules: [
@@ -14,23 +15,24 @@ module.exports = {
         loader: "babel-loader",
         options: {
           presets: ["@babel/env"],
-          plugins: ["@babel/plugin-transform-runtime"]
-        }
-      }
-    ]
+          plugins: ["@babel/plugin-transform-runtime"],
+        },
+      },
+    ],
   },
   resolve: {
     alias: {
-      "react-dom": "@hot-loader/react-dom"
+      "react-dom": "@hot-loader/react-dom",
     },
-    extensions: ["*", ".js", ".jsx"]
+    extensions: ["*", ".js", ".jsx"],
   },
   devServer: {
     // historyApiFallback: true,
     // publicPath: "http://localhost:3000/dist/",
+    historyApiFallback: true,
     contentBase: path.join(__dirname, "public/"),
     host: "0.0.0.0",
     port: 8080,
-    hotOnly: true
-  }
+    hotOnly: true,
+  },
 };
