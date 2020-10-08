@@ -12,7 +12,7 @@ const parseAndWriteUrl = (path, pages) => {
   return matchedIndex;
 };
 
-export default pages => {
+export default (pages) => {
   const [pageIndex, setPageIndex] = useState(() =>
     parseAndWriteUrl(window.location.pathname + window.location.hash, pages)
   );
@@ -26,7 +26,8 @@ export default pages => {
       setPageIndex(pageIndex);
     });
     return () => {
-      window.removeEventListener("popstate", () => {});
+      window.removeEventListener("popstate", useEffect);
+      // window.removeEventListener("popstate", () => {});
     };
   }, []);
 
