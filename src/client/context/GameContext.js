@@ -1,8 +1,8 @@
 import createDataContext from "./createDataContext";
 
 const initBoard = Array(20).fill(Array(10).fill(0));
-​
-const userReducer = (state, action) => {
+
+const gameReducer = (state, action) => {
   switch (action.type) {
     case "set_board":
       return { ...state, board: action.payload };
@@ -15,16 +15,16 @@ const userReducer = (state, action) => {
     case "set_next_pieces":
       return { ...state, nextPieces: action.payload };
     default:
-      return state; 
+      return state;
   }
 };
-​​
-const setBoard = dispatch => newBoard => {    
-    dispatch({ type: "set_board", payload : newBoard });
+
+const setBoard = dispatch => newBoard => {
+  dispatch({ type: "set_board", payload: newBoard });
 };
 
-const setOpponents = dispatch => newOpponents => {    
-  dispatch({ type: "set_opponents", payload : newOpponents });
+const setOpponents = dispatch => newOpponents => {
+  dispatch({ type: "set_opponents", payload: newOpponents });
 };
 
 const setScore = dispatch => newScore => {
@@ -34,19 +34,19 @@ const setScore = dispatch => newScore => {
 const setNextPieces = dispatch => newNextPieces => {
   dispatch({ type: "set_next_pieces", payload: newNextPieces });
 };
-​
+
 export const { Provider, Context } = createDataContext(
-  userReducer,
+  gameReducer,
   {
     setBoard,
     setOpponents,
     setScore,
-    setNextPieces,
+    setNextPieces
   },
   {
-      board: initBoard,
-      opponents: [],
-      score: 0,
-      nextPieces: [0, 0, 0]
+    board: initBoard,
+    opponents: [],
+    score: 0,
+    nextPieces: [0, 0, 0]
   }
 );
