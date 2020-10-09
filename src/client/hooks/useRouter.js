@@ -17,17 +17,18 @@ export default (pages) => {
     parseAndWriteUrl(window.location.pathname + window.location.hash, pages)
   );
 
+  const handlePopState = () => {
+    const pageIndex = parseAndWriteUrl(
+      window.location.pathname + window.location.hash,
+      pages
+    );
+    setPageIndex(pageIndex);
+  };
+
   useEffect(() => {
-    window.addEventListener("popstate", () => {
-      const pageIndex = parseAndWriteUrl(
-        window.location.pathname + window.location.hash,
-        pages
-      );
-      setPageIndex(pageIndex);
-    });
+    window.addEventListener("popstate", handlePopState);
     return () => {
-      window.removeEventListener("popstate", useEffect);
-      // window.removeEventListener("popstate", () => {});
+      window.removeEventListener("popstate", handlePopState);
     };
   }, []);
 

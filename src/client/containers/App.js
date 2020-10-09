@@ -10,7 +10,6 @@ import useRouter from "../hooks/useRouter";
 
 const App = () => {
   const [currentPage] = useRouter(pages);
-  console.log(currentPage);
   return (
     <>
       <Link path="/" hash="#abcdEf45gE[hugo]" title="room">
@@ -32,13 +31,13 @@ const pages = [
     regex: /^\/{1}$/gm,
     path: "/",
     component: <Home />,
-    title: "Red Tetris"
+    title: "Red Tetris",
   },
   {
     regex: /^\/\#[a-zA-Z0-9]{10}\[[a-zA-Z0-9]{3,15}\]$/gm,
     component: <Game />,
-    title: "Red Tetris - Game"
-  }
+    title: "Red Tetris - Game",
+  },
 ];
 
 export default hot(module)(App);
