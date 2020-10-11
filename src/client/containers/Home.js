@@ -26,10 +26,11 @@ export default () => {
       setErrorRoomName(true);
       return;
     }
+    setErrorRoomName(false);
   };
 
   return (
-    <>
+    <div className="home-form-container">
       <label>Username: </label>
       <input
         type="text"
@@ -43,24 +44,21 @@ export default () => {
           "_" characters.
         </p>
       )}
-      <br />
       <button type="submit" onClick={onNameSubmit}>
         New Room
       </button>
-      <br />
-      {errorRoomName && <p>Invalid room name</p>}
-      <br />
       <label>Room: </label>
       <input
         type="text"
         value={roomName}
         onChange={e => setRoomName(e.target.value)}
       ></input>
+      {errorRoomName && <p>Invalid room name</p>}
       <br />
       <button type="submit" onClick={onNameAndRoomNameSubmit}>
         Join room
       </button>
-    </>
+    </div>
   );
 };
 

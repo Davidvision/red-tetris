@@ -3,10 +3,9 @@ import React, { useEffect } from "react";
 import { Provider as GameProvider } from "../context/GameContext";
 import { Provider as SocketProvider } from "../context/SocketContext";
 import Website from "./Website";
-
-// process.env.NODE_ENV === "production"
-//   ? require("../sass/main.css")
-//   : require("../sass/main.scss");
+process.env.NODE_ENV === "production"
+  ? require("../sass/main.css")
+  : require("../sass/main.scss");
 
 const App = () => (
   <GameProvider>

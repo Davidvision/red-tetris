@@ -4,12 +4,18 @@ import Game from "../containers/Game";
 import Home from "../containers/Home";
 import Link from "../components/Link";
 import useListenSockets from "../hooks/useListenSockets";
+import ChangeTheme from "../components/ChangeTheme";
 
 export default () => {
-  useListenSockets();
+  //   useListenSockets();
   const [currentPage] = useRouter(pages);
 
-  return <>{currentPage}</>;
+  return (
+    <div className="main">
+      <ChangeTheme />
+      {currentPage}
+    </div>
+  );
 };
 
 // <Link path="/" hash="#abcdEf45gE[hugo]" title="room">

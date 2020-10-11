@@ -5,7 +5,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, "build"),
     publicPath: "/",
-    filename: "bundle.js",
+    filename: "bundle.js"
   },
   module: {
     rules: [
@@ -15,16 +15,20 @@ module.exports = {
         loader: "babel-loader",
         options: {
           presets: ["@babel/env"],
-          plugins: ["@babel/plugin-transform-runtime"],
-        },
+          plugins: ["@babel/plugin-transform-runtime"]
+        }
       },
-    ],
+      {
+        test: /\.(s[ac]ss$|css)/i,
+        use: ["style-loader", "css-loader", "sass-loader"]
+      }
+    ]
   },
   resolve: {
     alias: {
-      "react-dom": "@hot-loader/react-dom",
+      "react-dom": "@hot-loader/react-dom"
     },
-    extensions: ["*", ".js", ".jsx"],
+    extensions: ["*", ".js", ".jsx"]
   },
   devServer: {
     // historyApiFallback: true,
@@ -33,6 +37,6 @@ module.exports = {
     contentBase: path.join(__dirname, "public/"),
     host: "0.0.0.0",
     port: 8080,
-    hotOnly: true,
-  },
+    hotOnly: true
+  }
 };
