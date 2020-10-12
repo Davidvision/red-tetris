@@ -1,0 +1,15 @@
+.home {
+  &-form {
+    &-container {
+      display: flex;
+      flex-direction: column;
+      width: 40vw;
+      min-height: 30vh;
+      padding: 50px;
+      border-radius: 10px;
+      @include themify($themes) {
+        background-color: themed("containerColor");
+      }
+    }
+  }
+}

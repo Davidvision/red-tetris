@@ -1,0 +1,10 @@
+.main {
+  min-height: 100vh;
+  @include themify($themes) {
+    background-color: themed("backgroundColor");
+    color: themed("textColor");
+  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

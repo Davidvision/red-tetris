@@ -1,0 +1,16 @@
+@import "./themes/themes";
+
+@import "./utils/variables";
+@import "./utils/mixins";
+@import "./utils/functions";
+@import "./utils/normalize";
+
+@import "./base/base";
+
+@import "./component/change-theme";
+@import "./component/board-pixel";
+
+@import "./layout/main";
+
+@import "./pages/home";
+@import "./pages/game";

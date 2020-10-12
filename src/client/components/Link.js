@@ -1,11 +1,6 @@
 import React from "react";
+import changePage from "../utils/changePage";
 
-export default ({ path, hash = "", title, children }) => {
-  const handleClick = () => {
-    if (window.location.pathname !== path || window.location.hash !== hash) {
-      window.history.pushState({}, title, path + hash);
-      window.dispatchEvent(new Event("popstate"));
-    }
-  };
-  return <div onClick={handleClick}>{children}</div>;
-};
+export default ({ path, hash = "", title, children }) => (
+  <div onClick={() => changePage(title, path, hash)}>{children}</div>
+);

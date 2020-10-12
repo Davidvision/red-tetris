@@ -12,12 +12,11 @@ const parseAndWriteUrl = (path, pages) => {
   return matchedIndex;
 };
 
-export default (pages) => {
+export default pages => {
   const [pageIndex, setPageIndex] = useState(() =>
     parseAndWriteUrl(window.location.pathname + window.location.hash, pages)
   );
 
-<<<<<<< HEAD
   const handlePopState = () => {
     const pageIndex = parseAndWriteUrl(
       window.location.pathname + window.location.hash,
@@ -30,19 +29,6 @@ export default (pages) => {
     window.addEventListener("popstate", handlePopState);
     return () => {
       window.removeEventListener("popstate", handlePopState);
-=======
-  useEffect(() => {
-    window.addEventListener("popstate", () => {
-      const pageIndex = parseAndWriteUrl(
-        window.location.pathname + window.location.hash,
-        pages
-      );
-      setPageIndex(pageIndex);
-    });
-    return () => {
-      window.removeEventListener("popstate", useEffect);
-      // window.removeEventListener("popstate", () => {});
->>>>>>> 0326abeae11d4f96dee5f7a149c51247d57232cc
     };
   }, []);
 
