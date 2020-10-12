@@ -1,6 +1,6 @@
 const cryptoRandomString = require("crypto-random-string");
-const { Piece } = require("../Piece/Piece");
-const { Board } = require("../Board/Board");
+const Piece = require("../Piece/Piece");
+const Board = require("../Board/Board");
 
 class Player {
   constructor(game, name = "") {
@@ -27,4 +27,4 @@ class Player {
 // update
 // updateOnInput
 
-module.exports.Player = Player;
+module.exports = Player;

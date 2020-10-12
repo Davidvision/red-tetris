@@ -7,7 +7,7 @@ import useListenSockets from "../hooks/useListenSockets";
 import ChangeTheme from "../components/ChangeTheme";
 
 export default () => {
-  //   useListenSockets();
+  useListenSockets();
   const [currentPage] = useRouter(pages);
 
   return (

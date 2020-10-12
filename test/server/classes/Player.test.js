@@ -1,7 +1,7 @@
 const { describe, expect, test } = require("@jest/globals");
 const { fn } = require("jest");
-const { Player } = require("../../../src/server/classes/Player/Player");
-const { Game } = require("../../../src/server/classes/Game/Game");
+const Player = require("../../../src/server/classes/Player/Player");
+const Game = require("../../../src/server/classes/Game/Game");
 
 describe("Player class", () => {
   test("new Player without name has his id as name", () => {

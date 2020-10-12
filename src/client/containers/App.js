@@ -1,5 +1,5 @@
 import { hot } from "react-hot-loader";
-import React, { useEffect } from "react";
+import React from "react";
 import { Provider as GameProvider } from "../context/GameContext";
 import { Provider as SocketProvider } from "../context/SocketContext";
 import Website from "./Website";
