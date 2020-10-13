@@ -20,10 +20,25 @@ const ThreeRoomsSetterComp = ({ children }) => {
   const { setAvailableRooms } = useContext(GameContext);
   useEffect(() => {
     setAvailableRooms([
-      { id: "qwertyuiop", name: "axelS", nb: 3 },
-      { id: "asdfghjklq", name: "hugoS", nb: 4 },
-      { id: "zxcvbnmawe", name: "milano", nb: 2 },
-      { id: "qwertyui67", name: "67Gangs", nb: 1 }
+      {
+        name: "axelS",
+        nb: 3,
+        players: ["axelRump", "hugo", "player3"],
+        isPrivate: false
+      },
+      {
+        name: "hugoS",
+        nb: 4,
+        players: ["yoloboy", "67-mitraille", "sadboy34", "lol"],
+        isPrivate: false
+      },
+      {
+        name: "milano",
+        nb: 2,
+        players: ["hugmit", "robinginss"],
+        isPrivate: false
+      },
+      { name: "67Gangs", nb: 1, players: ["play1"], isPrivate: true }
     ]);
   }, []);
   return <>{children}</>;

@@ -4,7 +4,7 @@ const themesNumber = 2;
 
 export default () => {
   const handleClick = () => {
-    const rootDiv = document.getElementById("tetris");
+    const rootDiv = document.getElementById("tetris"); //bonus
     const { className } = rootDiv;
     const currentThemeNumber = parseInt(className.replace("theme-", ""));
     const newThemeNumber =

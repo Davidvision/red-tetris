@@ -2,8 +2,8 @@ const random = require("lodash").random;
 const Player = require("../Player/Player");
 
 class Game {
-  constructor(id, name, isPrivate = false) {
-    this.id = id;
+  constructor(name, isPrivate = false) {
+    this.id;
     this.name = name;
     this.players = [];
     this.time = 0;

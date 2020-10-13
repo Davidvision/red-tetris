@@ -1,34 +1,29 @@
+import HomeForm from "../../../src/client/components/HomeForm";
 import React from "react";
 import Enzyme, { mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import Link from "../../../src/client/components/Link";
-import BoardPixel from "../../../src/client/components/BoardPixel";
-import HomeForm from "../../../src/client/components/HomeForm";
 import { TestAppGameProvider } from "../helpers/simulateGameContext";
 import { TestAppGameProviderWithThreeRooms } from "../helpers/simulateGameContext";
+import { TestAppSocketProvider } from "../helpers/simulateSocketContext";
 import { describe, expect, test } from "@jest/globals";
 
 Enzyme.configure({ adapter: new Adapter() });
 
 describe("<HomeForm />", () => {
   const Wrapper = () => (
-    <TestAppGameProvider>
-      <HomeForm />
-    </TestAppGameProvider>
+    <TestAppSocketProvider>
+      <TestAppGameProvider>
+        <HomeForm />
+      </TestAppGameProvider>
+    </TestAppSocketProvider>
   );
 
   let wrapper;
-  const setState = jest.fn();
-  const useStateSpy = jest.spyOn(React, "useState");
-  useStateSpy.mockImplementation(init => [init, setState]);
 
   beforeEach(() => {
     wrapper = mount(<Wrapper />);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
   test('when clicking on "join room" button, list of rooms should appear', () => {
     wrapper
       .find("button")
@@ -73,9 +68,11 @@ describe("<HomeForm />", () => {
 
 describe("<HomeForm /> testing with context state", () => {
   const Wrapper = () => (
-    <TestAppGameProviderWithThreeRooms>
-      <HomeForm />
-    </TestAppGameProviderWithThreeRooms>
+    <TestAppSocketProvider>
+      <TestAppGameProviderWithThreeRooms>
+        <HomeForm />
+      </TestAppGameProviderWithThreeRooms>
+    </TestAppSocketProvider>
   );
 
   let wrapper;
@@ -83,7 +80,7 @@ describe("<HomeForm /> testing with context state", () => {
     wrapper = mount(<Wrapper />);
   });
 
-  test("testing already used room name", () => {
+  test("already used room name", () => {
     wrapper
       .find("input")
       .at(0)
@@ -98,7 +95,7 @@ describe("<HomeForm /> testing with context state", () => {
       .simulate("submit");
     expect(wrapper.find(".home-form__error").length).toBe(1);
   });
-  test("testing already used room name", () => {
+  test("already used room name", () => {
     wrapper
       .find("input")
       .at(0)
