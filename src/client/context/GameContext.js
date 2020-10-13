@@ -31,12 +31,12 @@ const gameReducer = (state, action) => {
       return { ...state, board: action.payload };
     case "set_opponents":
       return { ...state, opponentBoard: action.payload };
-    case "set_board":
-      return { ...state, board: action.payload };
     case "set_score":
       return { ...state, score: action.payload };
     case "set_next_pieces":
       return { ...state, nextPieces: action.payload };
+    case "set_available_rooms":
+      return { ...state, availableRooms: action.payload };
     default:
       return state;
   }
@@ -58,15 +58,21 @@ const setNextPieces = dispatch => newNextPieces => {
   dispatch({ type: "set_next_pieces", payload: newNextPieces });
 };
 
+const setAvailableRooms = dispatch => newAvailableRooms => {
+  dispatch({ type: "set_available_rooms", payload: newAvailableRooms });
+};
+
 export const { Provider, Context } = createDataContext(
   gameReducer,
   {
     setBoard,
     setOpponents,
     setScore,
-    setNextPieces
+    setNextPieces,
+    setAvailableRooms
   },
   {
+    availableRooms: [],
     board: initBoard,
     opponents: [],
     score: 0,

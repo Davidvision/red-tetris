@@ -1,5 +1,5 @@
 const { describe, expect, test } = require("@jest/globals");
-const { Game } = require("../../../src/server/classes/Game/Game");
+const Game = require("../../../src/server/classes/Game/Game");
 
 describe("Game class", () => {
   test("generate 1 random pieces", () => {
@@ -47,7 +47,6 @@ describe("Game class", () => {
     game.launchGame();
     setTimeout(() => {
       game.endGame();
-      console.log("expect");
       expect(game.isRunning).toEqual(false);
     }, 50);
     jest.runOnlyPendingTimers();

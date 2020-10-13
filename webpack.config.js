@@ -1,4 +1,6 @@
 var path = require("path");
+const params = require("./params");
+const { server } = require("./params");
 
 module.exports = {
   entry: "./src/client/index.js",
@@ -35,7 +37,7 @@ module.exports = {
     // publicPath: "http://localhost:3000/dist/",
     historyApiFallback: true,
     contentBase: path.join(__dirname, "public/"),
-    host: "0.0.0.0",
+    host: server.host,
     port: 8080,
     hotOnly: true
   }

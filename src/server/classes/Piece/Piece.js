@@ -12,4 +12,4 @@ class Piece {
 // translate(int, int)
 // isInRange()
 
-module.exports.Piece = Piece;
+module.exports = Piece;

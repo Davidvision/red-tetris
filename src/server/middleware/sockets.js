@@ -1,18 +1,11 @@
-// const io = require("socket.io");
+const emitAvailableRooms = (socket, games) => {
+  const availableRooms = Object.keys(games)
+    .filter(k => !games[k].isPrivate)
+    .map(k => {
+      const { name, id, players } = games[k];
+      return { name, id, nb: players.length };
+    });
+  socket.emit("availableRooms", []);
+};
 
-// const socketsMiddleware = (socket) => {
-//     socket.on
-
-//     console.log("New client connected");
-//     if (interval) {
-//       clearInterval(interval);
-//     }
-//     interval = setInterval(() => getApiAndEmit(socket), 1000);
-//     socket.on("disconnect", () => {
-//       console.log("Client disconnected");
-//       clearInterval(interval);
-//     });
-
-// }
-
-// module.exports = socketsMiddleware;
+module.exports = { emitAvailableRooms };

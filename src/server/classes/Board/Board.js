@@ -8,4 +8,4 @@ class Board {
 // isColliding
 // addBottomLines(int)
 
-module.exports.Board = Board;
+module.exports = Board;

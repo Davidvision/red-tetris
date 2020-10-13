@@ -1,14 +1,16 @@
-// const random = require("lodash.random");
 const random = require("lodash").random;
-const { Player } = require("../Player/Player");
+const Player = require("../Player/Player");
 
 class Game {
-  constructor() {
+  constructor(id, name, isPrivate = false) {
+    this.id = id;
+    this.name = name;
     this.players = [];
     this.time = 0;
     this.pieces = [];
     this.isRunning = false;
     this.interval = null;
+    this.isPrivate = isPrivate;
   }
 
   generatePieces(n) {
@@ -62,4 +64,4 @@ class Game {
 // updateOnInput
 // addPenalty
 
-module.exports.Game = Game;
+module.exports = Game;
