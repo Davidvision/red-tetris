@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Context as SocketContext } from "../context/SocketContext";
+import React, { useState, useContext } from "react";
+import { changePage, pages } from "../utils/router";
 import { Context as GameContext } from "../context/GameContext";
 
 export default () => {
@@ -9,9 +9,6 @@ export default () => {
   const [errorObj, setErrorObj] = useState({});
   const [joinRoom, setJoinRoom] = useState(false);
 
-  const {
-    state: { socketIOClient }
-  } = useContext(SocketContext);
   const {
     state: { availableRooms }
   } = useContext(GameContext);
@@ -25,14 +22,20 @@ export default () => {
     if (joinRoom && !Object.keys(selectedRoom).length) {
       tmpErrorObj.selectedRoom = selectedRoomErrorStr;
     }
-    if (!joinRoom && !isNameValid(roomName)) {
-      tmpErrorObj.roomName = roomNameErrorStr;
+    if (!joinRoom) {
+      if (!isNameValid(roomName)) {
+        tmpErrorObj.roomName = roomNameErrorStr;
+      }
+      if (availableRooms.findIndex(({ name }) => name === roomName) > -1) {
+        tmpErrorObj.notAvailableRoomName = notAvailableRoomNameStr;
+      }
     }
     if (Object.keys(tmpErrorObj).length) {
       setErrorObj(tmpErrorObj);
       return;
     }
     setErrorObj({});
+    changePage(pages[1].title, "", `/#${roomName}[${name}]`);
   };
 
   const handleSelectRoom = room => {
@@ -46,10 +49,11 @@ export default () => {
       <input
         type="text"
         value={name}
+        name="username"
         onChange={e => setName(e.target.value)}
       ></input>
       <br />
-      {errorObj.name && <p>{errorObj.name}</p>}
+      {errorObj.name && <p className="home-form__error">{errorObj.name}</p>}
       <div>
         <button
           type="button"
@@ -70,11 +74,17 @@ export default () => {
         <>
           <label>Room name: </label>
           <input
+            name="room-name"
             type="text"
             value={roomName}
             onChange={e => setRoomName(e.target.value)}
           ></input>
-          {errorObj.roomName && <p>{errorObj.roomName}</p>}
+          {errorObj.roomName && (
+            <p className="home-form__error">{errorObj.roomName}</p>
+          )}
+          {errorObj.notAvailableRoomName && (
+            <p className="home-form__error">{errorObj.notAvailableRoomName}</p>
+          )}
         </>
       )}
       {joinRoom && (
@@ -84,7 +94,9 @@ export default () => {
           handleClick={handleSelectRoom}
         />
       )}
-      {errorObj.selectedRoom && <p>{errorObj.selectedRoom}</p>}
+      {errorObj.selectedRoom && (
+        <p className="home-form__error">{errorObj.selectedRoom}</p>
+      )}
       <br />
       <button type="submit">{joinRoom ? "Join" : "Create"}</button>
     </form>
@@ -92,20 +104,25 @@ export default () => {
 };
 
 const RoomSelect = ({ rooms, handleClick, selectedRoom }) => (
-  <ul className="room-select-container">
-    {rooms.length > 0 &&
-      rooms.map(room => (
-        <li
-          key={room.id}
-          className={`room-select__option${
-            selectedRoom.id === room.id ? " room-select__option--selected" : ""
-          }`}
-          onClick={() => handleClick(room)}
-        >
-          {`${room.name} (${room.nb} player${room.nb > 1 ? "s" : ""})`}
-        </li>
-      ))}
-  </ul>
+  <>
+    <p>Available rooms:</p>
+    <ul className="room-select-container">
+      {rooms.length > 0 &&
+        rooms.map(room => (
+          <li
+            key={room.id}
+            className={`room-select__option${
+              selectedRoom.id === room.id
+                ? " room-select__option--selected"
+                : ""
+            }`}
+            onClick={() => handleClick(room)}
+          >
+            {`${room.name} (${room.nb} player${room.nb > 1 ? "s" : ""})`}
+          </li>
+        ))}
+    </ul>
+  </>
 );
 
 const playerNameErrorStr =
@@ -115,6 +132,8 @@ const roomNameErrorStr =
   'The room name must contain at least 3 and at most 15 alphanumeric, "-" or "_" characters.';
 
 const selectedRoomErrorStr = "Please select a valid room to join";
+
+const notAvailableRoomNameStr = "This room name is already in use";
 
 const isNameValid = name =>
   !(

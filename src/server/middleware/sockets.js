@@ -5,7 +5,7 @@ const emitAvailableRooms = (socket, games) => {
       const { name, id, players } = games[k];
       return { name, id, nb: players.length };
     });
-  socket.emit("availableRooms", availableRooms);
+  socket.emit("availableRooms", []);
 };
 
 module.exports = { emitAvailableRooms };
