@@ -1,12 +1,12 @@
 const {
   emitAvailableRooms,
   emitRedirectToHome,
-  emitAvailableRoomsToAll
+  emitAvailableRoomsToAll,
 } = require("../middleware/sockets");
 const Game = require("../classes/Game/Game");
 
 module.exports = (io, clientsIds, games) => {
-  io.on("connection", socket => {
+  io.on("connection", (socket) => {
     console.log(`client ${socket.id} is connected`);
     clientsIds[socket.id] = {};
     emitAvailableRooms(socket, games);
@@ -20,7 +20,7 @@ module.exports = (io, clientsIds, games) => {
       console.log(
         `Client ${socket.id}: name: ${playerName} asks to join ${roomName} room`
       );
-      const roomExists = Object.keys(games).some(n => n === roomName);
+      const roomExists = Object.keys(games).some((n) => n === roomName);
       if (roomExists) {
         const game = games[roomName];
         if (
@@ -42,7 +42,7 @@ module.exports = (io, clientsIds, games) => {
 
     socket.on("createPrivateGame", ({ roomName }) => {
       console.log(`Client ${socket.id}: private '${roomName}' room created`);
-      const roomExists = Object.keys(games).some(n => n === roomName);
+      const roomExists = Object.keys(games).some((n) => n === roomName);
       if (roomExists) {
         emitRedirectToHome(socket);
       } else {

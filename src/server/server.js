@@ -1,19 +1,7 @@
 const Game = require("./classes/Game/Game");
 const socketsController = require("./controllers/sockets");
 
-const clientsIds = {}; //clientId: gameId ?
-const games = {};
-
-let game = new Game("axelsRoom");
-game.addPlayer("axel");
-game.addPlayer("hugo");
-games["axelsRoom"] = game;
-game = new Game("privRoom", true);
-game.addPlayer("jeanmich");
-games["privRoom"] = game;
-game = new Game("jeanmichRoom");
-game.addPlayer("jeanmich");
-games["jeanmichRoom"] = game;
+const clientsIds = {};
 
 const initReqHandler = async (server, params, cb) => {
   const { host, port } = params.server;
@@ -26,7 +14,8 @@ const initReqHandler = async (server, params, cb) => {
   });
 };
 
-const startServer = async params => {
+const startServer = async (params, initGames = {}) => {
+  const games = initGames;
   const server = require("http").createServer();
   await initReqHandler(server, params);
   const io = require("socket.io")(server);
