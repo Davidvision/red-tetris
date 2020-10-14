@@ -6,9 +6,9 @@ class Game {
     this.id;
     this.name = name;
     this.players = [];
+    this.nbPlaying = 0;
     this.time = 0;
     this.pieces = [];
-    this.isRunning = false;
     this.interval = null;
     this.isPrivate = isPrivate;
   }
@@ -30,19 +30,19 @@ class Game {
     this.players.push(new Player(this, name));
   }
 
-  removePlayer(id) {
+  removePlayer(name) {
     for (let i = 0; i < this.players.length; i++) {
-      if (this.players[i].id === id) {
+      if (this.players[i].name === name) {
         this.players.splice(i, 1);
         break;
       }
     }
   }
 
-  launchGame() {
+  startGame() {
     if (this.players.length > 0) {
       this.generatePieces(20);
-      this.isRunning = true;
+      this.nbPlaying = this.players.length;
       this.interval = setInterval(() => {
         this.update();
       }, 1000 / 60);
@@ -50,9 +50,9 @@ class Game {
   }
 
   endGame() {
-    if (this.isRunning) {
+    if (this.nbPlaying > 0) {
       clearInterval(this.interval);
-      this.isRunning = false;
+      this.nbPlaying = 0;
       this.pieces.splice(0, this.pieces.length);
     }
   }

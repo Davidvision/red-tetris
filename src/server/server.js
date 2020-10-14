@@ -1,7 +1,5 @@
 const Game = require("./classes/Game/Game");
-const socketsController = require("./controllers/sockets");
-
-const clientsIds = {};
+const socketListener = require("./middleware/socketListener");
 
 const initReqHandler = async (server, params, cb) => {
   const { host, port } = params.server;
@@ -15,11 +13,12 @@ const initReqHandler = async (server, params, cb) => {
 };
 
 const startServer = async (params, initGames = {}) => {
+  const clientsIds = {};
   const games = initGames;
   const server = require("http").createServer();
   await initReqHandler(server, params);
   const io = require("socket.io")(server);
-  socketsController(io, clientsIds, games);
+  socketListener(io, clientsIds, games);
   return { server, io };
 };
 

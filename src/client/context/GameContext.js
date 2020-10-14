@@ -25,6 +25,18 @@ const initBoard = [
   [1, 1, 1, 1, 5, 4, 4, 6, 6, 6]
 ];
 
+const initValues = {
+  isLoading: true,
+  nbPlaying: 0,
+  userName: "",
+  isRunning: false,
+  players: [],
+  board: initBoard,
+  opponents: [],
+  score: 0,
+  nextPieces: [0, 0, 0]
+};
+
 const gameReducer = (state, action) => {
   switch (action.type) {
     case "set_board":
@@ -35,32 +47,41 @@ const gameReducer = (state, action) => {
       return { ...state, score: action.payload };
     case "set_next_pieces":
       return { ...state, nextPieces: action.payload };
-    case "set_available_rooms":
-      return { ...state, availableRooms: action.payload };
+    case "set_nb_playing":
+      return { ...state, nbPlaying: action.payload };
+    case "reset_state":
+      return initValues;
+    case "set_lobby_info":
+      return {
+        ...state,
+        players: action.payload.players,
+        nbPlaying: action.payload.nbPlaying,
+        isLoading: false
+      };
     default:
       return state;
   }
 };
 
-const setBoard = dispatch => newBoard => {
+const setBoard = dispatch => newBoard =>
   dispatch({ type: "set_board", payload: newBoard });
-};
 
-const setOpponents = dispatch => newOpponents => {
+const setOpponents = dispatch => newOpponents =>
   dispatch({ type: "set_opponents", payload: newOpponents });
-};
 
-const setScore = dispatch => newScore => {
+const setScore = dispatch => newScore =>
   dispatch({ type: "set_score", payload: newScore });
-};
 
-const setNextPieces = dispatch => newNextPieces => {
+const setNextPieces = dispatch => newNextPieces =>
   dispatch({ type: "set_next_pieces", payload: newNextPieces });
-};
 
-const setAvailableRooms = dispatch => newAvailableRooms => {
-  dispatch({ type: "set_available_rooms", payload: newAvailableRooms });
-};
+const setLobbyInfo = dispatch => newLobbyInfo =>
+  dispatch({ type: "set_lobby_info", payload: newLobbyInfo });
+
+const setNbPlaying = dispatch => newNbPlaying =>
+  dispatch({ type: "set_nb_playing", payload: newNbPlaying });
+
+const resetGameContext = dispatch => () => dispatch("reset_state");
 
 export const { Provider, Context } = createDataContext(
   gameReducer,
@@ -69,13 +90,9 @@ export const { Provider, Context } = createDataContext(
     setOpponents,
     setScore,
     setNextPieces,
-    setAvailableRooms
+    setLobbyInfo,
+    setNbPlaying,
+    resetGameContext
   },
-  {
-    availableRooms: [],
-    board: initBoard,
-    opponents: [],
-    score: 0,
-    nextPieces: [0, 0, 0]
-  }
+  initValues
 );

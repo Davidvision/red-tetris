@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { changePage, pages } from "../utils/router";
-import { Context as GameContext } from "../context/GameContext";
+import { Context as HomeContext } from "../context/HomeContext";
 import { Context as SocketContext } from "../context/SocketContext";
 import { createPrivateGame } from "../middleware/sockets";
 
@@ -13,8 +13,9 @@ export default () => {
   const [isPrivate, setIsPrivate] = useState(false);
 
   const {
-    state: { availableRooms }
-  } = useContext(GameContext);
+    state: { availableRooms, userName },
+    setUserName
+  } = useContext(HomeContext);
   const {
     state: { socketIOClient }
   } = useContext(SocketContext);
@@ -22,14 +23,15 @@ export default () => {
   const handleSubmit = e => {
     e.preventDefault();
     let tmpErrorObj = {};
-    if (!isNameValid(name)) {
+    if (!isNameValid(userName)) {
       tmpErrorObj.name = playerNameErrorStr;
     }
     if (joinRoom) {
       if (!Object.keys(selectedRoom).length) {
         tmpErrorObj.selectedRoom = selectedRoomErrorStr;
       } else if (
-        selectedRoom.players.findIndex(playerName => playerName === name) > -1
+        selectedRoom.players.findIndex(playerName => playerName === userName) >
+        -1
       ) {
         tmpErrorObj.name = playerNameAlreadyTakenInRoomStr;
       }
@@ -47,12 +49,12 @@ export default () => {
     }
     setErrorObj({});
     if (!joinRoom && isPrivate) {
-      createPrivateGame(socketIOClient, roomName, name);
+      createPrivateGame(socketIOClient, roomName, userName);
     }
     changePage(
       pages[1].title,
       "",
-      `/#${joinRoom ? selectedRoom.name : roomName}[${name}]`
+      `/#${joinRoom ? selectedRoom.name : roomName}[${userName}]`
     );
   };
 
@@ -66,9 +68,9 @@ export default () => {
       <label>Username: </label>
       <input
         type="text"
-        value={name}
+        value={userName}
         name="username"
-        onChange={e => setName(e.target.value)}
+        onChange={e => setUserName(e.target.value)}
       ></input>
       <br />
       {errorObj.name && <p className="home-form__error">{errorObj.name}</p>}
