@@ -3,19 +3,27 @@ import React from "react";
 import Enzyme, { mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { TestAppGameProvider } from "../helpers/simulateGameContext";
-import { TestAppGameProviderWithThreeRooms } from "../helpers/simulateGameContext";
-import { TestAppSocketProvider } from "../helpers/simulateSocketContext";
+import {
+  TestAppSocketProvider,
+  TestAppSocketProviderWithSocketClient
+} from "../helpers/simulateSocketContext";
+import {
+  TestAppHomeProvider,
+  TestAppHomeProviderWithThreeRooms
+} from "../helpers/simulateHomeContext";
 import { describe, expect, test } from "@jest/globals";
 
 Enzyme.configure({ adapter: new Adapter() });
 
 describe("<HomeForm />", () => {
   const Wrapper = () => (
-    <TestAppSocketProvider>
-      <TestAppGameProvider>
-        <HomeForm />
-      </TestAppGameProvider>
-    </TestAppSocketProvider>
+    <TestAppHomeProvider>
+      <TestAppSocketProvider>
+        <TestAppGameProvider>
+          <HomeForm />
+        </TestAppGameProvider>
+      </TestAppSocketProvider>
+    </TestAppHomeProvider>
   );
 
   let wrapper;
@@ -68,11 +76,13 @@ describe("<HomeForm />", () => {
 
 describe("<HomeForm /> testing with context state", () => {
   const Wrapper = () => (
-    <TestAppSocketProvider>
-      <TestAppGameProviderWithThreeRooms>
-        <HomeForm />
-      </TestAppGameProviderWithThreeRooms>
-    </TestAppSocketProvider>
+    <TestAppGameProvider>
+      <TestAppHomeProviderWithThreeRooms>
+        <TestAppSocketProviderWithSocketClient>
+          <HomeForm />
+        </TestAppSocketProviderWithSocketClient>
+      </TestAppHomeProviderWithThreeRooms>
+    </TestAppGameProvider>
   );
 
   let wrapper;
@@ -95,7 +105,7 @@ describe("<HomeForm /> testing with context state", () => {
       .simulate("submit");
     expect(wrapper.find(".home-form__error").length).toBe(1);
   });
-  test("already used room name", () => {
+  test("can select a room", () => {
     wrapper
       .find("input")
       .at(0)
@@ -125,5 +135,44 @@ describe("<HomeForm /> testing with context state", () => {
       .at(0)
       .simulate("submit");
     expect(wrapper.find(".room-select__option--selected").length).toBe(1);
+  });
+  test("userName already in use in that room error", () => {
+    wrapper
+      .find("input")
+      .at(0)
+      .simulate("change", { target: { value: "axelRump" } });
+    wrapper
+      .find("button")
+      .at(1)
+      .simulate("click");
+    wrapper
+      .find(".room-select__option")
+      .at(0)
+      .simulate("click");
+    wrapper
+      .find("form")
+      .at(0)
+      .simulate("submit");
+    expect(wrapper.find(".home-form__error").length).toBe(1);
+  });
+  test("create private game works and changes page", () => {
+    window.history.pushState = jest.fn();
+    wrapper
+      .find("input")
+      .at(0)
+      .simulate("change", { target: { value: "Hugo" } });
+    wrapper
+      .find("input")
+      .at(1)
+      .simulate("change", { target: { value: "PrivRoom" } });
+    wrapper
+      .find("input")
+      .at(2)
+      .simulate("change", { target: { checked: true } });
+    wrapper
+      .find("form")
+      .at(0)
+      .simulate("submit");
+    expect(window.history.pushState).toBeCalled();
   });
 });

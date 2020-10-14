@@ -79,9 +79,9 @@ const handleStartGame = ({ io, socket, games, clientsIds }) => {
   const { playerName, roomName } = clientsIds[socket.id];
   const game = games[roomName];
   if (
-    game &&
-    game.players &&
-    game.players.length &&
+    !game ||
+    !game.players ||
+    game.players.length === 0 ||
     playerName !== game.players[0].name
   ) {
     return;
