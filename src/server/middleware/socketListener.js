@@ -4,7 +4,9 @@ const {
   handleCreatePrivateGame,
   handleDisconnect,
   handleQuitGame,
-  handleStartGame
+  handleStartGame,
+  handleKeyDown,
+  handleKeyUp
 } = require("../controllers/sockets");
 
 module.exports = (io, clientsIds, games) => {
@@ -27,5 +29,13 @@ module.exports = (io, clientsIds, games) => {
     socket.on("quitGame", () => handleQuitGame(ioContext));
 
     socket.on("startGame", () => handleStartGame(ioContext));
+
+    socket.on("keyDown", key => {
+      handleKeyDown(ioContext, key);
+    });
+
+    socket.on("keyUp", key => {
+      handleKeyUp(ioContext, key);
+    });
   });
 };

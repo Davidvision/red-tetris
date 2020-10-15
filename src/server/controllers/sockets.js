@@ -57,9 +57,9 @@ const handleConnectToGame = (
 
 const addPlayer = (io, socket, clientsIds, games, playerName, roomName) => {
   const game = games[roomName];
-  game.addPlayer(playerName);
+  const player = game.addPlayer(playerName, { io, socket, roomName });
   socket.join(roomName);
-  clientsIds[socket.id] = { playerName, roomName };
+  clientsIds[socket.id] = { playerName, roomName, player };
   emitLobbyInfoToRoom(io, roomName, playerName, game);
   emitAvailableRoomsToAll(io, games);
 };
@@ -90,10 +90,21 @@ const handleStartGame = ({ io, socket, games, clientsIds }) => {
   emitNbPlaying(io, roomName, game.players.length);
 };
 
+const handleKeyDown = ({ io, socket, games, clientsIds }, key) => {
+  const { player } = clientsIds[socket.id];
+  player.updateOnInput(key, true);
+};
+const handleKeyUp = ({ io, socket, games, clientsIds }, key) => {
+  const { player } = clientsIds[socket.id];
+  player.updateOnInput(key, false);
+};
+
 module.exports = {
   handleConnectToGame,
   handleCreatePrivateGame,
   handleDisconnect,
   handleQuitGame,
-  handleStartGame
+  handleStartGame,
+  handleKeyDown,
+  handleKeyUp
 };

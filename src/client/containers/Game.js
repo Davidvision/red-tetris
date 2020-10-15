@@ -1,40 +1,42 @@
 import React, { memo, useContext, useEffect } from "react";
 import BoardPixel from "../components/BoardPixel";
 import { Context as GameContext } from "../context/GameContext";
-import { Context as SocketContext } from "../context/SocketContext";
+import { SocketContext } from "../context/SocketContext";
+import { changePage, pages } from "../utils/router";
 import { Context as HomeContext } from "../context/HomeContext";
 import { connectToGame, quitGame, startGame } from "../middleware/sockets";
+import useKeyboard from "../hooks/useKeyboard";
 
 export default () => {
   const {
     state: { nbPlaying, board, isLoading, players }
   } = useContext(GameContext);
-  const {
-    state: { socketIOClient }
-  } = useContext(SocketContext);
+  const { socketIOClient } = useContext(SocketContext);
   const {
     setUserName,
     state: { userName }
   } = useContext(HomeContext);
   const isPlaying =
     nbPlaying > 0 && players.findIndex(p => p.name === userName) < nbPlaying;
-  console.log(nbPlaying, players);
+
+  useKeyboard(isPlaying);
 
   useEffect(() => {
-    if (socketIOClient !== null) {
-      let regex = /^\/\#([a-zA-Z0-9]{3,15})\[([a-zA-Z0-9]{3,15})\]$/gm;
-      const gamePath = window.location.pathname + window.location.hash;
-      const [_, roomName, name] = regex.exec(gamePath);
-      setUserName(name);
-      connectToGame(socketIOClient, roomName, name);
-    }
-  }, [socketIOClient]);
+    let regex = /^\/\#([a-zA-Z0-9]{3,15})\[([a-zA-Z0-9]{3,15})\]$/gm;
+    const gamePath = window.location.pathname + window.location.hash;
+    const [_, roomName, name] = regex.exec(gamePath);
+    setUserName(name);
+    connectToGame(socketIOClient, roomName, name);
+    return () => quitGame(socketIOClient);
+  }, []);
 
   if (isLoading) return null;
 
   return (
     <div>
-      <button onClick={() => quitGame(socketIOClient)}>quit game</button>
+      <button onClick={() => changePage(pages[0].title, pages[0].path)}>
+        quit game
+      </button>
       <div className="game-container">
         {!isPlaying && <Lobby />}
         <Board board={board} />
@@ -50,9 +52,7 @@ const Lobby = () => {
   const {
     state: { players }
   } = useContext(GameContext);
-  const {
-    state: { socketIOClient }
-  } = useContext(SocketContext);
+  const { socketIOClient } = useContext(SocketContext);
 
   const isLeader = players.length && players[0].name === userName;
 

@@ -24,7 +24,6 @@ const emitLobbyInfoToRoom = (io, roomName, playerName, game) => {
   const players = game.players.map(p => {
     return { name: p.name, score: p.score };
   });
-  console.log("EMIT LOBBY", game);
   const nbPlaying = game.nbPlaying;
   io.in(roomName).emit("lobbyInfo", { players, nbPlaying });
 };
@@ -33,10 +32,15 @@ const emitNbPlaying = (io, roomName, nbPlaying) => {
   io.in(roomName).emit("setNbPlaying", nbPlaying);
 };
 
+const emitBoard = ({ socket }, board) => {
+  socket.emit("boardUpdate", board);
+};
+
 module.exports = {
   emitAvailableRooms,
   emitRedirectToHome,
   emitAvailableRoomsToAll,
   emitLobbyInfoToRoom,
-  emitNbPlaying
+  emitNbPlaying,
+  emitBoard
 };

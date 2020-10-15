@@ -1,23 +1,19 @@
-import createDataContext from "./createDataContext";
+import React, { createContext } from "react";
+import { server } from "../../../params";
+import socketIOClient from "socket.io-client";
 
-const socketReducer = (state, action) => {
-  switch (action.type) {
-    case "set_socket_io_client":
-      return { ...state, socketIOClient: action.payload };
-    default:
-      return state;
-  }
-};
-const setSocketIOClient = dispatch => socketIOClient => {
-  dispatch({ type: "set_socket_io_client", payload: socketIOClient });
-};
+const { port, host } = server;
+const ENDPOINT =
+  process.env.NODE_ENV === "production" ? "" : `http://${host}:${port}/`;
 
-export const { Provider, Context } = createDataContext(
-  socketReducer,
-  {
-    setSocketIOClient
-  },
-  {
-    socketIOClient: null
-  }
+export const SocketContext = createContext();
+
+export const SocketContextProvider = ({ children }) => (
+  <SocketContext.Provider
+    value={{
+      socketIOClient: socketIOClient(ENDPOINT)
+    }}
+  >
+    {children}
+  </SocketContext.Provider>
 );

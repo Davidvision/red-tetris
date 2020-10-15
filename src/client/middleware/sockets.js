@@ -7,3 +7,8 @@ export const createPrivateGame = (socketIOClient, roomName) =>
 export const quitGame = socketIOClient => socketIOClient.emit("quitGame");
 
 export const startGame = socketIOClient => socketIOClient.emit("startGame");
+
+export const keyDown = (socketIOClient, key) =>
+  socketIOClient.emit("keyDown", key);
+
+export const keyUp = (socketIOClient, key) => socketIOClient.emit("keyUp", key);

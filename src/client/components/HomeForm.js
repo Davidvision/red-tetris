@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { changePage, pages } from "../utils/router";
 import { Context as HomeContext } from "../context/HomeContext";
-import { Context as SocketContext } from "../context/SocketContext";
+import { SocketContext } from "../context/SocketContext";
 import { createPrivateGame } from "../middleware/sockets";
 
 export default () => {
@@ -16,9 +16,7 @@ export default () => {
     state: { availableRooms, userName },
     setUserName
   } = useContext(HomeContext);
-  const {
-    state: { socketIOClient }
-  } = useContext(SocketContext);
+  const { socketIOClient } = useContext(SocketContext);
 
   const handleSubmit = e => {
     e.preventDefault();

@@ -26,8 +26,10 @@ class Game {
     return this.pieces[i];
   }
 
-  addPlayer(name) {
-    this.players.push(new Player(this, name));
+  addPlayer(name, socketInfo) {
+    const player = new Player(this, socketInfo, name);
+    this.players.push(player);
+    return player;
   }
 
   removePlayer(name) {
@@ -61,7 +63,6 @@ class Game {
 }
 
 // update
-// updateOnInput
 // addPenalty
 
 module.exports = Game;

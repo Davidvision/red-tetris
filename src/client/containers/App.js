@@ -1,7 +1,8 @@
 import { hot } from "react-hot-loader";
 import React from "react";
 import { Provider as GameProvider } from "../context/GameContext";
-import { Provider as SocketProvider } from "../context/SocketContext";
+// import { Provider as SocketProvider } from "../context/SocketContext";
+import { SocketContextProvider } from "../context/SocketContext";
 import { Provider as HomeProvider } from "../context/HomeContext";
 import Website from "./Website";
 process.env.NODE_ENV === "production"
@@ -11,9 +12,11 @@ process.env.NODE_ENV === "production"
 const App = () => (
   <HomeProvider>
     <GameProvider>
-      <SocketProvider>
+      <SocketContextProvider>
+        {/* <SocketProvider> */}
         <Website />
-      </SocketProvider>
+      </SocketContextProvider>
+      {/* </SocketProvider> */}
     </GameProvider>
   </HomeProvider>
 );
