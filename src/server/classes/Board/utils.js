@@ -3,7 +3,7 @@ const { pieces: piecesData } = require("../../../data/pieces.json");
 const noRightOverflow = (p, grid) =>
   piecesData[p.type][p.rotation].every((l, i) =>
     l.every((c, j) => {
-      if (c === 0) {
+      if (c === 0 || p.y + i < 0) {
         return true;
       }
       return p.x + j + 1 < 10 && grid[p.y + i][p.x + j + 1] === 0;
@@ -13,7 +13,7 @@ const noRightOverflow = (p, grid) =>
 const noLeftOverflow = (p, grid) =>
   piecesData[p.type][p.rotation].every((l, i) =>
     l.every((c, j) => {
-      if (c === 0) {
+      if (c === 0 || p.y + i < 0) {
         return true;
       }
       return p.x + j - 1 >= 0 && grid[p.y + i][p.x + j - 1] === 0;
@@ -26,40 +26,48 @@ const noDownOverflow = (p, grid) =>
       if (c === 0) {
         return true;
       }
-      return p.y + i + 1 < 20 && grid[p.y + i + 1][p.x + j] === 0;
+      return (
+        p.y + i + 1 < 20 &&
+        (p.y + i + 1 < 0 || grid[p.y + i + 1][p.x + j] === 0)
+      );
     })
   );
 
 const isColliding = (p, grid) =>
-  piecesData[p.type][p.rotation].every((l, i) =>
-    l.every((c, j) => {
-      if (c === 0) {
-        return true;
-      }
-      return p.y + i < 20 && grid[p.y + i][p.x + j] === 0;
-    })
+  piecesData[p.type][p.rotation].some((l, i) =>
+    l.some((c, j) => c !== 0 && p.y + i >= 0 && grid[p.y + i][p.x + j] !== 0)
   );
 
-const isOutOfBoard = (p, grid) => {
-  piecesData[p.type][p.rotation].forEach((l, i) =>
-    l.forEach((c, j) => {
+const isOutLateral = p => {
+  let result = 0;
+  piecesData[p.type][p.rotation].every((l, i) =>
+    l.every((c, j) => {
       if (c !== 0) {
         if (p.x + j < 0) {
-          return 1;
+          result = 1;
+          return false;
         }
-        if (p.x + j > 10) {
-          return -1;
+        if (p.x + j >= 10) {
+          result = -1;
+          return false;
         }
       }
+      return true;
     })
   );
-  return 0;
+  return result;
 };
+
+const isOutUp = p =>
+  piecesData[p.type][p.rotation].some((l, i) =>
+    l.some((c, j) => c !== 0 && p.y + i < 0)
+  );
 
 module.exports = {
   noRightOverflow,
   noLeftOverflow,
   noDownOverflow,
   isColliding,
-  isOutOfBoard
+  isOutLateral,
+  isOutUp
 };

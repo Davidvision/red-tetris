@@ -4,11 +4,13 @@ const {
   noLeftOverflow,
   noDownOverflow,
   isColliding,
-  isOutOfBoard
+  isOutLateral,
+  isOutUp
 } = require("./utils");
 
 class Board {
-  constructor() {
+  constructor(player) {
+    this.player = player;
     this.grid = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -39,22 +41,12 @@ class Board {
     const gridWithPiece = this.grid.map(l => l.map(c => c));
     piece.map((l, i) =>
       l.map((c, j) => {
-        if (c > 0) {
+        if (c > 0 && i + p.y >= 0) {
           gridWithPiece[i + p.y][j + p.x] = c;
         }
       })
     );
     return gridWithPiece;
-  }
-
-  movePiece(p, dir) {
-    // if
-    // -piece dans le board
-    // ->si touche les cotes on fait rien
-    // ->si touche le sol -> collide
-    //
-    p.translate(dir);
-    return false;
   }
 
   moveRight(p) {
@@ -74,55 +66,97 @@ class Board {
       p.translate(0, 1);
       return false;
     } else {
-      piecesData[p.type][p.rotation].forEach((l, i) =>
-        l.forEach((c, j) => {
-          if (c !== 0) {
-            this.grid[p.y + i][p.x + j] = c;
-          }
-        })
-      );
+      this.addPieceToBoard(p);
       return true;
+    }
+  }
+
+  addPieceToBoard(p) {
+    let gameOver = false;
+    piecesData[p.type][p.rotation].forEach((l, i) =>
+      l.forEach((c, j) => {
+        if (c !== 0) {
+          if (p.y + i >= 0) {
+            this.grid[p.y + i][p.x + j] = c;
+          } else {
+            gameOver = true;
+          }
+        }
+      })
+    );
+    if (gameOver) {
+      this.player.gameOver();
+    }
+    this.checkLines();
+  }
+
+  checkLines() {
+    let linesToDelete = [];
+    this.grid.forEach((l, i) => {
+      if (l.every(c => c > 0 && c < 8)) {
+        linesToDelete.push(i);
+      }
+    });
+    if (linesToDelete.length > 0) {
+      linesToDelete.forEach(i => {
+        this.grid.splice(i, 1);
+        this.grid.unshift(Array(10).fill(0));
+      });
+      if (linesToDelete.length > 0) {
+        this.player.sendPenalty(linesToDelete.length - 1);
+      }
     }
   }
 
   rotate(p) {
     p.rotate();
-    // let leftOverflow = true,
-    //   rightOverflow = true,
-    //   downOverflow = true,
-    //   i = 0;
-    // while (rightOverflow && leftOverflow && downOverflow) {
-    //   leftOverflow = !noLeftOverflow(p, this.grid);
-    //   rightOverflow = !noRightOverflow(p, this.grid);
-    //   downOverflow = !noDownOverflow(p, this.grid);
-    //   i++;
-    //   // if (leftOverflow && rightOverflow) {
-    //   if (downOverflow) {
-    //     p.translate(0, -1);
-    //     console.log(i, "UP1");
-    //   } else if (leftOverflow) {
-    //     p.translate(1, 0);
-    //     console.log(i, "RIGHT");
-    //   } else if (rightOverflow) {
-    //     p.translate(-1, 0);
-    //     console.log(i, "LEFT");
-    //     // } else if (downOverflow) {
-    //     //   p.translate(0, -1);
-    //     //   console.log(i, "UP2");
-    //   }
-    // }
-    let lateralOf = isOutOfBoard(p, this.grid);
+    let lateralOf = isOutLateral(p);
     while (lateralOf !== 0) {
       p.translate(lateralOf, 0);
-      lateralOf = isOutOfBoard(p, this.grid);
+      lateralOf = isOutLateral(p);
     }
-    while (isColliding(p, this.grid)) {
+    let isCol = isColliding(p, this.grid);
+    while (isCol) {
       p.translate(0, -1);
+      isCol = isColliding(p, this.grid);
+    }
+    let upperOf = isOutUp(p);
+    while (upperOf) {
+      if (noDownOverflow(p, this.grid)) {
+        this.moveDown(p);
+        upperOf = isOutUp(p);
+      } else {
+        this.addPieceToBoard(p);
+        upperOf = false;
+      }
     }
   }
 
-  pieceToBottom() {
-    console.log("PieceToBottom");
+  pieceToBottom(p) {
+    while (!this.moveDown(p)) {}
+  }
+
+  checkNewPiece(p) {
+    let isCol = isColliding(p, this.grid);
+    if (isCol) {
+      p.translate(0, -1);
+      if (isColliding(p, this.grid)) {
+        this.player.gameOver();
+      }
+    }
+  }
+
+  addBottomLines(nbLines, p) {
+    let gameOver = false;
+    for (let i = 0; i < nbLines; i++) {
+      gameOver = this.grid[0].some(c => c > 0);
+      this.grid.shift();
+      this.grid.push(Array(10).fill(8));
+      p.translate(0, -1);
+    }
+    if (gameOver) {
+      this.player.gameOver();
+    }
   }
 }
 

@@ -90,13 +90,21 @@ const handleStartGame = ({ io, socket, games, clientsIds }) => {
   emitNbPlaying(io, roomName, game.players.length);
 };
 
-const handleKeyDown = ({ io, socket, games, clientsIds }, key) => {
+const handleKeyDown = ({ socket, clientsIds }, key) => {
   const { player } = clientsIds[socket.id];
-  player.updateOnInput(key, true);
+  if (player) {
+    player.updateOnInput(key, true);
+  } else {
+    emitRedirectToHome(socket);
+  }
 };
-const handleKeyUp = ({ io, socket, games, clientsIds }, key) => {
+const handleKeyUp = ({ socket, clientsIds }, key) => {
   const { player } = clientsIds[socket.id];
-  player.updateOnInput(key, false);
+  if (player) {
+    player.updateOnInput(key, false);
+  } else {
+    emitRedirectToHome(socket);
+  }
 };
 
 module.exports = {

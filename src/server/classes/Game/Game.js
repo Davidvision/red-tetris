@@ -6,11 +6,14 @@ class Game {
     this.id;
     this.name = name;
     this.players = [];
+    // this.playingPlayers = [];
     this.nbPlaying = 0;
     this.time = 0;
     this.pieces = [];
     this.interval = null;
     this.isPrivate = isPrivate;
+    this.startTime;
+    this.clock = null;
   }
 
   generatePieces(n) {
@@ -45,9 +48,13 @@ class Game {
     if (this.players.length > 0) {
       this.generatePieces(20);
       this.nbPlaying = this.players.length;
+      this.startTime = new Date().getTime();
       this.interval = setInterval(() => {
-        this.update();
-      }, 1000 / 60);
+        this.clock = new Date().getTime() - this.startTime;
+        for (let i = 0; i < this.nbPlaying; i++) {
+          this.players[i].update();
+        }
+      }, 1000 / 20);
     }
   }
 
@@ -58,11 +65,6 @@ class Game {
       this.pieces.splice(0, this.pieces.length);
     }
   }
-
-  update() {}
 }
-
-// update
-// addPenalty
 
 module.exports = Game;
