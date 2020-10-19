@@ -1,4 +1,5 @@
 const { pieces: piecesData } = require("../../../data/pieces.json");
+const { grids: initialGrids } = require("../../../data/grids.json");
 const {
   noRightOverflow,
   noLeftOverflow,
@@ -7,41 +8,19 @@ const {
   isOutLateral,
   isOutUp,
   addPieceToGrid,
-  shadowPiece
+  shadowPiece,
 } = require("./utils");
 const Piece = require("../Piece/Piece");
 
 class Board {
-  constructor(player) {
+  constructor(player, gridType = 0) {
     this.player = player;
-    // this.grid = [
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 3, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 3, 0, 7, 7, 0, 0, 0, 0, 0],
-    //   [2, 3, 3, 5, 7, 7, 0, 0, 0, 0],
-    //   [2, 2, 2, 5, 5, 4, 4, 0, 6, 0],
-    //   [1, 1, 1, 1, 5, 4, 4, 6, 6, 6]
-    // ];
-    this.grid = Array(20).fill(Array(10).fill(0));
+    this.grid = initialGrids[gridType];
   }
 
   serialize(p) {
     const piece = piecesData[p.type][p.rotation];
-    const gridCopy = this.grid.map(l => l.map(c => c));
+    const gridCopy = this.grid.map((l) => l.map((c) => c));
     shadowPiece(p.x, p.y, p.type, p.rotation, piece, gridCopy);
     addPieceToGrid(piece, p.x, p.y, gridCopy);
     return gridCopy;
@@ -92,12 +71,12 @@ class Board {
   checkLines() {
     let linesToDelete = [];
     this.grid.forEach((l, i) => {
-      if (l.every(c => c > 0 && c < 8)) {
+      if (l.every((c) => c > 0 && c < 8)) {
         linesToDelete.push(i);
       }
     });
     if (linesToDelete.length > 0) {
-      linesToDelete.forEach(i => {
+      linesToDelete.forEach((i) => {
         this.grid.splice(i, 1);
         this.grid.unshift(Array(10).fill(0));
       });
@@ -148,7 +127,7 @@ class Board {
   addBottomLines(nbLines, p) {
     let gameOver = false;
     for (let i = 0; i < nbLines; i++) {
-      gameOver = this.grid[0].some(c => c > 0);
+      gameOver = this.grid[0].some((c) => c > 0);
       this.grid.shift();
       this.grid.push(Array(10).fill(8));
       p.translate(0, -1);
