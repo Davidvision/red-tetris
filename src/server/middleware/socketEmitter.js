@@ -32,8 +32,17 @@ const emitNbPlaying = (io, roomName, nbPlaying) => {
   io.in(roomName).emit("setNbPlaying", nbPlaying);
 };
 
-const emitBoard = ({ socket }, board) => {
+const emitBoard = (socket, board) => {
   socket.emit("boardUpdate", board);
+};
+
+const broadcastBoardToOpponents = (
+  io,
+  roomName,
+  opponentName,
+  opponentBoard
+) => {
+  io.to(roomName).emit("opponentBoard", { opponentName, opponentBoard });
 };
 
 module.exports = {
@@ -42,5 +51,6 @@ module.exports = {
   emitAvailableRoomsToAll,
   emitLobbyInfoToRoom,
   emitNbPlaying,
-  emitBoard
+  emitBoard,
+  broadcastBoardToOpponents
 };

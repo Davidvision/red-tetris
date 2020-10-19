@@ -6,7 +6,7 @@ class Game {
     this.id;
     this.name = name;
     this.players = [];
-    // this.playingPlayers = [];
+    this.playingPlayers = [];
     this.nbPlaying = 0;
     this.time = 0;
     this.pieces = [];
@@ -38,8 +38,21 @@ class Game {
   removePlayer(name) {
     for (let i = 0; i < this.players.length; i++) {
       if (this.players[i].name === name) {
+        if (this.players[i].isPlaying) {
+          this.removePlayingPlayer(name);
+        }
         this.players.splice(i, 1);
+        console.log("remove player: ", name, this.players, this.playingPlayers);
         break;
+      }
+    }
+  }
+
+  removePlayingPlayer(name) {
+    this.nbPlaying--;
+    for (let j = 0; j < this.playingPlayers.length; j++) {
+      if (this.playingPlayers[j].name === name) {
+        this.playingPlayers.splice(j, 1);
       }
     }
   }
@@ -48,19 +61,22 @@ class Game {
     if (this.players.length > 0) {
       this.generatePieces(20);
       this.nbPlaying = this.players.length;
+      this.playingPlayers = this.players.map(p => p);
       this.startTime = new Date().getTime();
+      this.players.forEach(p => (p.isPlaying = true));
       this.interval = setInterval(() => {
+        //check si game end
         this.clock = new Date().getTime() - this.startTime;
-        for (let i = 0; i < this.nbPlaying; i++) {
-          this.players[i].update();
+        for (let i = 0; i < this.playingPlayers.length; i++) {
+          this.playingPlayers[i].update();
         }
       }, 1000 / 20);
     }
   }
 
   endGame() {
+    clearInterval(this.interval);
     if (this.nbPlaying > 0) {
-      clearInterval(this.interval);
       this.nbPlaying = 0;
       this.pieces.splice(0, this.pieces.length);
     }

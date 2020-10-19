@@ -2,24 +2,18 @@ import createDataContext from "./createDataContext";
 
 const initBoard = Array(20).fill(Array(10).fill(0));
 
-const initValues = {
-  isLoading: true,
-  nbPlaying: 0,
-  userName: "",
-  isRunning: false,
-  players: [],
-  board: initBoard,
-  opponents: [],
-  score: 0,
-  nextPieces: [0, 0, 0]
-};
-
 const gameReducer = (state, action) => {
   switch (action.type) {
     case "set_board":
       return { ...state, board: action.payload };
-    case "set_opponents":
-      return { ...state, opponentBoard: action.payload };
+    case "set_opponent":
+      return {
+        ...state,
+        opponents: {
+          ...opponents,
+          [action.payload.opponentName]: action.payload.opponentBoard
+        }
+      };
     case "set_score":
       return { ...state, score: action.payload };
     case "set_next_pieces":
@@ -43,8 +37,8 @@ const gameReducer = (state, action) => {
 const setBoard = dispatch => newBoard =>
   dispatch({ type: "set_board", payload: newBoard });
 
-const setOpponents = dispatch => newOpponents =>
-  dispatch({ type: "set_opponents", payload: newOpponents });
+const setOpponent = dispatch => newOpponent =>
+  dispatch({ type: "set_opponent", payload: newOpponent });
 
 const setScore = dispatch => newScore =>
   dispatch({ type: "set_score", payload: newScore });
@@ -64,12 +58,22 @@ export const { Provider, Context } = createDataContext(
   gameReducer,
   {
     setBoard,
-    setOpponents,
     setScore,
     setNextPieces,
     setLobbyInfo,
     setNbPlaying,
-    resetGameContext
+    resetGameContext,
+    setOpponent
   },
-  initValues
+  {
+    isLoading: true,
+    nbPlaying: 0,
+    userName: "",
+    isRunning: false,
+    players: [],
+    board: initBoard,
+    opponents: {},
+    score: 0,
+    nextPieces: [0, 0, 0]
+  }
 );

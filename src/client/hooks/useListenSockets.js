@@ -5,10 +5,6 @@ import { Context as HomeContext } from "../context/HomeContext";
 import { server } from "../../../params";
 import { changePage, pages } from "../utils/router";
 
-const { port, host } = server;
-const ENDPOINT =
-  process.env.NODE_ENV === "production" ? "" : `http://${host}:${port}/`;
-
 export default () => {
   const { socketIOClient } = useContext(SocketContext);
   const { setAvailableRooms } = useContext(HomeContext);
@@ -30,6 +26,10 @@ export default () => {
     socketIOClient.on("setNbPlaying", nbPlaying => setNbPlaying(nbPlaying));
 
     socketIOClient.on("boardUpdate", board => setBoard(board));
+
+    socketIOClient.on("opponentBoard", opponentInfo =>
+      setOpponent(opponentInfo)
+    );
 
     return () => socketClient.disconnect();
   }, []);

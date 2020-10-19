@@ -1,6 +1,9 @@
 const Piece = require("../Piece/Piece");
 const Board = require("../Board/Board");
-const { emitBoard } = require("../../middleware/socketEmitter");
+const {
+  emitBoard,
+  broadcastBoardToOpponents
+} = require("../../middleware/socketEmitter");
 const keysActions = ["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown", " "];
 const keysActionsLength = 5;
 
@@ -9,6 +12,7 @@ class Player {
     this.game = game;
     this.board = new Board(this);
     this.score = 0;
+    this.isPlaying = false;
     this.name = name.length > 3 ? name : this.id;
     this.nextPieceIndex = 0;
     this.pieces = [];
@@ -110,12 +114,22 @@ class Player {
 
   emitBoard() {
     const data = this.board.serialize(this.pieces[0]);
-    emitBoard(this.socketInfo, data);
+    emitBoard(this.socketInfo.socket, data);
+  }
+
+  broadcastBoardToOpponents(grid) {
+    broadcastBoardToOpponents(
+      this.socketInfo.io,
+      this.socketInfo.roomName,
+      this.name,
+      grid
+    );
   }
 
   gameOver() {
     this.emitBoard();
-
+    this.isPlaying = false;
+    this.game.removePlayingPlayer(this.name);
     console.log("GAME OVER", this.name);
   }
 
@@ -127,6 +141,7 @@ class Player {
       }
     });
   }
+
   getPenalty(nbLines) {
     this.board.addBottomLines(nbLines, this.pieces[0]);
     this.emitBoard();

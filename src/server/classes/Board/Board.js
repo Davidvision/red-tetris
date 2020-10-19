@@ -88,6 +88,7 @@ class Board {
       this.player.gameOver();
     }
     this.checkLines();
+    this.player.broadcastBoardToOpponents(this.grid);
   }
 
   checkLines() {
@@ -102,7 +103,7 @@ class Board {
         this.grid.splice(i, 1);
         this.grid.unshift(Array(10).fill(0));
       });
-      if (linesToDelete.length > 0) {
+      if (linesToDelete.length - 1 > 0) {
         this.player.sendPenalty(linesToDelete.length - 1);
       }
     }
