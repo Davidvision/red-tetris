@@ -33,6 +33,16 @@ const noDownOverflow = (p, grid) =>
     })
   );
 
+const noDownOverflowShadow = (piece, x, y, grid) =>
+  piece.every((l, i) =>
+    l.every((c, j) => {
+      if (c === 0) {
+        return true;
+      }
+      return y + i + 1 < 20 && (y + i + 1 < 0 || grid[y + i + 1][x + j] === 0);
+    })
+  );
+
 const isColliding = (x, y, type, rotation, grid) =>
   piecesData[type][rotation].some((l, i) =>
     l.some(
@@ -76,11 +86,12 @@ const addPieceToGrid = (piece, x, y, grid, shadow = 0) => {
 };
 
 const shadowPiece = (x, y, type, rotation, piece, grid) => {
-  while (!isColliding(x, y, type, rotation, grid)) {
-    //BOUCLE INFINIE AVEC BARRE DE 4 DE LONG
+  while (
+    noDownOverflowShadow(piece, x, y, grid) &&
+    !isColliding(x, y, type, rotation, grid)
+  ) {
     y++;
   }
-  y--;
   addPieceToGrid(piece, x, y, grid, 8);
 };
 

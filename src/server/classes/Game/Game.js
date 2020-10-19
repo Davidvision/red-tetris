@@ -63,7 +63,10 @@ class Game {
       this.nbPlaying = this.players.length;
       this.playingPlayers = this.players.map(p => p);
       this.startTime = new Date().getTime();
-      this.players.forEach(p => (p.isPlaying = true));
+      this.players.forEach(p => {
+        p.isPlaying = true;
+        p.emitFirstBoard();
+      });
       this.interval = setInterval(() => {
         //check si game end
         this.clock = new Date().getTime() - this.startTime;

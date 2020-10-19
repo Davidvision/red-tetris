@@ -1,6 +1,7 @@
 import React, { memo, useContext, useEffect } from "react";
 import { Context as GameContext } from "../context/GameContext";
 import { Context as HomeContext } from "../context/HomeContext";
+import Board from "../components/Board";
 import { startGame } from "../middleware/sockets";
 import useInitGame from "../hooks/useInitGame";
 import PlayerBoard from "../components/PlayerBoard";

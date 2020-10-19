@@ -126,6 +126,11 @@ class Player {
     );
   }
 
+  emitFirstBoard() {
+    this.emitBoard();
+    this.broadcastBoardToOpponents(this.board.grid);
+  }
+
   gameOver() {
     this.emitBoard();
     this.isPlaying = false;
