@@ -33,9 +33,11 @@ const noDownOverflow = (p, grid) =>
     })
   );
 
-const isColliding = (p, grid) =>
-  piecesData[p.type][p.rotation].some((l, i) =>
-    l.some((c, j) => c !== 0 && p.y + i >= 0 && grid[p.y + i][p.x + j] !== 0)
+const isColliding = (x, y, type, rotation, grid) =>
+  piecesData[type][rotation].some((l, i) =>
+    l.some(
+      (c, j) => c !== 0 && y + i >= 0 && y + i < 20 && grid[y + i][x + j] !== 0
+    )
   );
 
 const isOutLateral = p => {
@@ -63,11 +65,32 @@ const isOutUp = p =>
     l.some((c, j) => c !== 0 && p.y + i < 0)
   );
 
+const addPieceToGrid = (piece, x, y, grid, shadow = 0) => {
+  piece.map((l, i) =>
+    l.map((c, j) => {
+      if (c > 0 && i + y >= 0) {
+        grid[i + y][j + x] = c + shadow;
+      }
+    })
+  );
+};
+
+const shadowPiece = (x, y, type, rotation, piece, grid) => {
+  while (!isColliding(x, y, type, rotation, grid)) {
+    console.log(y);
+    y++;
+  }
+  y--;
+  addPieceToGrid(piece, x, y, grid, 8);
+};
+
 module.exports = {
   noRightOverflow,
   noLeftOverflow,
   noDownOverflow,
   isColliding,
   isOutLateral,
-  isOutUp
+  isOutUp,
+  addPieceToGrid,
+  shadowPiece
 };

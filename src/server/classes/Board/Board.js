@@ -5,8 +5,11 @@ const {
   noDownOverflow,
   isColliding,
   isOutLateral,
-  isOutUp
+  isOutUp,
+  addPieceToGrid,
+  shadowPiece
 } = require("./utils");
+const Piece = require("../Piece/Piece");
 
 class Board {
   constructor(player) {
@@ -38,15 +41,10 @@ class Board {
 
   serialize(p) {
     const piece = piecesData[p.type][p.rotation];
-    const gridWithPiece = this.grid.map(l => l.map(c => c));
-    piece.map((l, i) =>
-      l.map((c, j) => {
-        if (c > 0 && i + p.y >= 0) {
-          gridWithPiece[i + p.y][j + p.x] = c;
-        }
-      })
-    );
-    return gridWithPiece;
+    const gridCopy = this.grid.map(l => l.map(c => c));
+    shadowPiece(p.x, p.y, p.type, p.rotation, piece, gridCopy);
+    addPieceToGrid(piece, p.x, p.y, gridCopy);
+    return gridCopy;
   }
 
   moveRight(p) {
@@ -116,10 +114,10 @@ class Board {
       p.translate(lateralOf, 0);
       lateralOf = isOutLateral(p);
     }
-    let isCol = isColliding(p, this.grid);
+    let isCol = isColliding(p.x, p.y, p.type, p.rotation, this.grid);
     while (isCol) {
       p.translate(0, -1);
-      isCol = isColliding(p, this.grid);
+      isCol = isColliding(p.x, p.y, p.type, p.rotation, this.grid);
     }
     let upperOf = isOutUp(p);
     while (upperOf) {
@@ -138,10 +136,10 @@ class Board {
   }
 
   checkNewPiece(p) {
-    let isCol = isColliding(p, this.grid);
+    let isCol = isColliding(p.x, p.y, p.type, p.rotation, this.grid);
     if (isCol) {
       p.translate(0, -1);
-      if (isColliding(p, this.grid)) {
+      if (isColliding(p.x, p.y, p.type, p.rotation, this.grid)) {
         this.player.gameOver();
       }
     }

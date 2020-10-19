@@ -10,7 +10,7 @@ const gameReducer = (state, action) => {
       return {
         ...state,
         opponents: {
-          ...opponents,
+          ...state.opponents,
           [action.payload.opponentName]: action.payload.opponentBoard
         }
       };

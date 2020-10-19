@@ -8,9 +8,13 @@ import { changePage, pages } from "../utils/router";
 export default () => {
   const { socketIOClient } = useContext(SocketContext);
   const { setAvailableRooms } = useContext(HomeContext);
-  const { setNbPlaying, setLobbyInfo, resetGameContext, setBoard } = useContext(
-    GameContext
-  );
+  const {
+    setNbPlaying,
+    setLobbyInfo,
+    resetGameContext,
+    setBoard,
+    setOpponent
+  } = useContext(GameContext);
   useEffect(() => {
     socketIOClient.on("availableRooms", availableRooms =>
       setAvailableRooms(availableRooms)

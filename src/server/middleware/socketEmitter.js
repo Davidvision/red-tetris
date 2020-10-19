@@ -37,12 +37,12 @@ const emitBoard = (socket, board) => {
 };
 
 const broadcastBoardToOpponents = (
-  io,
+  socket,
   roomName,
   opponentName,
   opponentBoard
 ) => {
-  io.to(roomName).emit("opponentBoard", { opponentName, opponentBoard });
+  socket.to(roomName).emit("opponentBoard", { opponentName, opponentBoard });
 };
 
 module.exports = {

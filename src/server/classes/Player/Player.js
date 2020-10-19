@@ -119,7 +119,7 @@ class Player {
 
   broadcastBoardToOpponents(grid) {
     broadcastBoardToOpponents(
-      this.socketInfo.io,
+      this.socketInfo.socket,
       this.socketInfo.roomName,
       this.name,
       grid
