@@ -77,7 +77,7 @@ const addPieceToGrid = (piece, x, y, grid, shadow = 0) => {
 
 const shadowPiece = (x, y, type, rotation, piece, grid) => {
   while (!isColliding(x, y, type, rotation, grid)) {
-    console.log(y);
+    //BOUCLE INFINIE AVEC BARRE DE 4 DE LONG
     y++;
   }
   y--;
