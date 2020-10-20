@@ -1,7 +1,5 @@
-const { emitAvailableRooms } = require("./middleware/sockets");
-
-const clientsIds = {}; //clientId: gameId ?
-const games = {};
+const Game = require("./classes/Game/Game");
+const socketListener = require("./middleware/socketListener");
 
 const initReqHandler = async (server, params, cb) => {
   const { host, port } = params.server;
@@ -14,24 +12,13 @@ const initReqHandler = async (server, params, cb) => {
   });
 };
 
-const handleSockets = io => {
-  io.on("connection", socket => {
-    console.log(`client ${socket.id} is connected`);
-    clientsIds[socket.id] = {};
-    emitAvailableRooms(socket, games);
-
-    socket.on("disconnect", () => {
-      delete clientsIds[socket.id];
-      console.log(`Client ${socket.id} disconnected`);
-    });
-  });
-};
-
-const startServer = async params => {
+const startServer = async (params, initGames = {}) => {
+  const clientsIds = {};
+  const games = initGames;
   const server = require("http").createServer();
   await initReqHandler(server, params);
   const io = require("socket.io")(server);
-  handleSockets(io);
+  socketListener(io, clientsIds, games);
   return { server, io };
 };
 

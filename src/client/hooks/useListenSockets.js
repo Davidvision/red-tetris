@@ -1,25 +1,44 @@
 import { useEffect, useContext } from "react";
-import socketIOClient from "socket.io-client";
-import { Context as SocketContext } from "../context/SocketContext";
+import { SocketContext } from "../context/SocketContext";
 import { Context as GameContext } from "../context/GameContext";
+import { Context as HomeContext } from "../context/HomeContext";
 import { server } from "../../../params";
-
-const { port, host } = server;
-const ENDPOINT =
-  process.env.NODE_ENV === "production" ? "" : `http://${host}:${port}/`;
+import { changePage, pages } from "../utils/router";
 
 export default () => {
-  const { setSocketIOClient } = useContext(SocketContext);
-  const { setAvailableRooms } = useContext(GameContext);
-
+  const { socketIOClient } = useContext(SocketContext);
+  const { setAvailableRooms } = useContext(HomeContext);
+  const {
+    setLobbyInfo,
+    resetGameContext,
+    setBoard,
+    setOpponent,
+    setIsPlaying
+  } = useContext(GameContext);
   useEffect(() => {
-    const socketClient = socketIOClient(ENDPOINT);
-    setSocketIOClient(socketClient);
-
-    socketClient.on("availableRooms", availableRooms =>
+    socketIOClient.on("availableRooms", availableRooms =>
       setAvailableRooms(availableRooms)
     );
 
-    return () => socket.disconnect();
+    socketIOClient.on("redirectToHome", () => {
+      resetGameContext();
+      changePage(pages[0].title, pages[0].path);
+    });
+
+    socketIOClient.on("lobbyInfo", data => setLobbyInfo(data));
+
+    socketIOClient.on("playingPlayers", playingPlayers =>
+      setPlayingPlayers(playingPlayers)
+    );
+
+    socketIOClient.on("boardUpdate", board => setBoard(board));
+
+    socketIOClient.on("opponentBoard", opponentInfo =>
+      setOpponent(opponentInfo)
+    );
+
+    socketIOClient.on("isPlaying", newIsPlaying => setIsPlaying(newIsPlaying));
+
+    return () => socketClient.disconnect();
   }, []);
 };

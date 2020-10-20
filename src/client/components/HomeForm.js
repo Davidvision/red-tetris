@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { changePage, pages } from "../utils/router";
-import { Context as GameContext } from "../context/GameContext";
+import { Context as HomeContext } from "../context/HomeContext";
+import { SocketContext } from "../context/SocketContext";
+import { createPrivateGame } from "../middleware/sockets";
 
 export default () => {
   const [name, setName] = useState("");
@@ -8,21 +10,30 @@ export default () => {
   const [selectedRoom, setSelectedRoom] = useState({});
   const [errorObj, setErrorObj] = useState({});
   const [joinRoom, setJoinRoom] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   const {
-    state: { availableRooms }
-  } = useContext(GameContext);
+    state: { availableRooms, userName },
+    setUserName
+  } = useContext(HomeContext);
+  const { socketIOClient } = useContext(SocketContext);
 
   const handleSubmit = e => {
     e.preventDefault();
     let tmpErrorObj = {};
-    if (!isNameValid(name)) {
+    if (!isNameValid(userName)) {
       tmpErrorObj.name = playerNameErrorStr;
     }
-    if (joinRoom && !Object.keys(selectedRoom).length) {
-      tmpErrorObj.selectedRoom = selectedRoomErrorStr;
-    }
-    if (!joinRoom) {
+    if (joinRoom) {
+      if (!Object.keys(selectedRoom).length) {
+        tmpErrorObj.selectedRoom = selectedRoomErrorStr;
+      } else if (
+        selectedRoom.players.findIndex(playerName => playerName === userName) >
+        -1
+      ) {
+        tmpErrorObj.name = playerNameAlreadyTakenInRoomStr;
+      }
+    } else {
       if (!isNameValid(roomName)) {
         tmpErrorObj.roomName = roomNameErrorStr;
       }
@@ -35,11 +46,19 @@ export default () => {
       return;
     }
     setErrorObj({});
-    changePage(pages[1].title, "", `/#${roomName}[${name}]`);
+    if (!joinRoom && isPrivate) {
+      console.log("WESHHHH");
+      createPrivateGame(socketIOClient, roomName, userName);
+    }
+    changePage(
+      pages[1].title,
+      "",
+      `/#${joinRoom ? selectedRoom.name : roomName}[${userName}]`
+    );
   };
 
   const handleSelectRoom = room => {
-    if (room.nb > 3) return;
+    if (room.nb > 3 || room.isPrivate) return;
     setSelectedRoom(room);
   };
 
@@ -48,9 +67,9 @@ export default () => {
       <label>Username: </label>
       <input
         type="text"
-        value={name}
+        value={userName}
         name="username"
-        onChange={e => setName(e.target.value)}
+        onChange={e => setUserName(e.target.value)}
       ></input>
       <br />
       {errorObj.name && <p className="home-form__error">{errorObj.name}</p>}
@@ -85,6 +104,14 @@ export default () => {
           {errorObj.notAvailableRoomName && (
             <p className="home-form__error">{errorObj.notAvailableRoomName}</p>
           )}
+          <div>
+            <label>Play solo: </label>
+            <input
+              type="checkbox"
+              checked={isPrivate}
+              onChange={e => setIsPrivate(e.target.checked)}
+            />
+          </div>
         </>
       )}
       {joinRoom && (
@@ -110,20 +137,23 @@ const RoomSelect = ({ rooms, handleClick, selectedRoom }) => (
       {rooms.length > 0 &&
         rooms.map(room => (
           <li
-            key={room.id}
+            key={room.name}
             className={`room-select__option${
-              selectedRoom.id === room.id
+              selectedRoom.name === room.name
                 ? " room-select__option--selected"
                 : ""
             }`}
             onClick={() => handleClick(room)}
           >
-            {`${room.name} (${room.nb} player${room.nb > 1 ? "s" : ""})`}
+            {getSelectRoomStr(room)}
           </li>
         ))}
     </ul>
   </>
 );
+
+const getSelectRoomStr = ({ name, nb, isPrivate }) =>
+  (name += isPrivate ? ` (private)` : ` (${nb} player${nb > 1 ? "s" : ""})`);
 
 const playerNameErrorStr =
   'Your name must contain at least 3 and at most 15 alphanumeric, "-" or "_" characters.';
@@ -134,6 +164,9 @@ const roomNameErrorStr =
 const selectedRoomErrorStr = "Please select a valid room to join";
 
 const notAvailableRoomNameStr = "This room name is already in use";
+
+const playerNameAlreadyTakenInRoomStr =
+  "This player name is already taken in this room";
 
 const isNameValid = name =>
   !(

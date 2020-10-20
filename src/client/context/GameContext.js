@@ -1,81 +1,81 @@
 import createDataContext from "./createDataContext";
 
-// const initBoard = Array(20).fill(Array(10).fill(0));
-
-const initBoard = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 3, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 3, 0, 7, 7, 0, 0, 0, 0, 0],
-  [2, 3, 3, 5, 7, 7, 0, 0, 0, 0],
-  [2, 2, 2, 5, 5, 4, 4, 0, 6, 0],
-  [1, 1, 1, 1, 5, 4, 4, 6, 6, 6]
-];
+const initBoard = Array(20).fill(Array(10).fill(0));
+const initValues = {
+  isLoading: true,
+  playingPlayers: 0,
+  userName: "",
+  isRunning: false,
+  players: [],
+  board: initBoard,
+  opponents: {},
+  score: 0,
+  nextPieces: [0, 0, 0],
+  isPlaying: false
+};
 
 const gameReducer = (state, action) => {
   switch (action.type) {
     case "set_board":
       return { ...state, board: action.payload };
-    case "set_opponents":
-      return { ...state, opponentBoard: action.payload };
+    case "set_opponent":
+      return {
+        ...state,
+        opponents: {
+          ...state.opponents,
+          [action.payload.opponentName]: action.payload.opponentBoard
+        }
+      };
     case "set_score":
       return { ...state, score: action.payload };
     case "set_next_pieces":
       return { ...state, nextPieces: action.payload };
-    case "set_available_rooms":
-      return { ...state, availableRooms: action.payload };
+    case "set_is_playing":
+      return { ...state, isPlaying: action.payload };
+    case "set_lobby_info":
+      return {
+        ...state,
+        players: action.payload.players,
+        nbPlaying: action.payload.nbPlayers,
+        isLoading: false
+      };
+    case "reset_state":
+      return initValues;
     default:
       return state;
   }
 };
 
-const setBoard = dispatch => newBoard => {
+const setBoard = dispatch => newBoard =>
   dispatch({ type: "set_board", payload: newBoard });
-};
 
-const setOpponents = dispatch => newOpponents => {
-  dispatch({ type: "set_opponents", payload: newOpponents });
-};
+const setOpponent = dispatch => newOpponent =>
+  dispatch({ type: "set_opponent", payload: newOpponent });
 
-const setScore = dispatch => newScore => {
+const setScore = dispatch => newScore =>
   dispatch({ type: "set_score", payload: newScore });
-};
 
-const setNextPieces = dispatch => newNextPieces => {
+const setNextPieces = dispatch => newNextPieces =>
   dispatch({ type: "set_next_pieces", payload: newNextPieces });
-};
 
-const setAvailableRooms = dispatch => newAvailableRooms => {
-  dispatch({ type: "set_available_rooms", payload: newAvailableRooms });
-};
+const setLobbyInfo = dispatch => newLobbyInfo =>
+  dispatch({ type: "set_lobby_info", payload: newLobbyInfo });
+
+const setIsPlaying = dispatch => newIsPlaying =>
+  dispatch({ type: "set_is_playing", payload: newIsPlaying });
+
+const resetGameContext = dispatch => () => dispatch("reset_state");
 
 export const { Provider, Context } = createDataContext(
   gameReducer,
   {
     setBoard,
-    setOpponents,
     setScore,
     setNextPieces,
-    setAvailableRooms
+    setLobbyInfo,
+    resetGameContext,
+    setOpponent,
+    setIsPlaying
   },
-  {
-    availableRooms: [],
-    board: initBoard,
-    opponents: [],
-    score: 0,
-    nextPieces: [0, 0, 0]
-  }
+  initValues
 );

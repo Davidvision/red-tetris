@@ -2,15 +2,14 @@ const random = require("lodash").random;
 const Player = require("../Player/Player");
 
 class Game {
-  constructor(id, name, isPrivate = false) {
-    this.id = id;
+  constructor(name, isPrivate = false) {
     this.name = name;
     this.players = [];
-    this.time = 0;
     this.pieces = [];
-    this.isRunning = false;
     this.interval = null;
     this.isPrivate = isPrivate;
+    this.startTime = null;
+    this.clock = null;
   }
 
   generatePieces(n) {
@@ -26,42 +25,54 @@ class Game {
     return this.pieces[i];
   }
 
-  addPlayer(name) {
-    this.players.push(new Player(this, name));
+  addPlayer(name, socketInfo) {
+    const player = new Player(this, socketInfo, name);
+    this.players.push(player);
+    return player;
   }
 
-  removePlayer(id) {
+  removePlayer(name) {
     for (let i = 0; i < this.players.length; i++) {
-      if (this.players[i].id === id) {
+      if (this.players[i].name === name) {
         this.players.splice(i, 1);
+        console.log("remove player: ", name, this.players);
         break;
       }
     }
   }
 
-  launchGame() {
+  startGame() {
     if (this.players.length > 0) {
       this.generatePieces(20);
-      this.isRunning = true;
+      this.startTime = new Date().getTime();
+      this.players.forEach(p => {
+        p.isPlaying = true;
+        p.emitFirstBoard();
+      });
       this.interval = setInterval(() => {
-        this.update();
-      }, 1000 / 60);
+        this.clock = new Date().getTime() - this.startTime;
+        let nbPlaying = 0;
+        for (let i = 0; i < this.players.length; i++) {
+          if (this.players[i].isPlaying) {
+            this.players[i].update();
+            nbPlaying++;
+          }
+        }
+        if (nbPlaying === 0) {
+          this.endGame();
+        }
+      }, 1000 / 20);
     }
   }
 
   endGame() {
-    if (this.isRunning) {
-      clearInterval(this.interval);
-      this.isRunning = false;
-      this.pieces.splice(0, this.pieces.length);
-    }
+    console.log("endGame");
+    clearInterval(this.interval);
+    this.pieces = [];
+    this.startTime = null;
+    this.clock = null;
+    this.interval = null;
   }
-
-  update() {}
 }
-
-// update
-// updateOnInput
-// addPenalty
 
 module.exports = Game;
