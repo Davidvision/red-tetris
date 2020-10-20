@@ -3,16 +3,13 @@ const Player = require("../Player/Player");
 
 class Game {
   constructor(name, isPrivate = false) {
-    this.id;
     this.name = name;
     this.players = [];
     this.playingPlayers = [];
-    // this.nbPlaying = 0;
-    this.time = 0;
     this.pieces = [];
     this.interval = null;
     this.isPrivate = isPrivate;
-    this.startTime;
+    this.startTime = null;
     this.clock = null;
   }
 
@@ -49,7 +46,6 @@ class Game {
   }
 
   removePlayingPlayer(name) {
-    // this.nbPlaying--;
     for (let j = 0; j < this.playingPlayers.length; j++) {
       if (this.playingPlayers[j].name === name) {
         this.playingPlayers.splice(j, 1);
@@ -61,7 +57,6 @@ class Game {
   startGame() {
     if (this.players.length > 0) {
       this.generatePieces(20);
-      // this.nbPlaying = this.players.length;
       this.playingPlayers = this.players.map(p => p);
       this.players[0].leaderEmitPlayingPlayers();
       this.startTime = new Date().getTime();
@@ -84,6 +79,9 @@ class Game {
   endGame() {
     console.log("endGame");
     clearInterval(this.interval);
+    this.pieces = [];
+    this.startTime = null;
+    this.clock = null;
   }
 }
 

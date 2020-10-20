@@ -37,7 +37,8 @@ class Board {
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ];
-    this.copyInitialGrid(gridType);
+    this.gridType = gridType;
+    // this.copyInitialGrid(gridType);
   }
 
   serialize(p) {
@@ -159,10 +160,10 @@ class Board {
     }
   }
 
-  copyInitialGrid(gridType = 0) {
+  copyInitialGrid() {
     for (var i = 0; i < 20; i++) {
       for (var j = 0; j < 10; j++) {
-        this.grid[i][j] = initialGrids[gridType][i][j];
+        this.grid[i][j] = initialGrids[this.gridType][i][j];
       }
     }
   }

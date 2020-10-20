@@ -82,7 +82,8 @@ const handleStartGame = ({ io, socket, games, clientsIds }) => {
     !game ||
     !game.players ||
     game.players.length === 0 ||
-    playerName !== game.players[0].name
+    playerName !== game.players[0].name ||
+    game.playingPlayers.length > 0
   ) {
     return;
   }
