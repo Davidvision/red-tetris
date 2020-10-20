@@ -61,14 +61,18 @@ class Game {
     if (this.players.length > 0) {
       this.generatePieces(20);
       this.nbPlaying = this.players.length;
-      this.playingPlayers = this.players.map(p => p);
+      this.playingPlayers = this.players.map((p) => p);
       this.startTime = new Date().getTime();
-      this.players.forEach(p => {
+      this.players.forEach((p) => {
         p.isPlaying = true;
         p.emitFirstBoard();
       });
       this.interval = setInterval(() => {
         //check si game end
+        if (this.playingPlayers.length === 0) {
+          this.endGame();
+        }
+
         this.clock = new Date().getTime() - this.startTime;
         for (let i = 0; i < this.playingPlayers.length; i++) {
           this.playingPlayers[i].update();
@@ -78,11 +82,12 @@ class Game {
   }
 
   endGame() {
+    console.log("endGame");
     clearInterval(this.interval);
-    if (this.nbPlaying > 0) {
-      this.nbPlaying = 0;
-      this.pieces.splice(0, this.pieces.length);
-    }
+    // if (this.nbPlaying > 0) {
+    //   this.nbPlaying = 0;
+    //   this.pieces.splice(0, this.pieces.length);
+    // }
   }
 }
 

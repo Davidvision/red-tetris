@@ -2,8 +2,9 @@ const Piece = require("../Piece/Piece");
 const Board = require("../Board/Board");
 const {
   emitBoard,
-  broadcastBoardToOpponents
+  broadcastBoardToOpponents,
 } = require("../../middleware/socketEmitter");
+const { grids: initialGrids } = require("../../../data/grids.json");
 const keysActions = ["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown", " "];
 const keysActionsLength = 5;
 
@@ -25,7 +26,7 @@ class Player {
       ArrowUp: false,
       ArrowLeft: false,
       ArrowDown: false,
-      " ": false
+      " ": false,
     };
     this.actions = {
       moveDown: { next: 1000, interval: 1000 },
@@ -33,7 +34,7 @@ class Player {
       ArrowLeft: { next: -1, interval: 80 },
       ArrowDown: { next: -1, interval: 80 },
       ArrowUp: { next: -1, interval: 250 },
-      " ": { next: -1, interval: 10000 }
+      " ": { next: -1, interval: 10000 },
     };
   }
 
@@ -132,7 +133,7 @@ class Player {
   }
 
   gameOver() {
-    this.emitBoard();
+    this.emitBoard(initialGrids[0]);
     this.isPlaying = false;
     this.game.removePlayingPlayer(this.name);
     console.log("GAME OVER", this.name);
@@ -140,7 +141,7 @@ class Player {
 
   sendPenalty(nbLines) {
     console.log("sendPenalty", this.name, nbLines);
-    this.game.players.forEach(p => {
+    this.game.players.forEach((p) => {
       if (p.name !== this.name) {
         p.getPenalty(nbLines);
       }
