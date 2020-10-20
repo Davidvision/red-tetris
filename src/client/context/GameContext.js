@@ -11,8 +11,8 @@ const gameReducer = (state, action) => {
         ...state,
         opponents: {
           ...state.opponents,
-          [action.payload.opponentName]: action.payload.opponentBoard
-        }
+          [action.payload.opponentName]: action.payload.opponentBoard,
+        },
       };
     case "set_score":
       return { ...state, score: action.payload };
@@ -26,33 +26,33 @@ const gameReducer = (state, action) => {
       return {
         ...state,
         players: action.payload.players,
-        nbPlaying: action.payload.nbPlaying,
-        isLoading: false
+        nbPlaying: action.payload.nbPlayers,
+        isLoading: false,
       };
     default:
       return state;
   }
 };
 
-const setBoard = dispatch => newBoard =>
+const setBoard = (dispatch) => (newBoard) =>
   dispatch({ type: "set_board", payload: newBoard });
 
-const setOpponent = dispatch => newOpponent =>
+const setOpponent = (dispatch) => (newOpponent) =>
   dispatch({ type: "set_opponent", payload: newOpponent });
 
-const setScore = dispatch => newScore =>
+const setScore = (dispatch) => (newScore) =>
   dispatch({ type: "set_score", payload: newScore });
 
-const setNextPieces = dispatch => newNextPieces =>
+const setNextPieces = (dispatch) => (newNextPieces) =>
   dispatch({ type: "set_next_pieces", payload: newNextPieces });
 
-const setLobbyInfo = dispatch => newLobbyInfo =>
+const setLobbyInfo = (dispatch) => (newLobbyInfo) =>
   dispatch({ type: "set_lobby_info", payload: newLobbyInfo });
 
-const setNbPlaying = dispatch => newNbPlaying =>
+const setNbPlaying = (dispatch) => (newNbPlaying) =>
   dispatch({ type: "set_nb_playing", payload: newNbPlaying });
 
-const resetGameContext = dispatch => () => dispatch("reset_state");
+const resetGameContext = (dispatch) => () => dispatch("reset_state");
 
 export const { Provider, Context } = createDataContext(
   gameReducer,
@@ -63,7 +63,7 @@ export const { Provider, Context } = createDataContext(
     setLobbyInfo,
     setNbPlaying,
     resetGameContext,
-    setOpponent
+    setOpponent,
   },
   {
     isLoading: true,
@@ -74,6 +74,6 @@ export const { Provider, Context } = createDataContext(
     board: initBoard,
     opponents: {},
     score: 0,
-    nextPieces: [0, 0, 0]
+    nextPieces: [0, 0, 0],
   }
 );

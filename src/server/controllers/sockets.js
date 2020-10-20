@@ -2,7 +2,7 @@ const {
   emitRedirectToHome,
   emitAvailableRoomsToAll,
   emitLobbyInfoToRoom,
-  emitNbPlaying
+  emitNbPlaying,
 } = require("../middleware/socketEmitter");
 const Game = require("../classes/Game/Game");
 
@@ -37,7 +37,7 @@ const handleConnectToGame = (
   console.log(
     `Client ${socket.id}: name: ${playerName} asks to join ${roomName} room`
   );
-  const roomExists = Object.keys(games).some(n => n === roomName);
+  const roomExists = Object.keys(games).some((n) => n === roomName);
   if (roomExists) {
     const game = games[roomName];
     if (
@@ -66,7 +66,7 @@ const addPlayer = (io, socket, clientsIds, games, playerName, roomName) => {
 
 const handleCreatePrivateGame = ({ io, socket, games }, { roomName }) => {
   console.log(`Client ${socket.id}: private '${roomName}' room created`);
-  const roomExists = Object.keys(games).some(n => n === roomName);
+  const roomExists = Object.keys(games).some((n) => n === roomName);
   if (roomExists) {
     emitRedirectToHome(socket);
   } else {
@@ -87,7 +87,7 @@ const handleStartGame = ({ io, socket, games, clientsIds }) => {
     return;
   }
   game.startGame();
-  emitNbPlaying(io, roomName, game.players.length);
+  emitNbPlaying(io, roomName, game.playingPlayers.length);
 };
 
 const handleKeyDown = ({ socket, clientsIds }, key) => {
@@ -114,5 +114,5 @@ module.exports = {
   handleQuitGame,
   handleStartGame,
   handleKeyDown,
-  handleKeyUp
+  handleKeyUp,
 };

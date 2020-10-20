@@ -37,11 +37,7 @@ class Board {
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ];
-    for (var i = 0; i < 20; i++) {
-      for (var j = 0; j < 10; j++) {
-        this.grid[i][j] = initialGrids[gridType][i][j];
-      }
-    }
+    copyInitialGrid(gridType);
   }
 
   serialize(p) {
@@ -160,6 +156,14 @@ class Board {
     }
     if (gameOver) {
       this.player.gameOver();
+    }
+  }
+
+  copyInitialGrid(gridType = 0) {
+    for (var i = 0; i < 20; i++) {
+      for (var j = 0; j < 10; j++) {
+        this.grid[i][j] += initialGrids[gridType][i][j];
+      }
     }
   }
 }

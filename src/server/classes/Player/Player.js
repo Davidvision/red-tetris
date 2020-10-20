@@ -2,9 +2,10 @@ const Piece = require("../Piece/Piece");
 const Board = require("../Board/Board");
 const {
   emitBoard,
+  emitGameOver,
+  emitPlayingPlayers,
   broadcastBoardToOpponents,
 } = require("../../middleware/socketEmitter");
-const { grids: initialGrids } = require("../../../data/grids.json");
 const keysActions = ["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown", " "];
 const keysActionsLength = 5;
 
@@ -14,7 +15,7 @@ class Player {
     this.board = new Board(this);
     this.score = 0;
     this.isPlaying = false;
-    this.name = name.length > 3 ? name : this.id;
+    this.name = name;
     this.nextPieceIndex = 0;
     this.pieces = [];
     for (let i = 0; i < 4; i++) {
@@ -132,8 +133,18 @@ class Player {
     this.broadcastBoardToOpponents(this.board.grid);
   }
 
+  leaderEmitPlayingPlayers() {
+    emitPlayingPlayers(
+      this.socketInfo.io,
+      this.socketInfo.roomName,
+      this.game.playingPlayers
+    );
+  }
+
   gameOver() {
-    this.emitBoard(initialGrids[0]);
+    this.board.copyInitialGrid();
+    this.emitBoard();
+    emitGameOver(this.socketInfo.socket, this.socketInfo.roomName, this.name);
     this.isPlaying = false;
     this.game.removePlayingPlayer(this.name);
     console.log("GAME OVER", this.name);
