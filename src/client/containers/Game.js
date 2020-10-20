@@ -11,13 +11,15 @@ import CatContainer from "../components/CatContainer";
 
 export default () => {
   const {
-    state: { nbPlaying, isLoading, players, opponents }
+    state: { nbPlaying, isLoading, players, opponents },
   } = useContext(GameContext);
   const {
-    state: { userName }
+    state: { userName },
   } = useContext(HomeContext);
+
+  //isPlaying state local, faire un useEffect qui change l'etat avec en dependance le tableau playing players
   const isPlaying =
-    nbPlaying > 0 && players.findIndex(p => p.name === userName) < nbPlaying;
+    nbPlaying > 0 && players.findIndex((p) => p.name === userName) < nbPlaying;
 
   useInitGame(isPlaying);
 
@@ -38,7 +40,7 @@ export default () => {
 };
 
 const OpponentsPreview = memo(({ opponents }) =>
-  Object.keys(opponents).map(opponentName => (
+  Object.keys(opponents).map((opponentName) => (
     <div key={opponentName} className="game__opponent-container">
       <p>{opponentName}</p>
       <Board board={opponents[opponentName]} colors={false} />
