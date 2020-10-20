@@ -55,17 +55,17 @@ class Game {
         this.playingPlayers.splice(j, 1);
       }
     }
-    players[0].leaderEmitPlayingPlayers();
+    this.players[0].leaderEmitPlayingPlayers();
   }
 
   startGame() {
     if (this.players.length > 0) {
       this.generatePieces(20);
       // this.nbPlaying = this.players.length;
-      this.playingPlayers = this.players.map((p) => p);
+      this.playingPlayers = this.players.map(p => p);
       this.players[0].leaderEmitPlayingPlayers();
       this.startTime = new Date().getTime();
-      this.players.forEach((p) => {
+      this.players.forEach(p => {
         p.isPlaying = true;
         p.emitFirstBoard();
       });

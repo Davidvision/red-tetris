@@ -9,7 +9,7 @@ export default () => {
   const { socketIOClient } = useContext(SocketContext);
   const { setAvailableRooms } = useContext(HomeContext);
   const {
-    setNbPlaying,
+    setPlayingPlayers,
     setLobbyInfo,
     resetGameContext,
     setBoard,
@@ -27,7 +27,9 @@ export default () => {
 
     socketIOClient.on("lobbyInfo", data => setLobbyInfo(data));
 
-    socketIOClient.on("setNbPlaying", nbPlaying => setNbPlaying(nbPlaying));
+    socketIOClient.on("playingPlayers", playingPlayers =>
+      setPlayingPlayers(playingPlayers)
+    );
 
     socketIOClient.on("boardUpdate", board => setBoard(board));
 

@@ -1,4 +1,4 @@
-import React, { memo, useContext, useEffect } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import { Context as GameContext } from "../context/GameContext";
 import { Context as HomeContext } from "../context/HomeContext";
 import Board from "../components/Board";
@@ -10,16 +10,25 @@ import QuitGameBtn from "../components/QuitGameButton";
 import CatContainer from "../components/CatContainer";
 
 export default () => {
+  const [isPlaying, setIsPlaying] = useState(false);
   const {
-    state: { nbPlaying, isLoading, players, opponents },
+    state: { playingPlayers, isLoading, opponents }
   } = useContext(GameContext);
   const {
-    state: { userName },
+    state: { userName }
   } = useContext(HomeContext);
 
-  //isPlaying state local, faire un useEffect qui change l'etat avec en dependance le tableau playing players
-  const isPlaying =
-    nbPlaying > 0 && players.findIndex((p) => p.name === userName) < nbPlaying;
+  useEffect(() => {
+    console.log(playingPlayers);
+    if (
+      playingPlayers.length > 0 &&
+      playingPlayers.findIndex(name => name === userName) > -1
+    ) {
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
+    }
+  }, [playingPlayers]);
 
   useInitGame(isPlaying);
 
@@ -40,7 +49,7 @@ export default () => {
 };
 
 const OpponentsPreview = memo(({ opponents }) =>
-  Object.keys(opponents).map((opponentName) => (
+  Object.keys(opponents).map(opponentName => (
     <div key={opponentName} className="game__opponent-container">
       <p>{opponentName}</p>
       <Board board={opponents[opponentName]} colors={false} />
