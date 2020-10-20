@@ -1,8 +1,8 @@
 const {
   emitRedirectToHome,
   emitAvailableRoomsToAll,
-  emitLobbyInfoToRoom,
-  emitPlayingPlayers
+  emitLobbyInfoToRoom
+  // emitPlayingPlayers
 } = require("../middleware/socketEmitter");
 const Game = require("../classes/Game/Game");
 
@@ -83,12 +83,13 @@ const handleStartGame = ({ io, socket, games, clientsIds }) => {
     !game.players ||
     game.players.length === 0 ||
     playerName !== game.players[0].name ||
-    game.playingPlayers.length > 0
+    game.players.filter(p => p.isPlaying).length > 0
   ) {
     return;
   }
   game.startGame();
-  emitPlayingPlayers(io, roomName, game.playingPlayers);
+
+  // emitPlayingPlayers(io, roomName, game.playingPlayers);
 };
 
 const handleKeyDown = ({ socket, clientsIds }, key) => {

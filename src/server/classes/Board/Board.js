@@ -42,6 +42,10 @@ class Board {
   }
 
   serialize(p) {
+    if (p === undefined) {
+      return this.grid;
+    }
+    console.log("clock", this.player.game.clock, p);
     const piece = piecesData[p.type][p.rotation];
     const gridCopy = this.grid.map(l => l.map(c => c));
     shadowPiece(p.x, p.y, p.type, p.rotation, piece, gridCopy);
@@ -140,8 +144,11 @@ class Board {
   checkNewPiece(p) {
     let isCol = isColliding(p.x, p.y, p.type, p.rotation, this.grid);
     if (isCol) {
+      console.log("WESH ALORS");
       p.translate(0, -1);
       if (isColliding(p.x, p.y, p.type, p.rotation, this.grid)) {
+        p.translate(0, -1);
+        this.player.pieces = [];
         this.player.gameOver();
       }
     }

@@ -3,7 +3,7 @@ const Board = require("../Board/Board");
 const {
   emitBoard,
   emitGameOver,
-  emitPlayingPlayers,
+  emitIsPlaying,
   broadcastBoardToOpponents
 } = require("../../middleware/socketEmitter");
 const keysActions = ["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown", " "];
@@ -18,9 +18,6 @@ class Player {
     this.name = name;
     this.nextPieceIndex = 0;
     this.pieces = [];
-    for (let i = 0; i < 4; i++) {
-      this.createNextPiece();
-    }
     this.socketInfo = socketInfo;
     this.keysPressed = {
       ArrowRight: false,
@@ -59,6 +56,9 @@ class Player {
   }
 
   createNextPiece() {
+    if (this.isPlaying === false) {
+      return;
+    }
     const pieceType = this.game.getNextPiece(this.nextPieceIndex);
     this.nextPieceIndex++;
     this.pieces.push(new Piece(pieceType));
@@ -115,6 +115,9 @@ class Player {
   }
 
   emitBoard() {
+    if (this.isPlaying === false) {
+      return;
+    }
     const data = this.board.serialize(this.pieces[0]);
     emitBoard(this.socketInfo.socket, data);
   }
@@ -130,24 +133,46 @@ class Player {
 
   emitFirstBoard() {
     this.board.copyInitialGrid();
+    for (let i = 0; i < 4; i++) {
+      this.createNextPiece();
+    }
     this.emitBoard();
+    emitIsPlaying(this.socketInfo.socket, true);
     this.broadcastBoardToOpponents(this.board.grid);
   }
 
-  leaderEmitPlayingPlayers() {
-    emitPlayingPlayers(
-      this.socketInfo.io,
-      this.socketInfo.roomName,
-      this.game.playingPlayers
-    );
-  }
-
   gameOver() {
+    if (this.isPlaying === false) {
+      return;
+    }
     this.emitBoard();
     emitGameOver(this.socketInfo.socket, this.socketInfo.roomName, this.name);
     this.isPlaying = false;
-    this.game.removePlayingPlayer(this.name);
+    emitIsPlaying(this.socketInfo.socket, false);
+    this.score = 0;
+
     console.log("GAME OVER", this.name);
+
+    // this.board = new Board(this);
+
+    this.nextPieceIndex = 0;
+    // this.pieces = [];
+    // this.pieces.splice(0, this.pieces.length);
+    this.keysPressed = {
+      ArrowRight: false,
+      ArrowUp: false,
+      ArrowLeft: false,
+      ArrowDown: false,
+      " ": false
+    };
+    this.actions = {
+      moveDown: { next: 1000, interval: 1000 },
+      ArrowRight: { next: -1, interval: 100 },
+      ArrowLeft: { next: -1, interval: 80 },
+      ArrowDown: { next: -1, interval: 80 },
+      ArrowUp: { next: -1, interval: 250 },
+      " ": { next: -1, interval: 10000 }
+    };
   }
 
   sendPenalty(nbLines) {

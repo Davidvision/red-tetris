@@ -9,11 +9,11 @@ export default () => {
   const { socketIOClient } = useContext(SocketContext);
   const { setAvailableRooms } = useContext(HomeContext);
   const {
-    setPlayingPlayers,
     setLobbyInfo,
     resetGameContext,
     setBoard,
-    setOpponent
+    setOpponent,
+    setIsPlaying
   } = useContext(GameContext);
   useEffect(() => {
     socketIOClient.on("availableRooms", availableRooms =>
@@ -36,6 +36,8 @@ export default () => {
     socketIOClient.on("opponentBoard", opponentInfo =>
       setOpponent(opponentInfo)
     );
+
+    socketIOClient.on("isPlaying", newIsPlaying => setIsPlaying(newIsPlaying));
 
     return () => socketClient.disconnect();
   }, []);

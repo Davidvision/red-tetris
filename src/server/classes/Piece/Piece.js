@@ -18,9 +18,4 @@ class Piece {
   }
 }
 
-// 	methods:
-// rotate
-// translate(int, ist)
-// isInRange()
-
 module.exports = Piece;

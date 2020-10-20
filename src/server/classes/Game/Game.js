@@ -5,7 +5,6 @@ class Game {
   constructor(name, isPrivate = false) {
     this.name = name;
     this.players = [];
-    this.playingPlayers = [];
     this.pieces = [];
     this.interval = null;
     this.isPrivate = isPrivate;
@@ -35,42 +34,32 @@ class Game {
   removePlayer(name) {
     for (let i = 0; i < this.players.length; i++) {
       if (this.players[i].name === name) {
-        if (this.players[i].isPlaying) {
-          this.removePlayingPlayer(name);
-        }
         this.players.splice(i, 1);
-        console.log("remove player: ", name, this.players, this.playingPlayers);
+        console.log("remove player: ", name, this.players);
         break;
       }
     }
   }
 
-  removePlayingPlayer(name) {
-    for (let j = 0; j < this.playingPlayers.length; j++) {
-      if (this.playingPlayers[j].name === name) {
-        this.playingPlayers.splice(j, 1);
-      }
-    }
-    this.players[0].leaderEmitPlayingPlayers();
-  }
-
   startGame() {
     if (this.players.length > 0) {
       this.generatePieces(20);
-      this.playingPlayers = this.players.map(p => p);
-      this.players[0].leaderEmitPlayingPlayers();
       this.startTime = new Date().getTime();
       this.players.forEach(p => {
         p.isPlaying = true;
         p.emitFirstBoard();
       });
       this.interval = setInterval(() => {
-        if (this.playingPlayers.length === 0) {
-          this.endGame();
-        }
         this.clock = new Date().getTime() - this.startTime;
-        for (let i = 0; i < this.playingPlayers.length; i++) {
-          this.playingPlayers[i].update();
+        let nbPlaying = 0;
+        for (let i = 0; i < this.players.length; i++) {
+          if (this.players[i].isPlaying) {
+            this.players[i].update();
+            nbPlaying++;
+          }
+        }
+        if (nbPlaying === 0) {
+          this.endGame();
         }
       }, 1000 / 20);
     }
@@ -82,6 +71,7 @@ class Game {
     this.pieces = [];
     this.startTime = null;
     this.clock = null;
+    this.interval = null;
   }
 }
 

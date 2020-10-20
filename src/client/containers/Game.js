@@ -10,25 +10,25 @@ import QuitGameBtn from "../components/QuitGameButton";
 import CatContainer from "../components/CatContainer";
 
 export default () => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  // const [isPlaying, setIsPlaying] = useState(false);
   const {
-    state: { playingPlayers, isLoading, opponents }
+    state: { playingPlayers, isLoading, opponents, isPlaying }
   } = useContext(GameContext);
   const {
     state: { userName }
   } = useContext(HomeContext);
 
-  useEffect(() => {
-    console.log(playingPlayers);
-    if (
-      playingPlayers.length > 0 &&
-      playingPlayers.findIndex(name => name === userName) > -1
-    ) {
-      setIsPlaying(true);
-    } else {
-      setIsPlaying(false);
-    }
-  }, [playingPlayers]);
+  // useEffect(() => {
+  //   console.log(playingPlayers);
+  //   if (
+  //     playingPlayers.length > 0 &&
+  //     playingPlayers.findIndex(name => name === userName) > -1
+  //   ) {
+  //     setIsPlaying(true);
+  //   } else {
+  //     setIsPlaying(false);
+  //   }
+  // }, [playingPlayers]);
 
   useInitGame(isPlaying);
 

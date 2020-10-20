@@ -1,6 +1,18 @@
 import createDataContext from "./createDataContext";
 
 const initBoard = Array(20).fill(Array(10).fill(0));
+const initValues = {
+  isLoading: true,
+  playingPlayers: 0,
+  userName: "",
+  isRunning: false,
+  players: [],
+  board: initBoard,
+  opponents: {},
+  score: 0,
+  nextPieces: [0, 0, 0],
+  isPlaying: false
+};
 
 const gameReducer = (state, action) => {
   switch (action.type) {
@@ -18,10 +30,8 @@ const gameReducer = (state, action) => {
       return { ...state, score: action.payload };
     case "set_next_pieces":
       return { ...state, nextPieces: action.payload };
-    case "set_playing_players":
-      return { ...state, playingPlayers: action.payload };
-    case "reset_state":
-      return initValues;
+    case "set_is_playing":
+      return { ...state, isPlaying: action.payload };
     case "set_lobby_info":
       return {
         ...state,
@@ -29,6 +39,8 @@ const gameReducer = (state, action) => {
         nbPlaying: action.payload.nbPlayers,
         isLoading: false
       };
+    case "reset_state":
+      return initValues;
     default:
       return state;
   }
@@ -49,8 +61,8 @@ const setNextPieces = dispatch => newNextPieces =>
 const setLobbyInfo = dispatch => newLobbyInfo =>
   dispatch({ type: "set_lobby_info", payload: newLobbyInfo });
 
-const setPlayingPlayers = dispatch => newPlayingPlayers =>
-  dispatch({ type: "set_playing_players", payload: newPlayingPlayers });
+const setIsPlaying = dispatch => newIsPlaying =>
+  dispatch({ type: "set_is_playing", payload: newIsPlaying });
 
 const resetGameContext = dispatch => () => dispatch("reset_state");
 
@@ -61,19 +73,9 @@ export const { Provider, Context } = createDataContext(
     setScore,
     setNextPieces,
     setLobbyInfo,
-    setPlayingPlayers,
     resetGameContext,
-    setOpponent
+    setOpponent,
+    setIsPlaying
   },
-  {
-    isLoading: true,
-    playingPlayers: 0,
-    userName: "",
-    isRunning: false,
-    players: [],
-    board: initBoard,
-    opponents: {},
-    score: 0,
-    nextPieces: [0, 0, 0]
-  }
+  initValues
 );
