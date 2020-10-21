@@ -47,7 +47,6 @@ export default () => {
     }
     setErrorObj({});
     if (!joinRoom && isPrivate) {
-      console.log("WESHHHH");
       createPrivateGame(socketIOClient, roomName, userName);
     }
     changePage(

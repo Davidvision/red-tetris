@@ -38,14 +38,12 @@ class Board {
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ];
     this.gridType = gridType;
-    // this.copyInitialGrid(gridType);
   }
 
   serialize(p) {
     if (p === undefined) {
       return this.grid;
     }
-    console.log("clock", this.player.game.clock, p);
     const piece = piecesData[p.type][p.rotation];
     const gridCopy = this.grid.map(l => l.map(c => c));
     shadowPiece(p.x, p.y, p.type, p.rotation, piece, gridCopy);
@@ -107,9 +105,7 @@ class Board {
         this.grid.splice(i, 1);
         this.grid.unshift(Array(10).fill(0));
       });
-      if (linesToDelete.length - 1 > 0) {
-        this.player.sendPenalty(linesToDelete.length - 1);
-      }
+      this.player.manageBrokenLines(linesToDelete.length);
     }
   }
 
@@ -144,7 +140,6 @@ class Board {
   checkNewPiece(p) {
     let isCol = isColliding(p.x, p.y, p.type, p.rotation, this.grid);
     if (isCol) {
-      console.log("WESH ALORS");
       p.translate(0, -1);
       if (isColliding(p.x, p.y, p.type, p.rotation, this.grid)) {
         p.translate(0, -1);
@@ -160,7 +155,9 @@ class Board {
       gameOver = this.grid[0].some(c => c > 0);
       this.grid.shift();
       this.grid.push(Array(10).fill(8));
-      p.translate(0, -1);
+      if (p !== undefined) {
+        p.translate(0, -1);
+      }
     }
     if (gameOver) {
       this.player.gameOver();

@@ -28,10 +28,6 @@ const emitLobbyInfoToRoom = (io, roomName, playerName, game) => {
   io.in(roomName).emit("lobbyInfo", { players, nbPlayers });
 };
 
-// const emitNbPlaying = (io, roomName, nbPlaying) => {
-//   io.in(roomName).emit("setNbPlaying", nbPlaying);
-// };
-
 const emitPlayingPlayers = (io, roomName, playingPlayers) => {
   const players = playingPlayers.map(p => p.name);
   io.to(roomName).emit("playingPlayers", players);
@@ -47,7 +43,9 @@ const broadcastBoardToOpponents = (
   opponentName,
   opponentBoard
 ) => {
-  socket.to(roomName).emit("opponentBoard", { opponentName, opponentBoard });
+  socket
+    .to(roomName)
+    .emit("opponentBoard", { opponentName, value: opponentBoard });
 };
 
 const emitGameOver = (socket, roomName, playerName) => {
@@ -59,15 +57,37 @@ const emitIsPlaying = (socket, value) => {
   socket.emit("isPlaying", value);
 };
 
+const emitScore = (socket, roomName, playerName, score) => {
+  socket.emit("score", score);
+  socket
+    .to(roomName)
+    .emit("opponentScore", { opponentName: playerName, value: score });
+};
+
+const emitNextPieces = (socket, nextPieces) => {
+  socket.emit("nextPieces", nextPieces);
+};
+
+const emitMessageToRoom = (io, roomName, sender, message) => {
+  io.to(roomName).emit("chatMessage", { sender, message });
+};
+
+const emitGameScores = (io, roomName, scores, playersHistory) => {
+  io.to(roomName).emit("gameScores", { scores, playersHistory });
+};
+
 module.exports = {
   emitAvailableRooms,
   emitRedirectToHome,
   emitAvailableRoomsToAll,
   emitLobbyInfoToRoom,
-  // emitNbPlaying,
   emitBoard,
   broadcastBoardToOpponents,
   emitGameOver,
   emitPlayingPlayers,
-  emitIsPlaying
+  emitIsPlaying,
+  emitScore,
+  emitNextPieces,
+  emitMessageToRoom,
+  emitGameScores
 };

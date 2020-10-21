@@ -11,12 +11,18 @@ export default isPlaying => {
     let isListenerSet = false;
     let keyPressed = "";
     const handleKeyDown = e => {
-      if (allowedKeys.findIndex(allowedKey => allowedKey === e.key) > -1) {
+      if (
+        document.activeElement.id !== "chatInput" &&
+        allowedKeys.findIndex(allowedKey => allowedKey === e.key) > -1
+      ) {
         keyDown(socketIOClient, e.key);
       }
     };
     const handleKeyUp = e => {
-      if (allowedKeys.findIndex(allowedKey => allowedKey === e.key) > -1) {
+      if (
+        document.activeElement.id !== "chatInput" &&
+        allowedKeys.findIndex(allowedKey => allowedKey === e.key) > -1
+      ) {
         keyUp(socketIOClient, e.key);
       }
     };

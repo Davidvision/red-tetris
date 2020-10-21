@@ -1,2 +1,6 @@
 $tetris-grid-height: 70vh;
 $tetris-game-height: 80vh;
+$chat-container-height: calc(#{$tetris-grid-height} / 4);
+$opponents-container-height: calc(
+  #{$tetris-grid-height} - #{$chat-container-height}
+);

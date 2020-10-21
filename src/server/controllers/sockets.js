@@ -1,14 +1,15 @@
 const {
   emitRedirectToHome,
   emitAvailableRoomsToAll,
-  emitLobbyInfoToRoom
-  // emitPlayingPlayers
+  emitLobbyInfoToRoom,
+  emitMessageToRoom
 } = require("../middleware/socketEmitter");
 const Game = require("../classes/Game/Game");
 
 const handleQuitGame = ({ io, clientsIds, games, socket }) => {
   const { playerName, roomName } = clientsIds[socket.id];
   if (games[roomName]) {
+    socket.leave(roomName);
     games[roomName].removePlayer(playerName);
     if (games[roomName].players.length === 0) {
       delete games[roomName];
@@ -50,7 +51,7 @@ const handleConnectToGame = (
       addPlayer(io, socket, clientsIds, games, playerName, roomName);
     }
   } else {
-    games[roomName] = new Game(roomName);
+    games[roomName] = new Game(roomName, io);
     addPlayer(io, socket, clientsIds, games, playerName, roomName);
   }
 };
@@ -70,7 +71,7 @@ const handleCreatePrivateGame = ({ io, socket, games }, { roomName }) => {
   if (roomExists) {
     emitRedirectToHome(socket);
   } else {
-    games[roomName] = new Game(roomName, true);
+    games[roomName] = new Game(roomName, io, true);
     emitAvailableRoomsToAll(io, games);
   }
 };
@@ -88,8 +89,6 @@ const handleStartGame = ({ io, socket, games, clientsIds }) => {
     return;
   }
   game.startGame();
-
-  // emitPlayingPlayers(io, roomName, game.playingPlayers);
 };
 
 const handleKeyDown = ({ socket, clientsIds }, key) => {
@@ -109,6 +108,16 @@ const handleKeyUp = ({ socket, clientsIds }, key) => {
   }
 };
 
+const handleChatMessage = (
+  { io, socket, clientsIds, games },
+  sender,
+  message
+) => {
+  if (message.length > 0) {
+    emitMessageToRoom(io, clientsIds[socket.id].roomName, sender, message);
+  }
+};
+
 module.exports = {
   handleConnectToGame,
   handleCreatePrivateGame,
@@ -116,5 +125,6 @@ module.exports = {
   handleQuitGame,
   handleStartGame,
   handleKeyDown,
-  handleKeyUp
+  handleKeyUp,
+  handleChatMessage
 };

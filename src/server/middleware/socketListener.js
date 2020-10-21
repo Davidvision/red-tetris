@@ -6,7 +6,8 @@ const {
   handleQuitGame,
   handleStartGame,
   handleKeyDown,
-  handleKeyUp
+  handleKeyUp,
+  handleChatMessage
 } = require("../controllers/sockets");
 
 module.exports = (io, clientsIds, games) => {
@@ -37,5 +38,9 @@ module.exports = (io, clientsIds, games) => {
     socket.on("keyUp", key => {
       handleKeyUp(ioContext, key);
     });
+
+    socket.on("chatMessage", (sender, message) =>
+      handleChatMessage(ioContext, sender, message)
+    );
   });
 };
