@@ -1,15 +1,23 @@
 const random = require("lodash").random;
 const Player = require("../Player/Player");
+const {
+  emitMessageToRoom,
+  emitGameScores
+} = require("../../middleware/socketEmitter");
 
 class Game {
-  constructor(name, isPrivate = false) {
+  constructor(name, io, isPrivate = false) {
     this.name = name;
+    this.io = io;
     this.players = [];
     this.pieces = [];
     this.interval = null;
     this.isPrivate = isPrivate;
     this.startTime = null;
     this.clock = null;
+    this.nbGames = 0;
+    this.scores = {};
+    this.playersHistory = {};
   }
 
   generatePieces(n) {
@@ -27,7 +35,14 @@ class Game {
 
   addPlayer(name, socketInfo) {
     const player = new Player(this, socketInfo, name);
+    this.playersHistory[name] = 0;
     this.players.push(player);
+    emitMessageToRoom(
+      this.io,
+      this.name,
+      "Game Master: ",
+      `${name} joined the game.`
+    );
     return player;
   }
 
@@ -35,7 +50,12 @@ class Game {
     for (let i = 0; i < this.players.length; i++) {
       if (this.players[i].name === name) {
         this.players.splice(i, 1);
-        console.log("remove player: ", name, this.players);
+        emitMessageToRoom(
+          this.io,
+          this.name,
+          "Game Master: ",
+          `${name} left the game.`
+        );
         break;
       }
     }
@@ -43,9 +63,12 @@ class Game {
 
   startGame() {
     if (this.players.length > 0) {
+      this.nbGames++;
+      this.scores[this.nbGames] = {};
       this.generatePieces(20);
       this.startTime = new Date().getTime();
       this.players.forEach(p => {
+        p.initValues();
         p.isPlaying = true;
         p.emitFirstBoard();
       });
@@ -66,7 +89,8 @@ class Game {
   }
 
   endGame() {
-    console.log("endGame");
+    emitGameScores(this.io, this.name, this.scores, this.playersHistory);
+    emitMessageToRoom(this.io, this.name, "Game Master: ", `end of the game!`);
     clearInterval(this.interval);
     this.pieces = [];
     this.startTime = null;

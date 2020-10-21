@@ -38,6 +38,17 @@
     top: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.7);
+    &__scores {
+      &-container {
+        border: 1px solid white;
+      }
+      & th {
+        min-width: 100px;
+      }
+    }
+  }
+  &__opponents-container {
+    height: $opponents-container-height;
   }
   &__opponent {
     &-container {
@@ -48,6 +59,18 @@
         height: $tetris-grid-height / 3.2;
         width: calc(#{$tetris-grid-height} / 6.6);
       }
+    }
+  }
+  &__chat {
+    &-container {
+      height: $chat-container-height;
+      width: 200px;
+      overflow: hidden;
+    }
+    &-message {
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      hyphens: auto;
     }
   }
 }

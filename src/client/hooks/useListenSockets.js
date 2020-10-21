@@ -12,8 +12,13 @@ export default () => {
     setLobbyInfo,
     resetGameContext,
     setBoard,
-    setOpponent,
-    setIsPlaying
+    setIsPlaying,
+    setOpponentScore,
+    setOpponentBoard,
+    setScore,
+    setNextPieces,
+    setMessage,
+    setGameScores
   } = useContext(GameContext);
   useEffect(() => {
     socketIOClient.on("availableRooms", availableRooms =>
@@ -33,11 +38,27 @@ export default () => {
 
     socketIOClient.on("boardUpdate", board => setBoard(board));
 
-    socketIOClient.on("opponentBoard", opponentInfo =>
-      setOpponent(opponentInfo)
+    socketIOClient.on("score", newScore => setScore(newScore));
+
+    socketIOClient.on("opponentBoard", newOpponentBoard =>
+      setOpponentBoard(newOpponentBoard)
+    );
+
+    socketIOClient.on("opponentScore", newOpponentScore =>
+      setOpponentScore(newOpponentScore)
     );
 
     socketIOClient.on("isPlaying", newIsPlaying => setIsPlaying(newIsPlaying));
+
+    socketIOClient.on("nextPieces", newNextPieces =>
+      setNextPieces(newNextPieces)
+    );
+
+    socketIOClient.on("chatMessage", newMessage => setMessage(newMessage));
+
+    socketIOClient.on("gameScores", newGameScores =>
+      setGameScores(newGameScores)
+    );
 
     return () => socketClient.disconnect();
   }, []);

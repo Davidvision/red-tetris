@@ -12,3 +12,6 @@ export const keyDown = (socketIOClient, key) =>
   socketIOClient.emit("keyDown", key);
 
 export const keyUp = (socketIOClient, key) => socketIOClient.emit("keyUp", key);
+
+export const sendChatMessage = (socketIOClient, userName, message) =>
+  socketIOClient.emit("chatMessage", userName, message);

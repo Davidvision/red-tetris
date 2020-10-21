@@ -1,0 +1,21 @@
+.pieces-preview {
+  &-container {
+    display: flex;
+    flex-direction: column;
+    height: $tetris-grid-height / 2.5;
+  }
+  &__piece-container {
+    height: $tetris-grid-height / 7.5;
+    width: $tetris-grid-height / 7.5;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    &--0 {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+    }
+    &--3 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}

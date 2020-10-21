@@ -10,8 +10,10 @@ const initValues = {
   board: initBoard,
   opponents: {},
   score: 0,
-  nextPieces: [0, 0, 0],
-  isPlaying: false
+  nextPieces: [],
+  isPlaying: false,
+  messages: [],
+  gameScores: null
 };
 
 const gameReducer = (state, action) => {
@@ -23,11 +25,18 @@ const gameReducer = (state, action) => {
         ...state,
         opponents: {
           ...state.opponents,
-          [action.payload.opponentName]: action.payload.opponentBoard
+          [action.payload.opponentName]: {
+            ...state.opponents[action.payload.opponentName],
+            [action.payload.key]: action.payload.value
+          }
         }
       };
     case "set_score":
       return { ...state, score: action.payload };
+    case "set_message":
+      return { ...state, messages: [...state.messages, action.payload] };
+    case "set_game_scores":
+      return { ...state, gameScores: action.payload };
     case "set_next_pieces":
       return { ...state, nextPieces: action.payload };
     case "set_is_playing":
@@ -49,8 +58,17 @@ const gameReducer = (state, action) => {
 const setBoard = dispatch => newBoard =>
   dispatch({ type: "set_board", payload: newBoard });
 
-const setOpponent = dispatch => newOpponent =>
-  dispatch({ type: "set_opponent", payload: newOpponent });
+const setOpponentBoard = dispatch => newOpponentBoard =>
+  dispatch({
+    type: "set_opponent",
+    payload: { ...newOpponentBoard, key: "board" }
+  });
+
+const setOpponentScore = dispatch => newOpponentScore =>
+  dispatch({
+    type: "set_opponent",
+    payload: { ...newOpponentScore, key: "score" }
+  });
 
 const setScore = dispatch => newScore =>
   dispatch({ type: "set_score", payload: newScore });
@@ -64,7 +82,13 @@ const setLobbyInfo = dispatch => newLobbyInfo =>
 const setIsPlaying = dispatch => newIsPlaying =>
   dispatch({ type: "set_is_playing", payload: newIsPlaying });
 
-const resetGameContext = dispatch => () => dispatch("reset_state");
+const setMessage = dispatch => newMessage =>
+  dispatch({ type: "set_message", payload: newMessage });
+
+const setGameScores = dispatch => newGameScores =>
+  dispatch({ type: "set_game_scores", payload: newGameScores });
+
+const resetGameContext = dispatch => () => dispatch({ type: "reset_state" });
 
 export const { Provider, Context } = createDataContext(
   gameReducer,
@@ -74,8 +98,11 @@ export const { Provider, Context } = createDataContext(
     setNextPieces,
     setLobbyInfo,
     resetGameContext,
-    setOpponent,
-    setIsPlaying
+    setOpponentBoard,
+    setIsPlaying,
+    setOpponentScore,
+    setMessage,
+    setGameScores
   },
   initValues
 );

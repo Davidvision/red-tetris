@@ -4,36 +4,22 @@ const {
   emitBoard,
   emitGameOver,
   emitIsPlaying,
-  broadcastBoardToOpponents
+  broadcastBoardToOpponents,
+  emitScore,
+  emitNextPieces,
+  emitMessageToRoom
 } = require("../../middleware/socketEmitter");
 const keysActions = ["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown", " "];
 const keysActionsLength = 5;
+const scorePerNbLines = [50, 150, 350, 1000];
 
 class Player {
   constructor(game, socketInfo, name = "") {
     this.game = game;
     this.board = new Board(this);
-    this.score = 0;
-    this.isPlaying = false;
     this.name = name;
-    this.nextPieceIndex = 0;
-    this.pieces = [];
     this.socketInfo = socketInfo;
-    this.keysPressed = {
-      ArrowRight: false,
-      ArrowUp: false,
-      ArrowLeft: false,
-      ArrowDown: false,
-      " ": false
-    };
-    this.actions = {
-      moveDown: { next: 1000, interval: 1000 },
-      ArrowRight: { next: -1, interval: 100 },
-      ArrowLeft: { next: -1, interval: 80 },
-      ArrowDown: { next: -1, interval: 80 },
-      ArrowUp: { next: -1, interval: 250 },
-      " ": { next: -1, interval: 10000 }
-    };
+    this.initValues();
   }
 
   update() {
@@ -62,7 +48,17 @@ class Player {
     const pieceType = this.game.getNextPiece(this.nextPieceIndex);
     this.nextPieceIndex++;
     this.pieces.push(new Piece(pieceType));
+    this.emitNextPieces();
     this.board.checkNewPiece(this.pieces[0]);
+  }
+
+  emitNextPieces() {
+    if (this.pieces.length < 4) {
+      return;
+    }
+    const [, ...nextPieces] = this.pieces;
+    const nextPiecesBoards = nextPieces.map(p => p.type);
+    emitNextPieces(this.socketInfo.socket, nextPiecesBoards);
   }
 
   deleteFirstPiece() {
@@ -137,27 +133,81 @@ class Player {
       this.createNextPiece();
     }
     this.emitBoard();
-    emitIsPlaying(this.socketInfo.socket, true);
     this.broadcastBoardToOpponents(this.board.grid);
+    emitScore(
+      this.socketInfo.socket,
+      this.socketInfo.roomName,
+      this.name,
+      this.score
+    );
+    emitIsPlaying(this.socketInfo.socket, true);
   }
 
   gameOver() {
     if (this.isPlaying === false) {
       return;
     }
+    this.game.scores[this.game.nbGames][this.name] = this.score;
+    this.game.playersHistory[this.name] += this.score;
+    emitMessageToRoom(
+      this.socketInfo.io,
+      this.game.name,
+      this.name,
+      "GAME OVER!"
+    );
     this.emitBoard();
     emitGameOver(this.socketInfo.socket, this.socketInfo.roomName, this.name);
-    this.isPlaying = false;
     emitIsPlaying(this.socketInfo.socket, false);
+    this.isPlaying = false;
+  }
+
+  manageBrokenLines(nbLines) {
+    this.brokenLines += nbLines;
+    this.score += scorePerNbLines[nbLines] * (this.level + 1);
+    emitScore(
+      this.socketInfo.socket,
+      this.socketInfo.roomName,
+      this.name,
+      this.score
+    );
+    this.level = Math.floor(this.brokenLines / 20);
+    if (this.level > 0) {
+      this.actions.moveDown.interval = 1000 * Math.pow(0.9, this.level);
+    }
+    if (nbLines - 1 > 0) {
+      this.sendPenalty(nbLines - 1);
+    }
+  }
+
+  sendPenalty(nbLines) {
+    let nbVictims = 0;
+    this.game.players.forEach(p => {
+      if (p.name !== this.name && p.isPlaying) {
+        nbVictims++;
+        p.getPenalty(nbLines);
+      }
+    });
+    if (nbVictims > 0) {
+      emitMessageToRoom(
+        this.socketInfo.io,
+        this.game.name,
+        this.name,
+        `sent ${nbLines} malus to the opponents`
+      );
+    }
+  }
+
+  getPenalty(nbLines) {
+    this.board.addBottomLines(nbLines, this.pieces[0]);
+    this.emitBoard();
+  }
+
+  initValues() {
+    this.brokenLines = 0;
+    this.level = 0;
     this.score = 0;
-
-    console.log("GAME OVER", this.name);
-
-    // this.board = new Board(this);
-
+    this.pieces = [];
     this.nextPieceIndex = 0;
-    // this.pieces = [];
-    // this.pieces.splice(0, this.pieces.length);
     this.keysPressed = {
       ArrowRight: false,
       ArrowUp: false,
@@ -173,20 +223,6 @@ class Player {
       ArrowUp: { next: -1, interval: 250 },
       " ": { next: -1, interval: 10000 }
     };
-  }
-
-  sendPenalty(nbLines) {
-    console.log("sendPenalty", this.name, nbLines);
-    this.game.players.forEach(p => {
-      if (p.name !== this.name) {
-        p.getPenalty(nbLines);
-      }
-    });
-  }
-
-  getPenalty(nbLines) {
-    this.board.addBottomLines(nbLines, this.pieces[0]);
-    this.emitBoard();
   }
 }
 

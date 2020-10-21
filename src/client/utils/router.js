@@ -1,6 +1,6 @@
 import React from "react";
-import Game from "../containers/Game";
-import Home from "../containers/Home";
+import Game from "../pages/Game";
+import Home from "../pages/Home";
 
 export const changePage = (title, path, hash) => {
   if (window.location.pathname !== path || window.location.hash !== hash) {
