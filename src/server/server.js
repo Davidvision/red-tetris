@@ -27,7 +27,7 @@ const startServer = (params, initGames = {}) => {
         cb();
       };
       socketListener(io, clientsIds, games);
-      resolve({ stop });
+      resolve({ stop, io });
     });
   });
   return promise;
