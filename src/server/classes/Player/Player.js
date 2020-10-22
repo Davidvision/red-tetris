@@ -11,7 +11,7 @@ const {
 } = require("../../middleware/socketEmitter");
 const keysActions = ["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown", " "];
 const keysActionsLength = 5;
-const scorePerNbLines = [50, 150, 350, 1000];
+const scorePerNbLines = [0, 50, 150, 350, 1000];
 
 class Player {
   constructor(game, socketInfo, name = "") {
