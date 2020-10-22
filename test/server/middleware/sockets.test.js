@@ -6,25 +6,26 @@ const {
   beforeAll,
   afterAll,
   beforeEach,
-  afterEach,
+  afterEach
 } = require("@jest/globals");
 const params = { server: { port: 3004, host: "0.0.0.0" } };
 const Game = require("../../../src/server/classes/Game/Game");
 const { startServer, killServer } = require("../../../src/server/server");
 const socketIOClient = require("socket.io-client");
 const {
-  emitAvailableRooms,
+  emitAvailableRooms
 } = require("../../../src/server/middleware/sockets");
 const {
   connectToGame,
-  createPrivateGame,
+  createPrivateGame
 } = require("../../../src/client/middleware/sockets.js");
+const { startTestServer } = require("../utils/server");
 
 describe("server", () => {
   let servers;
   let socketClient;
   let socketObject;
-  beforeAll(async (done) => {
+  beforeAll(async done => {
     let games = [];
     let game = new Game("axelsRoom");
     game.addPlayer("axel");
@@ -41,17 +42,17 @@ describe("server", () => {
       done();
     }, 1000);
   });
-  afterAll(async (done) => {
+  afterAll(async done => {
     await killServer(servers);
     setTimeout(() => {
       done();
     }, 500);
   });
 
-  beforeEach(async (done) => {
+  beforeEach(async done => {
     const { host, port } = params.server;
     socketClient = socketIOClient(`http://${host}:${port}`);
-    servers.io.on("connection", (socket) => {
+    servers.io.on("connection", socket => {
       socketObject = socket;
     });
     setTimeout(() => {
@@ -59,7 +60,7 @@ describe("server", () => {
     }, 200);
   });
 
-  afterEach(async (done) => {
+  afterEach(async done => {
     setTimeout(() => {
       if (socketClient.connected) {
         socketClient.disconnect();
@@ -69,7 +70,7 @@ describe("server", () => {
   });
 
   test("emitAvailableRooms should send array of games", () => {
-    socketClient.on("availableRooms", (data) => {
+    socketClient.on("availableRooms", data => {
       expect(data.length).toEqual(3);
     });
   });
@@ -86,7 +87,7 @@ describe("server", () => {
     game.addPlayer("jeanmich");
     games["jeanmichRoom"] = game;
     emitAvailableRooms(socketObject, games);
-    socketClient.on("availableRooms", (data) => {
+    socketClient.on("availableRooms", data => {
       console.log("WEEEEESH");
       expect(data.length).toEqual(3);
     });
@@ -99,18 +100,18 @@ describe("server", () => {
   test("connectToGame - join existing game", () => {
     socketClient.emit("connectToGame", {
       roomName: "axelsRoom",
-      playerName: "patrick",
+      playerName: "patrick"
     });
-    socketClient.on("availableRooms", (data) => {
+    socketClient.on("availableRooms", data => {
       expect(data[0].players.length).toEqual(3);
     });
   });
   test("connectToGame - new game", () => {
     socketClient.emit("connectToGame", {
       roomName: "newRoom",
-      playerName: "patrick",
+      playerName: "patrick"
     });
-    socketClient.on("availableRooms", (data) => {
+    socketClient.on("availableRooms", data => {
       expect(data.length).toEqual(4);
     });
   });
@@ -122,13 +123,13 @@ describe("server", () => {
   });
   test("createPrivateGame - new game", () => {
     createPrivateGame(socketClient, "newPrivRoom");
-    socketClient.on("availableRooms", (data) => {
+    socketClient.on("availableRooms", data => {
       expect(data.length).toEqual(5);
     });
   });
   test("createPrivateGame - existing game", () => {
     socketClient.emit("createPrivateGame", {
-      roomName: "privRoom",
+      roomName: "privRoom"
     });
     socketClient.on("redirectToHome", () => {
       expect(1).toEqual(1);

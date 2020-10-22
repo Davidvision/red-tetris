@@ -17,6 +17,8 @@ export default () => {
 
   const isLeader = players.length && players[0].name === userName;
 
+  console.log(isLeader);
+
   return (
     <div className="game-lobby">
       {isLeader && (

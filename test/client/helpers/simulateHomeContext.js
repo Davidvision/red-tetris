@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import Enzyme, { mount } from "enzyme";
+import { threeRoomsMockup } from "../helpers/simulateRoomsData";
 import Adapter from "enzyme-adapter-react-16";
 import { Provider as HomeProvider } from "../../../src/client/context/HomeContext";
 import { Context as HomeContext } from "../../../src/client/context/HomeContext";
@@ -19,27 +20,7 @@ export const TestAppHomeProviderWithThreeRooms = ({ children }) => (
 const ThreeRoomsSetterComp = ({ children }) => {
   const { setAvailableRooms } = useContext(HomeContext);
   useEffect(() => {
-    setAvailableRooms([
-      {
-        name: "axelS",
-        nb: 3,
-        players: ["axelRump", "hugo", "player3"],
-        isPrivate: false
-      },
-      {
-        name: "hugoS",
-        nb: 4,
-        players: ["yoloboy", "67-mitraille", "sadboy34", "lol"],
-        isPrivate: false
-      },
-      {
-        name: "milano",
-        nb: 2,
-        players: ["hugmit", "robinginss"],
-        isPrivate: false
-      },
-      { name: "67Gangs", nb: 1, players: ["play1"], isPrivate: true }
-    ]);
+    setAvailableRooms(threeRoomsMockup);
   }, []);
   return <>{children}</>;
 };

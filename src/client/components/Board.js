@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import BoardPixel from "./BoardPixel";
 
-export default memo(({ board, colors = true, opponent = false }) => (
+export default memo(({ board, colors = true }) => (
   <div className="game__board-background">
     <div className="game__board">
       {board.map((y, yi) =>

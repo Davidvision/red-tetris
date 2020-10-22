@@ -1,4 +1,4 @@
-import HomeForm from "../../../src/client/components/HomeForm";
+import Home from "../../../src/client/pages/Home";
 import React from "react";
 import Enzyme, { mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
@@ -15,12 +15,12 @@ import { describe, expect, test } from "@jest/globals";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe("<HomeForm />", () => {
+describe("<Home />", () => {
   const Wrapper = () => (
     <TestAppHomeProvider>
       <TestAppSocketProvider>
         <TestAppGameProvider>
-          <HomeForm />
+          <Home />
         </TestAppGameProvider>
       </TestAppSocketProvider>
     </TestAppHomeProvider>
@@ -79,7 +79,7 @@ describe("<HomeForm /> testing with context state", () => {
     <TestAppGameProvider>
       <TestAppHomeProviderWithThreeRooms>
         <TestAppSocketProviderWithSocketClient>
-          <HomeForm />
+          <Home />
         </TestAppSocketProviderWithSocketClient>
       </TestAppHomeProviderWithThreeRooms>
     </TestAppGameProvider>
