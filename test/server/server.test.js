@@ -75,19 +75,16 @@ describe("sockets", () => {
     socketClient2.on("connect", () => {
       const data = { playerName: "axel", roomName: "Axel Room" };
       socketClient.emit("connectToGame", data);
-
       const socketClient3 = socketIOClient(`http://${host}:${port}`);
       socketClient3.on("connect", () => {
         const socketClient4 = socketIOClient(`http://${host}:${port}`);
         socketClient4.on("connect", () => {
           const socketClient5 = socketIOClient(`http://${host}:${port}`);
           socketClient5.on("connect", () => {
-            // const data = { playerName: "axel", roomName: "Axel Room" };
             const data2 = { playerName: "axel2", roomName: "Axel Room" };
             const data3 = { playerName: "axel3", roomName: "Axel Room" };
             const data4 = { playerName: "axel4", roomName: "Axel Room" };
             const data5 = { playerName: "axel5", roomName: "Axel Room" };
-            // socketClient.emit("connectToGame", data);
             socketClient2.emit("connectToGame", data2);
             socketClient3.emit("connectToGame", data3);
             socketClient4.emit("connectToGame", data4);
@@ -99,13 +96,11 @@ describe("sockets", () => {
                 ).toBeGreaterThan(-1);
                 socketClient.emit("quitGame");
                 socketClient.on("availableRooms", (data) => {
-                  if (data[0] && data[0].nb == 3) {
-                    socketClient2.disconnect();
-                    socketClient3.disconnect();
-                    socketClient4.disconnect();
-                    socketClient5.disconnect();
-                    done();
-                  }
+                  socketClient2.disconnect();
+                  socketClient3.disconnect();
+                  socketClient4.disconnect();
+                  socketClient5.disconnect();
+                  done();
                 });
               }
             });
