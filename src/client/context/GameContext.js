@@ -45,7 +45,6 @@ const gameReducer = (state, action) => {
       return {
         ...state,
         players: action.payload.players,
-        nbPlaying: action.payload.nbPlayers,
         isLoading: false
       };
     case "reset_state":
@@ -58,11 +57,12 @@ const gameReducer = (state, action) => {
 const setBoard = dispatch => newBoard =>
   dispatch({ type: "set_board", payload: newBoard });
 
-const setOpponentBoard = dispatch => newOpponentBoard =>
+const setOpponentBoard = dispatch => newOpponentBoard => {
   dispatch({
     type: "set_opponent",
     payload: { ...newOpponentBoard, key: "board" }
   });
+};
 
 const setOpponentScore = dispatch => newOpponentScore =>
   dispatch({

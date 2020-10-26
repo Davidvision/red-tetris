@@ -7,11 +7,11 @@ const {
   broadcastBoardToOpponents,
   emitScore,
   emitNextPieces,
-  emitMessageToRoom
+  emitMessageToRoom,
 } = require("../../middleware/socketEmitter");
 const keysActions = ["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown", " "];
 const keysActionsLength = 5;
-const scorePerNbLines = [50, 150, 350, 1000];
+const scorePerNbLines = [0, 50, 150, 350, 1000];
 
 class Player {
   constructor(game, socketInfo, name = "") {
@@ -57,7 +57,7 @@ class Player {
       return;
     }
     const [, ...nextPieces] = this.pieces;
-    const nextPiecesBoards = nextPieces.map(p => p.type);
+    const nextPiecesBoards = nextPieces.map((p) => p.type);
     emitNextPieces(this.socketInfo.socket, nextPiecesBoards);
   }
 
@@ -181,7 +181,7 @@ class Player {
 
   sendPenalty(nbLines) {
     let nbVictims = 0;
-    this.game.players.forEach(p => {
+    this.game.players.forEach((p) => {
       if (p.name !== this.name && p.isPlaying) {
         nbVictims++;
         p.getPenalty(nbLines);
@@ -203,6 +203,7 @@ class Player {
   }
 
   initValues() {
+    this.isPlaying = false;
     this.brokenLines = 0;
     this.level = 0;
     this.score = 0;
@@ -213,7 +214,7 @@ class Player {
       ArrowUp: false,
       ArrowLeft: false,
       ArrowDown: false,
-      " ": false
+      " ": false,
     };
     this.actions = {
       moveDown: { next: 1000, interval: 1000 },
@@ -221,7 +222,7 @@ class Player {
       ArrowLeft: { next: -1, interval: 80 },
       ArrowDown: { next: -1, interval: 80 },
       ArrowUp: { next: -1, interval: 250 },
-      " ": { next: -1, interval: 10000 }
+      " ": { next: -1, interval: 10000 },
     };
   }
 }

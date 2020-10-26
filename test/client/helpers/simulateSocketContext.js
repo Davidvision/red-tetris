@@ -1,13 +1,13 @@
-import React, { useContext, useEffect } from "react";
-import Enzyme, { mount } from "enzyme";
+import React from "react";
+import Enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { Provider as SocketProvider } from "../../../src/client/context/SocketContext";
+import { SocketContextProvider } from "../../../src/client/context/SocketContext";
 import useListenSocket from "../../../src/client/hooks/useListenSockets";
 
 Enzyme.configure({ adapter: new Adapter() });
 
 export const TestAppSocketProvider = ({ children }) => (
-  <SocketProvider>{children}</SocketProvider>
+  <SocketContextProvider>{children}</SocketContextProvider>
 );
 
 export const TestAppSocketProviderWithSocketClient = ({ children }) => {
