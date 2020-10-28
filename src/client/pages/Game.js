@@ -27,7 +27,7 @@ export default () => {
 
   return (
     <div className="game-container">
-      <CatContainer customStyle={{ padding: "8vh 0" }}>
+      <CatContainer customStyle={{ padding: "8vh 0" }} cClass="game__left">
         {nbOpponents > 0 && (
           <OpponentsPreview opponents={opponents} nbOpponents={nbOpponents} />
         )}

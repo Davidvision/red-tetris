@@ -1,10 +1,21 @@
 .game {
+  &__left {
+    & .game__chat-container {
+      @include for-size(phone-only) {
+        display: none;
+      }
+    }
+  }
   &__logo {
     height: 4.4vh;
     margin-bottom: 7px;
     position: absolute;
     top: 10vh;
     z-index: 2;
+    @include for-size(phone-only) {
+      position: fixed;
+      top: 2vh;
+    }
   }
   &__label {
     color: $error;
@@ -35,6 +46,10 @@
     display: grid;
     grid-template-columns: 2fr auto 2fr;
     grid-template-rows: 1fr;
+    @include for-size(phone-only) {
+      grid-template-rows: 20vh 60vh 20vh;
+      grid-template-columns: 1fr;
+    }
   }
   &__cat-container {
     display: flex;
@@ -80,6 +95,9 @@
     }
     & .game__chat__submit {
       color: black !important;
+      @include for-size(phone-only) {
+        width: 300px;
+      }
     }
     &__start-btn {
       width: 150px;
@@ -138,7 +156,7 @@
   &__chat {
     &-container {
       height: $chat-container-height;
-      width: 280px;
+      max-width: 280px;
       overflow: hidden;
       font-size: 14px;
       & .room-select-container {

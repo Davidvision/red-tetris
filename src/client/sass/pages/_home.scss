@@ -8,6 +8,10 @@
   &__logo {
     height: 75px;
     margin-bottom: 20px;
+    @include for-size(phone-only) {
+      height: auto;
+      width: 90vw;
+    }
   }
   &-form {
     &-container {
