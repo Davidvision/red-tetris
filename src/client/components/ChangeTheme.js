@@ -1,6 +1,6 @@
 import React from "react";
 
-const themesNumber = 2;
+const themesNumber = 3;
 
 export default () => {
   const handleClick = () => {
@@ -13,7 +13,7 @@ export default () => {
   };
 
   return (
-    <button className="change-theme" onClick={handleClick}>
+    <button className="btn btn-outline change-theme" onClick={handleClick}>
       Change Theme
     </button>
   );

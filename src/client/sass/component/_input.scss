@@ -1,0 +1,17 @@
+input[type="text"] {
+  transition: all 0.2s;
+  border: none;
+  outline: none;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  background: transparent;
+  border-radius: 2px;
+  border: 1px solid white;
+  line-height: 20px;
+  padding-top: 5px;
+  padding-bottom: 3px;
+  &:focus {
+    @include white-shadow-inset;
+  }
+}

@@ -1,9 +1,23 @@
-const Game = require("./classes/Game/Game");
+const fs = require("fs");
 const socketListener = require("./middleware/socketListener");
 
 const initReqHandler = (server, params, cb) => {
   const { host, port } = params.server;
-  const handler = (req, res) => {};
+  const handler = (req, res) => {
+    const file =
+      req.url === "/bundle.js"
+        ? "/../../public/bundle.js"
+        : "/../../public/index.html";
+    fs.readFile(__dirname + file, (err, data) => {
+      if (err) {
+        logerror(err);
+        res.writeHead(500);
+        return res.end("Error loading index.html");
+      }
+      res.writeHead(200);
+      res.end(data);
+    });
+  };
 
   server.on("request", handler);
 
@@ -31,7 +45,6 @@ const startServer = (params, initGames = {}) => {
     });
   });
   return promise;
-  // return { server, io };
 };
 
 const killServer = ({ server, io }) => {

@@ -1,17 +1,17 @@
-import React, { memo, useContext, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import { Context as GameContext } from "../context/GameContext";
 import Board from "../components/Board";
-import { startGame } from "../middleware/sockets";
 import useInitGame from "../hooks/useInitGame";
 import PlayerBoard from "../components/PlayerBoard";
-import BoardPixel from "../components/BoardPixel";
 import Lobby from "../containers/Lobby";
+import PiecesPreview from "../components/PiecesPreview";
+import Logo from "../assets/img/logo.png";
 import QuitGameBtn from "../components/QuitGameButton";
 import Chat from "../components/Chat";
 import CatContainer from "../components/CatContainer";
-import { pieces as piecesData } from "../../data/pieces.json";
 
 export default () => {
+  const [nbOpponents, setNbOpponents] = useState(0);
   const {
     resetGameContext,
     state: { isLoading, opponents, isPlaying, score, nextPieces }
@@ -19,18 +19,29 @@ export default () => {
 
   useInitGame(isPlaying);
 
+  useEffect(() => {
+    setNbOpponents(Object.keys(opponents).length);
+  }, [opponents]);
+
   if (isLoading) return null;
 
   return (
     <div className="game-container">
-      <CatContainer>
-        <OpponentsPreview opponents={opponents} />
+      <CatContainer customStyle={{ padding: "8vh 0" }}>
+        {nbOpponents > 0 && (
+          <OpponentsPreview opponents={opponents} nbOpponents={nbOpponents} />
+        )}
         <Chat />
       </CatContainer>
-      <PlayerBoard />
-      <CatContainer>
+      <CatContainer
+        customStyle={{ justifyContent: "center", position: "relative" }}
+      >
+        <img className="game__logo" src={Logo} />
+        <PlayerBoard />
+      </CatContainer>
+      <CatContainer customStyle={{ padding: "10vh 0" }}>
         <PiecesPreview pieces={nextPieces} />
-        <p>{`score: ${score}`}</p>
+        <Score score={score} />
         <QuitGameBtn callBack={resetGameContext} />
       </CatContainer>
       {!isPlaying && <Lobby />}
@@ -38,42 +49,55 @@ export default () => {
   );
 };
 
-const OpponentsPreview = memo(({ opponents }) => (
-  <div className="game__opponents-container">
-    {Object.keys(opponents).map((opponentName, index) => (
-      <OpponentPreview
-        key={index}
-        name={opponentName}
-        score={opponents[opponentName].score}
-        board={opponents[opponentName].board}
-      />
-    ))}
+const OpponentsPreview = memo(({ opponents, nbOpponents }) => (
+  <div className="game__opponents">
+    <p className="game__label">{`Your opponent${
+      nbOpponents > 1 ? "s" : ""
+    }:`}</p>
+    <div
+      className="game__opponents-container"
+      style={{ height: opponentsContainerHeight[nbOpponents] }}
+    >
+      {Object.keys(opponents).map((opponentName, index) => (
+        <OpponentPreview
+          nbOpponents={nbOpponents}
+          key={index}
+          name={opponentName}
+          score={opponents[opponentName].score}
+          board={opponents[opponentName].board}
+        />
+      ))}
+    </div>
   </div>
 ));
 
-const OpponentPreview = memo(({ score, board, name }) => (
+const OpponentPreview = memo(({ score, board, name, nbOpponents }) => (
   <div className="game__opponent-container">
     <p>{name}</p>
-    <p>{`score : ${score}`}</p>
-    <Board board={board} colors={false} />
+    <Board
+      customDims={opponentsDims[nbOpponents]}
+      board={board}
+      colors={false}
+    />
+    <p>{`Score : ${score}`}</p>
   </div>
 ));
 
-const PiecesPreview = memo(({ pieces }) => (
-  <div className="pieces-preview__container">
-    {pieces.map((pieceType, index) => (
-      <div
-        key={index}
-        className={`pieces-preview__piece-container${
-          pieceType === 0 || pieceType === 3
-            ? ` pieces-preview__piece-container--${pieceType}`
-            : ""
-        }`}
-      >
-        {piecesData[pieceType][0].map((y, yi) =>
-          y.map((x, xi) => <BoardPixel color={x} key={xi} />)
-        )}
-      </div>
-    ))}
+const Score = memo(({ score }) => (
+  <div className="game__score-container">
+    <p className="game__label">Your score:</p>
+    <p className="game__score">{score}</p>
   </div>
 ));
+
+const opponentsDims = {
+  1: { width: "12.5vh", height: "25vh" },
+  2: { width: "10vh", height: "20vh" },
+  3: { width: "8vh", height: "16vh" }
+};
+
+const opponentsContainerHeight = {
+  1: "31vh",
+  2: "55vh",
+  3: "55vh"
+};

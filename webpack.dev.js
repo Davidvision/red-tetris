@@ -1,9 +1,11 @@
-var path = require("path");
-const params = require("./params");
+const path = require("path");
+const { merge } = require("webpack-merge");
+
+const common = require("./webpack.common.js");
 const { server } = require("./params");
 
-module.exports = {
-  entry: "./src/client/index.js",
+module.exports = merge(common, {
+  mode: "development",
   output: {
     path: path.join(__dirname, "build"),
     publicPath: "/",
@@ -11,15 +13,6 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: "babel-loader",
-        options: {
-          presets: ["@babel/env"],
-          plugins: ["@babel/plugin-transform-runtime"]
-        }
-      },
       {
         test: /\.(s[ac]ss$|css)/i,
         use: ["style-loader", "css-loader", "sass-loader"]
@@ -33,12 +26,10 @@ module.exports = {
     extensions: ["*", ".js", ".jsx"]
   },
   devServer: {
-    // historyApiFallback: true,
-    // publicPath: "http://localhost:3000/dist/",
     historyApiFallback: true,
     contentBase: path.join(__dirname, "public/"),
     host: server.host,
     port: 8080,
     hotOnly: true
   }
-};
+});

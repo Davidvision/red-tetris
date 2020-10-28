@@ -46,3 +46,16 @@ button,
 [type="submit"] {
   -webkit-appearance: button;
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  @include themify($themes) {
+    -webkit-box-shadow: 0 0 0 30px themed("backgroundColor") inset !important;
+  }
+}
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: white !important;
+}

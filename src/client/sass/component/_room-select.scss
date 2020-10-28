@@ -4,14 +4,18 @@
     height: 100px;
     list-style-type: none;
     overflow: auto;
+    border-radius: 2px;
   }
   &__option {
     cursor: pointer;
     &:hover {
-      background-color: rgb(165, 165, 165);
+      @include fifteen-percent-white-bg;
     }
     &--selected {
-      background-color: rgb(102, 102, 102);
+      @include white-bg-transparent-text;
+      &:hover {
+        @include white-bg-transparent-text;
+      }
     }
   }
 }

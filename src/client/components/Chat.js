@@ -4,7 +4,7 @@ import { Context as HomeContext } from "../context/HomeContext";
 import { Context as GameContext } from "../context/GameContext";
 import { sendChatMessage } from "../middleware/sockets";
 
-export default () => {
+export default ({ label = true }) => {
   const [currentMessage, setCurrentMessage] = useState("");
   const scrollRef = useRef(null);
   const { socketIOClient } = useContext(SocketContext);
@@ -28,28 +28,37 @@ export default () => {
 
   return (
     <div className="game__chat-container">
-      <ChatMessages messages={messages} scrollRef={scrollRef} />
+      {label && <p className="game__label">Chat !</p>}
+      <ChatMessages
+        messages={messages}
+        scrollRef={scrollRef}
+        userName={userName}
+      />
       <form onSubmit={handleSubmit}>
-        <input
-          id="chatInput"
-          name="message"
-          type="text"
-          value={currentMessage}
-          onChange={e => setCurrentMessage(e.target.value)}
-        ></input>
-        <button type="submit">Send</button>
+        <div className="game__chat__send-container">
+          <input
+            autoComplete="off"
+            id="chatInput"
+            name="message"
+            type="text"
+            value={currentMessage}
+            onChange={e => setCurrentMessage(e.target.value)}
+          ></input>
+          <button className="btn game__chat__submit" type="submit">
+            send
+          </button>
+        </div>
       </form>
     </div>
   );
 };
 
-const ChatMessages = memo(({ messages, scrollRef }) => (
-  <ul className="room-select-container" ref={scrollRef}>
+const ChatMessages = memo(({ messages, scrollRef, userName }) => (
+  <ul className="room-select-container noSelect" ref={scrollRef}>
     {messages.map(({ sender, message }, index) => (
-      <li
-        className="game__chat-message"
-        key={index}
-      >{`${sender}: ${message}`}</li>
+      <li className="game__chat-message" key={index}>{`${
+        sender === userName ? "You" : sender
+      }: ${message}`}</li>
     ))}
   </ul>
 ));

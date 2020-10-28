@@ -5,10 +5,11 @@
   "license": "MIT",
   "scripts": {
     "eslint": "eslint src",
-    "client-dist": "NODE_ENV=production webpack --progress --colors",
-    "client-dev": "webpack-dev-server --mode development --hot",
-    "srv-dev": "DEBUG=tetris:* nodemon src/server/index.js",
-    "srv-dist": "DEBUG=tetris:* babel src --out-dir dist",
+    "client-dev": "webpack-dev-server --mode development --hot --config webpack.dev.js",
+    "client-build": "yarn scss-compile && webpack --progress --colors --config webpack.prod.js",
+    "scss-compile": "node-sass src/client/sass/main.scss ./public/styles/main.css && sed -i '' 's/\\/src\\/assets//g' ./public/styles/main.css",
+    "srv-dev": "nodemon src/server/index.js",
+    "srv": "node src/server/index.js",
     "test": "jest",
     "coverage": "jest --coverage"
   },
@@ -21,6 +22,8 @@
     "crypto-random-string": "^3.3.0",
     "css-loader": "^4.3.0",
     "enzyme-adapter-react-16": "^1.15.5",
+    "file-loader": "^6.1.1",
+    "fs": "^0.0.1-security",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
@@ -31,6 +34,7 @@
     "socket.io-client": "^2.3.1",
     "socket.io-mock": "^1.3.1",
     "style-loader": "^2.0.0",
+    "webpack-merge": "^5.2.0",
     "yarn": "^1.22.10"
   },
   "devDependencies": {

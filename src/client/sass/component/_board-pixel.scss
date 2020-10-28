@@ -1,69 +1,85 @@
 .board-pixel {
   &__piece {
-    box-shadow: inset 0 0 4px 3px rgba(255, 255, 255, 0.35);
+    box-shadow: inset 0 0 4px 3px rgba(255, 255, 255, 0.25);
     border-radius: 2px;
   }
   &--0 {
-    background-color: rgb(146, 146, 146);
+    background-color: white;
+    opacity: 0.5;
+  }
+  &--00 {
+    @include themify($themes) {
+      background-color: themed("backgroundColor");
+    }
+  }
+  &--000 {
+    background-color: $error;
   }
   &--1 {
-    border: 2px solid #01ffff;
-    background-color: #01ffff;
+    border: 2px solid $red;
+    background-color: $red;
   }
   &--2 {
-    border: 2px solid #0000ff;
-    background-color: #0000ff;
+    border: 2px solid $yellow;
+    background-color: $yellow;
   }
   &--3 {
-    border: 2px solid #ffaa00;
-    background-color: #ffaa00;
+    border: 2px solid $purple;
+    background-color: $purple;
   }
   &--4 {
-    border: 2px solid #ffff00;
-    background-color: #ffff00;
+    border: 2px solid $blue;
+    background-color: $blue;
   }
   &--5 {
-    border: 2px solid #01ff00;
-    background-color: #01ff00;
+    border: 2px solid $green;
+    background-color: $green;
   }
   &--6 {
-    border: 2px solid #9900ff;
-    background-color: #9900ff;
+    border: 2px solid $orange;
+    background-color: $orange;
   }
   &--7 {
-    border: 2px solid #ff0000;
-    background-color: #ff0000;
+    border: 2px solid $salmon;
+    background-color: $salmon;
   }
   &--8 {
-    border: 2px solid #000000;
-    background-color: #000000;
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.5);
   }
   &--9 {
-    border: 2px solid #77ffff;
-    background-color: #77ffff;
+    border: 2px solid $red;
+    background-color: $red;
+    opacity: 0.5;
   }
   &--10 {
-    border: 2px solid #7c7cfd;
-    background-color: #7c7cfd;
+    border: 2px solid $yellow;
+    background-color: $yellow;
+    opacity: 0.5;
   }
   &--11 {
-    border: 2px solid #fcd17d;
-    background-color: #fcd17d;
+    border: 2px solid $purple;
+    background-color: $purple;
+    opacity: 0.5;
   }
   &--12 {
-    border: 2px solid #fcfc77;
-    background-color: #fcfc77;
+    border: 2px solid $blue;
+    background-color: $blue;
+    opacity: 0.5;
   }
   &--13 {
-    border: 2px solid #7dff7d;
-    background-color: #7dff7d;
+    border: 2px solid $green;
+    background-color: $green;
+    opacity: 0.5;
   }
   &--14 {
-    border: 2px solid #cb7eff;
-    background-color: #cb7eff;
+    border: 2px solid $orange;
+    background-color: $orange;
+    opacity: 0.5;
   }
   &--15 {
-    border: 2px solid #ff0000;
-    background-color: #ff0000;
+    border: 2px solid $salmon;
+    background-color: $salmon;
+    opacity: 0.5;
   }
 }

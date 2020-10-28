@@ -1,5 +1,14 @@
 .change-theme {
   position: absolute;
+  z-index: 2;
   top: 10px;
   right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  &:hover {
+    @include white-bg-transparent-text;
+  }
+  &:focus {
+    @include white-shadow-inset;
+  }
 }

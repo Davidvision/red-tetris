@@ -1,14 +1,16 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { changePage, pages } from "../utils/router";
 import { Context as HomeContext } from "../context/HomeContext";
 import { SocketContext } from "../context/SocketContext";
+import Logo from "../assets/img/logo.png";
 import { createPrivateGame } from "../middleware/sockets";
+import { use } from "chai";
 
 export default () => {
-  const [name, setName] = useState("");
   const [roomName, setRoomName] = useState("");
   const [selectedRoom, setSelectedRoom] = useState({});
   const [errorObj, setErrorObj] = useState({});
+  const [errorSubmit, setErrorSubmit] = useState({});
   const [joinRoom, setJoinRoom] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false);
 
@@ -42,6 +44,7 @@ export default () => {
       }
     }
     if (Object.keys(tmpErrorObj).length) {
+      setErrorSubmit(true);
       setErrorObj(tmpErrorObj);
       return;
     }
@@ -58,80 +61,126 @@ export default () => {
 
   const handleSelectRoom = room => {
     if (room.nb > 3 || room.isPrivate) return;
+    setErrorSubmit(false);
     setSelectedRoom(room);
   };
 
+  useEffect(() => {
+    setErrorSubmit(false);
+  }, [userName, roomName, joinRoom, selectedRoom]);
+
+  useEffect(() => {
+    setErrorObj({});
+  }, [joinRoom]);
+
+  const unsetErrorObjKey = key => {
+    setErrorObj({ ...errorObj, [key]: undefined });
+  };
+
   return (
-    <form className="home-form-container" onSubmit={handleSubmit}>
-      <label>Username: </label>
-      <input
-        type="text"
-        value={userName}
-        name="username"
-        onChange={e => setUserName(e.target.value)}
-      ></input>
-      <br />
-      {errorObj.name && <p className="home-form__error">{errorObj.name}</p>}
-      <div>
-        <button
-          type="button"
-          style={{ color: !joinRoom ? "red" : "" }}
-          onClick={() => setJoinRoom(false)}
-        >
-          Create Room
-        </button>
-        <button
-          type="button"
-          style={{ color: joinRoom ? "red" : "" }}
-          onClick={() => setJoinRoom(true)}
-        >
-          Join room
-        </button>
-      </div>
-      {!joinRoom && (
-        <>
-          <label>Room name: </label>
-          <input
-            name="room-name"
-            type="text"
-            value={roomName}
-            onChange={e => setRoomName(e.target.value)}
-          ></input>
-          {errorObj.roomName && (
-            <p className="home-form__error">{errorObj.roomName}</p>
-          )}
-          {errorObj.notAvailableRoomName && (
-            <p className="home-form__error">{errorObj.notAvailableRoomName}</p>
-          )}
-          <div>
-            <label>Play solo: </label>
+    <div className="home-container">
+      <img className="home__logo" src={Logo} />
+      <form className="home-form-container" onSubmit={handleSubmit}>
+        <label>Username</label>
+        <input
+          style={{ marginBottom: "30px" }}
+          type="text"
+          value={userName}
+          name="username"
+          spellCheck="false"
+          onChange={e => {
+            unsetErrorObjKey("name");
+            setUserName(e.target.value);
+          }}
+        ></input>
+        <div className="switch-mode-container">
+          <button
+            style={{
+              borderTopLeftRadius: "2px",
+              borderBottomLeftRadius: "2px"
+            }}
+            className={`btn switch-mode__button${
+              !joinRoom ? " switch-mode__button--selected" : ""
+            }`}
+            type="button"
+            onClick={() => setJoinRoom(false)}
+          >
+            Create Room
+          </button>
+          <button
+            style={{
+              borderTopRightRadius: "2px",
+              borderBottomRightRadius: "2px"
+            }}
+            className={`btn switch-mode__button${
+              joinRoom ? " switch-mode__button--selected" : ""
+            }`}
+            type="button"
+            onClick={() => setJoinRoom(true)}
+          >
+            Join room
+          </button>
+        </div>
+        {!joinRoom && (
+          <>
+            <label>Room name</label>
             <input
-              type="checkbox"
-              checked={isPrivate}
-              onChange={e => setIsPrivate(e.target.checked)}
-            />
+              style={{ marginBottom: "10px" }}
+              name="room-name"
+              type="text"
+              value={roomName}
+              spellCheck="false"
+              onChange={e => {
+                unsetErrorObjKey("roomName");
+                setRoomName(e.target.value);
+              }}
+            ></input>
+            <div>
+              <label className="checkbox noSelect">
+                Play solo
+                <input
+                  type="checkbox"
+                  checked={isPrivate}
+                  onChange={e => setIsPrivate(e.target.checked)}
+                />
+                <span className="checkmark"></span>
+              </label>
+            </div>
+          </>
+        )}
+        {joinRoom && (
+          <RoomSelect
+            rooms={availableRooms}
+            selectedRoom={selectedRoom}
+            handleClick={handleSelectRoom}
+          />
+        )}
+        <br />
+        <button
+          className={`btn home-form__submit ${
+            errorSubmit ? " btn-disabled home-form__submit--error" : ""
+          }`}
+          type="submit"
+        >
+          {errorSubmit ? "!" : joinRoom ? "Join" : "Create"}
+        </button>
+        <div className="home-form__error-relative">
+          <div className="home-form__error-container">
+            {Object.keys(errorObj).map(errorKey => (
+              <p key={errorKey} className="home-form__error">
+                {errorObj[errorKey]}
+              </p>
+            ))}
           </div>
-        </>
-      )}
-      {joinRoom && (
-        <RoomSelect
-          rooms={availableRooms}
-          selectedRoom={selectedRoom}
-          handleClick={handleSelectRoom}
-        />
-      )}
-      {errorObj.selectedRoom && (
-        <p className="home-form__error">{errorObj.selectedRoom}</p>
-      )}
-      <br />
-      <button type="submit">{joinRoom ? "Join" : "Create"}</button>
-    </form>
+        </div>
+      </form>
+    </div>
   );
 };
 
 const RoomSelect = ({ rooms, handleClick, selectedRoom }) => (
   <>
-    <p>Available rooms:</p>
+    <p>Available rooms</p>
     <ul className="room-select-container">
       {rooms.length > 0 &&
         rooms.map(room => (
@@ -155,10 +204,10 @@ const getSelectRoomStr = ({ name, nb, isPrivate }) =>
   (name += isPrivate ? ` (private)` : ` (${nb} player${nb > 1 ? "s" : ""})`);
 
 const playerNameErrorStr =
-  'Your name must contain at least 3 and at most 15 alphanumeric, "-" or "_" characters.';
+  "Username must contain between 3 and 15 alphanumeric and scores symbols.";
 
 const roomNameErrorStr =
-  'The room name must contain at least 3 and at most 15 alphanumeric, "-" or "_" characters.';
+  "Room name must contain between 3 and 15 alphanumeric and scores symbols.";
 
 const selectedRoomErrorStr = "Please select a valid room to join";
 

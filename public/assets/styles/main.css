@@ -1,0 +1,286 @@
+/**
+ * 1. Change the font styles in all browsers.
+ * 2. Remove the margin in Firefox and Safari.
+ */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  /* 1 */
+  font-size: 100%;
+  /* 1 */
+  line-height: 1.15;
+  /* 1 */
+  margin: 0;
+  /* 2 */ }
+
+/**
+  * Show the overflow in IE.
+  * 1. Show the overflow in Edge.
+  */
+button,
+input {
+  /* 1 */
+  overflow: visible; }
+
+/**
+  * Remove the inheritance of text transform in Edge, Firefox, and IE.
+  * 1. Remove the inheritance of text transform in Firefox.
+  */
+button,
+select {
+  /* 1 */
+  text-transform: none; }
+
+/**
+  * Correct the inability to style clickable types in iOS and Safari.
+  */
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button; }
+
+*,
+::after,
+::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit; }
+
+body {
+  font-family: "Muli", sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.7;
+  box-sizing: border-box; }
+
+.t1 {
+  font-size: 30px;
+  line-height: 1.4; }
+
+.t2 {
+  font-size: 20px;
+  line-height: 25px; }
+
+.t3 {
+  font-size: 15px;
+  line-height: 20px; }
+
+.bold {
+  font-weight: bold; }
+
+.upp {
+  text-transform: uppercase; }
+
+.center {
+  justify-content: center; }
+
+.underline {
+  text-decoration: underline; }
+
+.noSelect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+button {
+  cursor: pointer; }
+
+.change-theme {
+  position: absolute;
+  top: 10px;
+  right: 10px; }
+
+.board-pixel__piece {
+  box-shadow: inset 0 0 4px 3px rgba(255, 255, 255, 0.35);
+  border-radius: 2px; }
+
+.board-pixel--0 {
+  background-color: #929292; }
+
+.board-pixel--1 {
+  border: 2px solid #01ffff;
+  background-color: #01ffff; }
+
+.board-pixel--2 {
+  border: 2px solid #0000ff;
+  background-color: #0000ff; }
+
+.board-pixel--3 {
+  border: 2px solid #ffaa00;
+  background-color: #ffaa00; }
+
+.board-pixel--4 {
+  border: 2px solid #ffff00;
+  background-color: #ffff00; }
+
+.board-pixel--5 {
+  border: 2px solid #01ff00;
+  background-color: #01ff00; }
+
+.board-pixel--6 {
+  border: 2px solid #9900ff;
+  background-color: #9900ff; }
+
+.board-pixel--7 {
+  border: 2px solid #ff0000;
+  background-color: #ff0000; }
+
+.board-pixel--8 {
+  border: 2px solid #000000;
+  background-color: #000000; }
+
+.board-pixel--9 {
+  border: 2px solid #77ffff;
+  background-color: #77ffff; }
+
+.board-pixel--10 {
+  border: 2px solid #7c7cfd;
+  background-color: #7c7cfd; }
+
+.board-pixel--11 {
+  border: 2px solid #fcd17d;
+  background-color: #fcd17d; }
+
+.board-pixel--12 {
+  border: 2px solid #fcfc77;
+  background-color: #fcfc77; }
+
+.board-pixel--13 {
+  border: 2px solid #7dff7d;
+  background-color: #7dff7d; }
+
+.board-pixel--14 {
+  border: 2px solid #cb7eff;
+  background-color: #cb7eff; }
+
+.board-pixel--15 {
+  border: 2px solid #ff0000;
+  background-color: #ff0000; }
+
+.room-select-container {
+  border: 1px solid white;
+  height: 100px;
+  list-style-type: none;
+  overflow: auto; }
+
+.room-select__option {
+  cursor: pointer; }
+  .room-select__option:hover {
+    background-color: #a5a5a5; }
+  .room-select__option--selected {
+    background-color: #666666; }
+
+.pieces-preview-container {
+  display: flex;
+  flex-direction: column;
+  height: 28vh; }
+
+.pieces-preview__piece-container {
+  height: 9.33333vh;
+  width: 9.33333vh;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr); }
+  .pieces-preview__piece-container--0 {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr); }
+  .pieces-preview__piece-container--3 {
+    grid-template-columns: repeat(4, 1fr); }
+
+.main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .theme-1 .main {
+    background-color: black;
+    color: white; }
+  .theme-2 .main {
+    background-color: white;
+    color: black; }
+
+.home-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 40vw;
+  min-height: 30vh;
+  padding: 50px;
+  border-radius: 10px; }
+  .theme-1 .home-form-container {
+    background-color: #4d4d4d; }
+  .theme-2 .home-form-container {
+    background-color: #c5c5c5; }
+
+.home__switch-mode__container {
+  display: flex; }
+
+.game__board {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(20, 1fr);
+  grid-gap: 1px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0; }
+  .game__board-background {
+    position: relative;
+    background-color: black;
+    height: 70vh;
+    width: calc(70vh / 2); }
+
+.game-container {
+  position: relative;
+  background-color: #5e5e5e;
+  height: 80vh;
+  width: calc(80vh * 1.3);
+  display: grid;
+  grid-template-columns: 2fr auto 2fr;
+  grid-template-rows: 1fr; }
+
+.game__cat-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center; }
+
+.game-lobby {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); }
+  .game-lobby__scores-container {
+    border: 1px solid white; }
+  .game-lobby__scores th {
+    min-width: 100px; }
+
+.game__opponents-container {
+  height: calc( 70vh - calc(70vh / 4)); }
+
+.game__opponent-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  .game__opponent-container .game__board-background {
+    height: 21.875vh;
+    width: calc(70vh / 6.6); }
+
+.game__chat-container {
+  height: calc(70vh / 4);
+  width: 200px;
+  overflow: hidden; }
+
+.game__chat-message {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto; }
