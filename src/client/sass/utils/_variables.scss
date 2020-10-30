@@ -5,12 +5,11 @@ $home-form-error-width: 300px;
 $home-form-error-width-m: 98vw;
 
 $tetris-grid-height: 70vh;
+$tetris-grid-height-m: 60vh;
 $tetris-game-height: 80vh;
 $chat-container-height: 200px;
 $opponents-container-height: 55vh;
-// $opponents-container-height: calc(
-//   #{$tetris-grid-height} - #{$chat-container-height}
-// );
+$bottom-zone-mobile-height: 20vh;
 
 $red: rgb(203, 92, 72);
 $yellow: rgb(238, 190, 103);

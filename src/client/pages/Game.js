@@ -1,41 +1,54 @@
 import React, { memo, useContext, useEffect, useState } from "react";
 import { Context as GameContext } from "../context/GameContext";
+import { Context as HomeContext } from "../context/HomeContext";
+import ChangeTheme from "../components/ChangeTheme";
 import Board from "../components/Board";
 import useInitGame from "../hooks/useInitGame";
 import PlayerBoard from "../components/PlayerBoard";
 import Lobby from "../containers/Lobby";
 import PiecesPreview from "../components/PiecesPreview";
-import Logo from "../assets/img/logo.png";
+import Logo from "../assets/images/logo.png";
 import QuitGameBtn from "../components/QuitGameButton";
 import Chat from "../components/Chat";
 import CatContainer from "../components/CatContainer";
+import MobileControls from "../components/MobileControls";
 
 export default () => {
-  const [nbOpponents, setNbOpponents] = useState(0);
   const {
-    resetGameContext,
-    state: { isLoading, opponents, isPlaying, score, nextPieces }
+    state: { isLoading, isPlaying }
   } = useContext(GameContext);
+  const {
+    state: { isMobile }
+  } = useContext(HomeContext);
 
   useInitGame(isPlaying);
 
-  useEffect(() => {
-    setNbOpponents(Object.keys(opponents).length);
-  }, [opponents]);
-
   if (isLoading) return null;
+
+  return isMobile ? <MobileGameLayout /> : <DesktopGameLayout />;
+};
+
+const DesktopGameLayout = () => {
+  const {
+    resetGameContext,
+    state: { opponents, score, nextPieces, players, isPlaying }
+  } = useContext(GameContext);
 
   return (
     <div className="game-container">
-      <CatContainer customStyle={{ padding: "8vh 0" }} cClass="game__left">
-        {nbOpponents > 0 && (
-          <OpponentsPreview opponents={opponents} nbOpponents={nbOpponents} />
+      <ChangeTheme />
+      <CatContainer cClass="game__left">
+        {players.length > 1 && (
+          <>
+            <OpponentsPreview
+              opponents={opponents}
+              nbOpponents={players.length}
+            />
+            <Chat />
+          </>
         )}
-        <Chat />
       </CatContainer>
-      <CatContainer
-        customStyle={{ justifyContent: "center", position: "relative" }}
-      >
+      <CatContainer cClass="game__middle">
         <img className="game__logo" src={Logo} />
         <PlayerBoard />
       </CatContainer>
@@ -46,6 +59,74 @@ export default () => {
       </CatContainer>
       {!isPlaying && <Lobby />}
     </div>
+  );
+};
+
+const MobileGameLayout = () => {
+  const {
+    state: { score, nextPieces, isPlaying }
+  } = useContext(GameContext);
+  const {
+    state: { winHeight }
+  } = useContext(HomeContext);
+
+  return (
+    <div className="game-container" style={{ height: winHeight }}>
+      <MobileMenu />
+      <CatContainer
+        cClass="game__left"
+        customStyle={{ height: winHeight * 0.2 }}
+      >
+        <PiecesPreview pieces={nextPieces} />
+        <Score score={score} />
+      </CatContainer>
+      <CatContainer
+        cClass="game__middle"
+        customStyle={{ height: winHeight * 0.6 }}
+      >
+        <img className="game__logo" src={Logo} />
+        <PlayerBoard />
+      </CatContainer>
+      <CatContainer customStyle={{ height: winHeight * 0.2 }}>
+        <MobileControls />
+      </CatContainer>
+      {!isPlaying && <Lobby />}
+    </div>
+  );
+};
+
+const MobileMenu = () => {
+  const [open, setOpen] = useState(false);
+  const {
+    resetGameContext,
+    state: { isPlaying }
+  } = useContext(GameContext);
+
+  useEffect(() => {
+    if (open && !isPlaying) {
+      setOpen(false);
+    }
+  }, [isPlaying]);
+
+  return (
+    <>
+      <div
+        className={`mobile-menu__icon ${open ? "mobile-menu__cross" : ""}`}
+        onClick={() => setOpen(!open)}
+      >
+        <div className="bar1"></div>
+        <div className="bar2"></div>
+        <div className="bar3"></div>
+      </div>
+      <div
+        className={`mobile-menu-container ${
+          open ? "mobile-menu-container--open" : ""
+        }`}
+      >
+        <ChangeTheme />
+        <QuitGameBtn callBack={resetGameContext} />
+      </div>
+    </>
   );
 };
 

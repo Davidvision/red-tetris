@@ -9,13 +9,13 @@ export default isPlaying => {
 
   useEffect(() => {
     let isListenerSet = false;
-    let keyPressed = "";
     const handleKeyDown = e => {
       if (
         document.activeElement.id !== "chatInput" &&
         allowedKeys.findIndex(allowedKey => allowedKey === e.key) > -1
       ) {
         keyDown(socketIOClient, e.key);
+        console.log(e.key);
       }
     };
     const handleKeyUp = e => {

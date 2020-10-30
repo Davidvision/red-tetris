@@ -5,6 +5,16 @@
         display: none;
       }
     }
+    padding: 8vh 0;
+    @include for-size(phone-only) {
+      padding: 0;
+      padding-top: 3vh;
+      flex-direction: row !important;
+    }
+  }
+  &__middle {
+    justify-content: center;
+    position: relative;
   }
   &__logo {
     height: 4.4vh;
@@ -14,13 +24,17 @@
     z-index: 2;
     @include for-size(phone-only) {
       position: fixed;
-      top: 2vh;
+      top: 1vh;
     }
   }
   &__label {
     color: $error;
     font-family: "Half-75";
     font-size: 20px;
+    @include for-size(phone-only) {
+      font-size: 15px;
+      line-height: 15px;
+    }
   }
   &__board {
     display: grid;
@@ -32,6 +46,7 @@
     right: 0;
     top: 0;
     bottom: 0;
+    height: 100%;
     &-background {
       position: relative;
       background-color: rgba(255, 255, 255, 0.2);
@@ -47,8 +62,11 @@
     grid-template-columns: 2fr auto 2fr;
     grid-template-rows: 1fr;
     @include for-size(phone-only) {
-      grid-template-rows: 20vh 60vh 20vh;
-      grid-template-columns: 1fr;
+      // grid-template-rows: 20vh $tetris-grid-height-m $bottom-zone-mobile-height;
+      // grid-template-rows: 2fr 6fr 2fr;
+      // grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
     }
   }
   &__cat-container {
@@ -74,6 +92,10 @@
       height: $tetris-grid-height;
       justify-content: space-evenly;
       align-items: center;
+      @include for-size(phone-only) {
+        width: 80vw;
+        height: 80vh;
+      }
     }
     &__players-container {
       text-align: center;
@@ -84,6 +106,9 @@
     }
     &__scores-container {
       font-size: 12px;
+      height: 120px;
+      overflow-y: auto;
+      display: block;
       & td {
         min-width: 6.5vh;
         text-align: center;
@@ -96,7 +121,7 @@
     & .game__chat__submit {
       color: black !important;
       @include for-size(phone-only) {
-        width: 300px;
+        width: 65px !important;
       }
     }
     &__start-btn {
@@ -123,6 +148,9 @@
     align-items: center;
     justify-content: space-evenly;
     width: 100%;
+    @include for-size(phone-only) {
+      display: none;
+    }
     &-container {
       height: $opponents-container-height;
       display: flex;
@@ -191,8 +219,15 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      @include for-size(phone-only) {
+        justify-content: center;
+      }
     }
     font-size: 40px;
     line-height: 40px;
+    @include for-size(phone-only) {
+      font-size: 20px;
+      line-height: 25px;
+    }
   }
 }

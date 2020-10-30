@@ -3,6 +3,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    @include for-size(phone-only) {
+      flex-direction: row;
+    }
   }
   &__label {
     margin-bottom: 7px;
@@ -16,12 +19,22 @@
     width: $tetris-grid-height / 4;
     border: 1px solid rgba($color: #ffffff, $alpha: 0.6);
     padding: 14px 0;
+    @include for-size(phone-only) {
+      flex-direction: row;
+      height: 8vh;
+      width: 50vw;
+      justify-content: space-evenly;
+    }
   }
   &__piece-container {
     display: grid;
     & .board-pixel__piece {
       height: $tetris-grid-height / 20;
       width: $tetris-grid-height / 20;
+      @include for-size(phone-only) {
+        height: $tetris-grid-height-m / 30;
+        width: $tetris-grid-height-m / 30;
+      }
     }
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);

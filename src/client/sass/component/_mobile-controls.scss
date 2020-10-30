@@ -1,0 +1,33 @@
+.mobile-controls {
+  &-container {
+    display: grid;
+    // width: 100%;
+    height: $bottom-zone-mobile-height;
+    grid-template-columns: 25vw 50vw 25vw;
+  }
+  &__control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    & p {
+      color: white;
+    }
+    &:active {
+      background-color: $error;
+    }
+  }
+  &__middle {
+    display: flex;
+    flex-direction: column;
+    &__1 {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+    }
+  }
+  &__left,
+  &__right {
+    width: 100%;
+  }
+}

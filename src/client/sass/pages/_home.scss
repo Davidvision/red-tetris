@@ -52,6 +52,11 @@
         position: absolute;
         top: 10px;
         left: 50%;
+        @include for-size(phone-only) {
+          position: relative;
+          transform: unset;
+          left: 0;
+        }
       }
       font-size: 12px;
       margin-bottom: 10px;

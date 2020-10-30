@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
+import ChangeTheme from "../components/ChangeTheme";
 import { changePage, pages } from "../utils/router";
 import { Context as HomeContext } from "../context/HomeContext";
 import { SocketContext } from "../context/SocketContext";
-import Logo from "../assets/img/logo.png";
+import Logo from "../assets/images/logo.png";
 import { createPrivateGame } from "../middleware/sockets";
-import { use } from "chai";
 
 export default () => {
   const [roomName, setRoomName] = useState("");
@@ -78,102 +78,123 @@ export default () => {
   };
 
   return (
-    <div className="home-container">
-      <img className="home__logo" src={Logo} />
-      <form className="home-form-container" onSubmit={handleSubmit}>
-        <label>Username</label>
-        <input
-          style={{ marginBottom: "30px" }}
-          type="text"
-          value={userName}
-          name="username"
-          spellCheck="false"
-          onChange={e => {
-            unsetErrorObjKey("name");
-            setUserName(e.target.value);
-          }}
-        ></input>
-        <div className="switch-mode-container">
-          <button
-            style={{
-              borderTopLeftRadius: "2px",
-              borderBottomLeftRadius: "2px"
+    <>
+      <ChangeTheme />
+      <div className="home-container">
+        <img className="home__logo" src={Logo} />
+        <form className="home-form-container" onSubmit={handleSubmit}>
+          <label>Username</label>
+          <input
+            style={{ marginBottom: "30px" }}
+            type="text"
+            value={userName}
+            name="username"
+            spellCheck="false"
+            onChange={e => {
+              unsetErrorObjKey("name");
+              setUserName(e.target.value);
             }}
-            className={`btn switch-mode__button${
-              !joinRoom ? " switch-mode__button--selected" : ""
-            }`}
-            type="button"
-            onClick={() => setJoinRoom(false)}
-          >
-            Create Room
-          </button>
-          <button
-            style={{
-              borderTopRightRadius: "2px",
-              borderBottomRightRadius: "2px"
-            }}
-            className={`btn switch-mode__button${
-              joinRoom ? " switch-mode__button--selected" : ""
-            }`}
-            type="button"
-            onClick={() => setJoinRoom(true)}
-          >
-            Join room
-          </button>
-        </div>
-        {!joinRoom && (
-          <>
-            <label>Room name</label>
-            <input
-              style={{ marginBottom: "10px" }}
-              name="room-name"
-              type="text"
-              value={roomName}
-              spellCheck="false"
-              onChange={e => {
-                unsetErrorObjKey("roomName");
-                setRoomName(e.target.value);
+          ></input>
+          <div className="switch-mode-container">
+            <button
+              style={{
+                borderTopLeftRadius: "2px",
+                borderBottomLeftRadius: "2px"
               }}
-            ></input>
-            <div>
-              <label className="checkbox noSelect">
-                Play solo
-                <input
-                  type="checkbox"
-                  checked={isPrivate}
-                  onChange={e => setIsPrivate(e.target.checked)}
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
-          </>
-        )}
-        {joinRoom && (
-          <RoomSelect
-            rooms={availableRooms}
-            selectedRoom={selectedRoom}
-            handleClick={handleSelectRoom}
-          />
-        )}
-        <br />
-        <button
-          className={`btn home-form__submit ${
-            errorSubmit ? " btn-disabled home-form__submit--error" : ""
-          }`}
-          type="submit"
-        >
-          {errorSubmit ? "!" : joinRoom ? "Join" : "Create"}
-        </button>
-        <div className="home-form__error-relative">
-          <div className="home-form__error-container">
-            {Object.keys(errorObj).map(errorKey => (
-              <p key={errorKey} className="home-form__error">
-                {errorObj[errorKey]}
-              </p>
-            ))}
+              className={`btn switch-mode__button${
+                !joinRoom ? " switch-mode__button--selected" : ""
+              }`}
+              type="button"
+              onClick={() => setJoinRoom(false)}
+            >
+              Create Room
+            </button>
+            <button
+              style={{
+                borderTopRightRadius: "2px",
+                borderBottomRightRadius: "2px"
+              }}
+              className={`btn switch-mode__button${
+                joinRoom ? " switch-mode__button--selected" : ""
+              }`}
+              type="button"
+              onClick={() => setJoinRoom(true)}
+            >
+              Join room
+            </button>
           </div>
-        </div>
-      </form>
+          {!joinRoom && (
+            <>
+              <label>Room name</label>
+              <input
+                style={{ marginBottom: "10px" }}
+                name="room-name"
+                type="text"
+                value={roomName}
+                spellCheck="false"
+                onChange={e => {
+                  unsetErrorObjKey("roomName");
+                  setRoomName(e.target.value);
+                }}
+              ></input>
+              <div>
+                <label className="checkbox noSelect">
+                  Play solo
+                  <input
+                    type="checkbox"
+                    checked={isPrivate}
+                    onChange={e => setIsPrivate(e.target.checked)}
+                  />
+                  <span className="checkmark"></span>
+                </label>
+              </div>
+            </>
+          )}
+          {joinRoom && (
+            <RoomSelect
+              rooms={availableRooms}
+              selectedRoom={selectedRoom}
+              handleClick={handleSelectRoom}
+            />
+          )}
+          <br />
+          <button
+            className={`btn home-form__submit ${
+              errorSubmit ? " btn-disabled home-form__submit--error" : ""
+            }`}
+            type="submit"
+          >
+            {errorSubmit ? "!" : joinRoom ? "Join" : "Create"}
+          </button>
+        </form>
+        <Errors errorObj={errorObj} />
+      </div>
+    </>
+  );
+};
+
+const Errors = ({ errorObj }) => {
+  const {
+    state: { isMobile }
+  } = useContext(HomeContext);
+
+  return isMobile ? (
+    <div className="home-form__error-container">
+      {Object.keys(errorObj).map(errorKey => (
+        <p key={errorKey} className="home-form__error">
+          {errorObj[errorKey]}
+        </p>
+      ))}
+    </div>
+  ) : (
+    <div className="home-form__error-relative">
+      <div className="home-form__error-container">
+        {Object.keys(errorObj).map(errorKey => (
+          <p key={errorKey} className="home-form__error">
+            {errorObj[errorKey]}
+          </p>
+        ))}
+      </div>
     </div>
   );
 };

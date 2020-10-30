@@ -21,12 +21,14 @@ export default () => {
     <div className="game-lobby">
       <div className="game-lobby-container">
         <div className="game-lobby__players-container">
-          <p style={{ marginBottom: "10px" }}>Players:</p>
+          <p style={{ marginBottom: "10px" }}>{`Player${
+            players.length > 1 ? "s" : ""
+          }:`}</p>
           {players.map(player => (
             <p key={player.name}>{player.name}</p>
           ))}
         </div>
-        <Chat label={false} />
+        {players.length > 1 && <Chat label={false} />}
         {gameScores && <GameScores gameScores={gameScores} />}
         <div className="game-lobby__btn-container">
           {isLeader && (

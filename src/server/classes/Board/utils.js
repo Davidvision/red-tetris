@@ -46,7 +46,9 @@ const noDownOverflowShadow = (piece, x, y, grid) =>
 const isColliding = (x, y, type, rotation, grid) =>
   piecesData[type][rotation].some((l, i) =>
     l.some(
-      (c, j) => c !== 0 && y + i >= 0 && y + i < 20 && grid[y + i][x + j] !== 0
+      (c, j) =>
+        (c !== 0 && y + i >= 0 && y + i < 20 && grid[y + i][x + j] !== 0) ||
+        (c !== 0 && y + i >= 20)
     )
   );
 

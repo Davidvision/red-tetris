@@ -4,15 +4,19 @@ const socketListener = require("./middleware/socketListener");
 const initReqHandler = (server, params, cb) => {
   const { host, port } = params.server;
   const handler = (req, res) => {
-    const file =
-      req.url === "/bundle.js"
-        ? "/../../public/bundle.js"
-        : "/../../public/index.html";
+    const isAsset =
+      req.url.split("/").findIndex(path => path === "assets") === 1;
+    let file = "/../../public";
+    if (isAsset) {
+      file += req.url;
+    } else {
+      file += req.url === "/bundle.js" ? "/bundle.js" : "/index.html";
+    }
     fs.readFile(__dirname + file, (err, data) => {
       if (err) {
-        logerror(err);
+        console.log(err);
         res.writeHead(500);
-        return res.end("Error loading index.html");
+        return res.end("Error transferring file");
       }
       res.writeHead(200);
       res.end(data);
