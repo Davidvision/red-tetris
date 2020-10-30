@@ -1,20 +1,87 @@
 .home {
+  &-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  &__logo {
+    height: 75px;
+    margin-bottom: 20px;
+    @include for-size(phone-only) {
+      height: auto;
+      width: 90vw;
+    }
+  }
   &-form {
     &-container {
       display: flex;
       flex-direction: column;
-      width: 40vw;
-      min-height: 30vh;
-      padding: 50px;
+      width: $home-form-width;
       border-radius: 10px;
-      @include themify($themes) {
-        background-color: themed("containerColor");
+      @include for-size(phone-only) {
+        width: $home-form-width-m;
+        max-width: 300px;
       }
     }
+    &__submit {
+      align-self: center;
+      width: 100px;
+      border-radius: 2px;
+      color: white;
+      background-color: $green;
+      &:hover {
+        @include white-shadow-inset;
+      }
+      &--error {
+        background-color: $error;
+        font-family: "Half-75";
+        &:focus {
+          box-shadow: none;
+        }
+      }
+    }
+    &__error {
+      &-relative {
+        position: relative;
+        height: 0;
+      }
+      &-container {
+        transform: translateX(-50%);
+        width: $home-form-error-width;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        @include for-size(phone-only) {
+          position: relative;
+          transform: unset;
+          left: 0;
+        }
+      }
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
   }
-  &__switch-mode {
-    &__container {
-      display: flex;
+}
+
+.switch-mode {
+  &-container {
+    display: flex;
+    margin-bottom: 30px;
+  }
+  &__button {
+    flex: 2 1 auto;
+    border: 1px solid white;
+    color: white;
+    @include fifteen-percent-white-bg;
+    &--selected {
+      background-color: white;
+      @include themify($themes) {
+        color: themed("backgroundColor");
+      }
+    }
+    &:hover {
+      @include white-shadow-inset;
     }
   }
 }

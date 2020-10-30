@@ -1,0 +1,73 @@
+.mobile-menu {
+  &__icon {
+    position: fixed;
+    top: 5px;
+    right: 10px;
+    height: 20px;
+    width: 30px;
+  }
+  &__cross {
+    & .bar1 {
+      -webkit-transform: rotate(-45deg) translate(-0px, 0px);
+      transform: rotate(-45deg) translate(-0px, 0px);
+    }
+    & .bar2 {
+      opacity: 0;
+    }
+    & .bar3 {
+      -webkit-transform: rotate(45deg) translate(6px, 6px);
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+  }
+  &-container {
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 35px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 0px;
+    overflow: hidden;
+    transition: all 0.2s;
+    border-radius: 2px;
+    &--open {
+      height: 94px;
+    }
+    & .change-theme {
+      position: relative;
+      top: unset;
+      right: unset;
+      margin: 10px;
+    }
+    & .quit-game-btn {
+      margin: 0 10px 10px 10px;
+    }
+    & .btn {
+      width: auto;
+    }
+  }
+}
+
+.bar1 {
+  top: 8px;
+}
+.bar2 {
+  top: 12px;
+}
+.bar2 {
+  top: 16px;
+}
+
+.bar1,
+.bar2,
+.bar3 {
+  width: 25px;
+  height: 4px;
+  background-color: $error;
+  border-radius: 2px;
+  transition: 0.4s;
+  border-radius: 1px;
+  position: absolute;
+  left: 9px;
+}

@@ -17,23 +17,36 @@ export default () => {
 
   const isLeader = players.length && players[0].name === userName;
 
-  console.log(isLeader);
-
   return (
     <div className="game-lobby">
-      {isLeader && (
-        <button onClick={() => startGame(socketIOClient)}>start game</button>
-      )}
-      {!isLeader && <p>wait for the leader to start the game</p>}
-      <p>players :</p>
-      <ul className="room-select-container">
-        {players.map(player => (
-          <li key={player.name}>{player.name}</li>
-        ))}
-      </ul>
-      <Chat />
-      {gameScores && <GameScores gameScores={gameScores} />}
-      <QuitGameBtn callBack={resetGameContext} />
+      <div className="game-lobby-container">
+        <div className="game-lobby__players-container">
+          <p style={{ marginBottom: "10px" }}>{`Player${
+            players.length > 1 ? "s" : ""
+          }:`}</p>
+          {players.map(player => (
+            <p key={player.name}>{player.name}</p>
+          ))}
+        </div>
+        {players.length > 1 && <Chat label={false} />}
+        {gameScores && <GameScores gameScores={gameScores} />}
+        <div className="game-lobby__btn-container">
+          {isLeader && (
+            <button
+              className="btn game-lobby__start-btn"
+              onClick={() => startGame(socketIOClient)}
+            >
+              Start game
+            </button>
+          )}
+          {!isLeader && (
+            <p style={{ margin: "0 10px 10px 10px" }}>
+              wait for the leader to start the game
+            </p>
+          )}
+          <QuitGameBtn callBack={resetGameContext} />
+        </div>
+      </div>
     </div>
   );
 };

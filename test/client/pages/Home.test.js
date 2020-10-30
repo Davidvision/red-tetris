@@ -34,7 +34,7 @@ describe("<Home />", () => {
 
   test('when clicking on "join room" button, list of rooms should appear', () => {
     wrapper
-      .find("button")
+      .find(".switch-mode__button")
       .at(1)
       .simulate("click");
     expect(wrapper.find(".room-select-container").length).toBe(1);
@@ -111,15 +111,15 @@ describe("<HomeForm /> testing with context state", () => {
       .at(0)
       .simulate("change", { target: { value: "Axel" } });
     wrapper
-      .find("button")
+      .find(".switch-mode__button")
       .at(1)
       .simulate("click");
     wrapper
-      .find("button")
+      .find(".switch-mode__button")
       .at(0)
       .simulate("click");
     wrapper
-      .find("button")
+      .find(".switch-mode__button")
       .at(1)
       .simulate("click");
     wrapper
@@ -142,7 +142,7 @@ describe("<HomeForm /> testing with context state", () => {
       .at(0)
       .simulate("change", { target: { value: "axelRump" } });
     wrapper
-      .find("button")
+      .find(".switch-mode__button")
       .at(1)
       .simulate("click");
     wrapper

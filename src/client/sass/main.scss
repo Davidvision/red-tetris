@@ -1,6 +1,5 @@
-@import "./themes/themes";
-
 @import "./utils/variables";
+@import "./themes/themes";
 @import "./utils/mixins";
 @import "./utils/functions";
 @import "./utils/normalize";
@@ -11,6 +10,11 @@
 @import "./component/board-pixel";
 @import "./component/room-select";
 @import "./component/pieces-preview";
+@import "./component/input";
+@import "./component/btn";
+@import "./component/checkbox";
+@import "./component/mobile-controls";
+@import "./component/mobile-menu";
 
 @import "./layout/main";
 

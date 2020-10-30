@@ -1,9 +1,27 @@
-const Game = require("./classes/Game/Game");
+const fs = require("fs");
 const socketListener = require("./middleware/socketListener");
 
 const initReqHandler = (server, params, cb) => {
   const { host, port } = params.server;
-  const handler = (req, res) => {};
+  const handler = (req, res) => {
+    const isAsset =
+      req.url.split("/").findIndex(path => path === "assets") === 1;
+    let file = "/../../public";
+    if (isAsset) {
+      file += req.url;
+    } else {
+      file += req.url === "/bundle.js" ? "/bundle.js" : "/index.html";
+    }
+    fs.readFile(__dirname + file, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.writeHead(500);
+        return res.end("Error transferring file");
+      }
+      res.writeHead(200);
+      res.end(data);
+    });
+  };
 
   server.on("request", handler);
 
@@ -31,7 +49,6 @@ const startServer = (params, initGames = {}) => {
     });
   });
   return promise;
-  // return { server, io };
 };
 
 const killServer = ({ server, io }) => {

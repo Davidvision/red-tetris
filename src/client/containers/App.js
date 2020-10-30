@@ -5,7 +5,7 @@ import { SocketContextProvider } from "../context/SocketContext";
 import { Provider as HomeProvider } from "../context/HomeContext";
 import Website from "./Website";
 process.env.NODE_ENV === "production"
-  ? require("../sass/main.css")
+  ? require("../../../public/assets/styles/main.css")
   : require("../sass/main.scss");
 
 const App = () => (

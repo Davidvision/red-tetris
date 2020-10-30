@@ -1,36 +1,60 @@
-import React, { memo, useContext, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import { Context as GameContext } from "../context/GameContext";
+import { Context as HomeContext } from "../context/HomeContext";
+import ChangeTheme from "../components/ChangeTheme";
 import Board from "../components/Board";
-import { startGame } from "../middleware/sockets";
 import useInitGame from "../hooks/useInitGame";
 import PlayerBoard from "../components/PlayerBoard";
-import BoardPixel from "../components/BoardPixel";
 import Lobby from "../containers/Lobby";
+import PiecesPreview from "../components/PiecesPreview";
+import Logo from "../assets/images/logo.png";
 import QuitGameBtn from "../components/QuitGameButton";
 import Chat from "../components/Chat";
 import CatContainer from "../components/CatContainer";
-import { pieces as piecesData } from "../../data/pieces.json";
+import MobileControls from "../components/MobileControls";
 
 export default () => {
   const {
-    resetGameContext,
-    state: { isLoading, opponents, isPlaying, score, nextPieces }
+    state: { isLoading, isPlaying }
   } = useContext(GameContext);
+  const {
+    state: { isMobile }
+  } = useContext(HomeContext);
 
   useInitGame(isPlaying);
 
   if (isLoading) return null;
 
+  return isMobile ? <MobileGameLayout /> : <DesktopGameLayout />;
+};
+
+const DesktopGameLayout = () => {
+  const {
+    resetGameContext,
+    state: { opponents, score, nextPieces, players, isPlaying }
+  } = useContext(GameContext);
+
   return (
     <div className="game-container">
-      <CatContainer>
-        <OpponentsPreview opponents={opponents} />
-        <Chat />
+      <ChangeTheme />
+      <CatContainer cClass="game__left">
+        {players.length > 1 && (
+          <>
+            <OpponentsPreview
+              opponents={opponents}
+              nbOpponents={players.length}
+            />
+            <Chat />
+          </>
+        )}
       </CatContainer>
-      <PlayerBoard />
-      <CatContainer>
+      <CatContainer cClass="game__middle">
+        <img className="game__logo" src={Logo} />
+        <PlayerBoard />
+      </CatContainer>
+      <CatContainer customStyle={{ padding: "10vh 0" }}>
         <PiecesPreview pieces={nextPieces} />
-        <p>{`score: ${score}`}</p>
+        <Score score={score} />
         <QuitGameBtn callBack={resetGameContext} />
       </CatContainer>
       {!isPlaying && <Lobby />}
@@ -38,42 +62,123 @@ export default () => {
   );
 };
 
-const OpponentsPreview = memo(({ opponents }) => (
-  <div className="game__opponents-container">
-    {Object.keys(opponents).map((opponentName, index) => (
-      <OpponentPreview
-        key={index}
-        name={opponentName}
-        score={opponents[opponentName].score}
-        board={opponents[opponentName].board}
-      />
-    ))}
-  </div>
-));
+const MobileGameLayout = () => {
+  const {
+    state: { score, nextPieces, isPlaying }
+  } = useContext(GameContext);
+  const {
+    state: { winHeight }
+  } = useContext(HomeContext);
 
-const OpponentPreview = memo(({ score, board, name }) => (
-  <div className="game__opponent-container">
-    <p>{name}</p>
-    <p>{`score : ${score}`}</p>
-    <Board board={board} colors={false} />
-  </div>
-));
+  return (
+    <div className="game-container" style={{ height: winHeight }}>
+      <MobileMenu />
+      <CatContainer
+        cClass="game__left"
+        customStyle={{ height: winHeight * 0.2 }}
+      >
+        <PiecesPreview pieces={nextPieces} />
+        <Score score={score} />
+      </CatContainer>
+      <CatContainer
+        cClass="game__middle"
+        customStyle={{ height: winHeight * 0.6 }}
+      >
+        <img className="game__logo" src={Logo} />
+        <PlayerBoard />
+      </CatContainer>
+      <CatContainer customStyle={{ height: winHeight * 0.2 }}>
+        <MobileControls />
+      </CatContainer>
+      {!isPlaying && <Lobby />}
+    </div>
+  );
+};
 
-const PiecesPreview = memo(({ pieces }) => (
-  <div className="pieces-preview__container">
-    {pieces.map((pieceType, index) => (
+const MobileMenu = () => {
+  const [open, setOpen] = useState(false);
+  const {
+    resetGameContext,
+    state: { isPlaying }
+  } = useContext(GameContext);
+
+  useEffect(() => {
+    if (open && !isPlaying) {
+      setOpen(false);
+    }
+  }, [isPlaying]);
+
+  return (
+    <>
       <div
-        key={index}
-        className={`pieces-preview__piece-container${
-          pieceType === 0 || pieceType === 3
-            ? ` pieces-preview__piece-container--${pieceType}`
-            : ""
+        className={`mobile-menu__icon ${open ? "mobile-menu__cross" : ""}`}
+        onClick={() => setOpen(!open)}
+      >
+        <div className="bar1"></div>
+        <div className="bar2"></div>
+        <div className="bar3"></div>
+      </div>
+      <div
+        className={`mobile-menu-container ${
+          open ? "mobile-menu-container--open" : ""
         }`}
       >
-        {piecesData[pieceType][0].map((y, yi) =>
-          y.map((x, xi) => <BoardPixel color={x} key={xi} />)
-        )}
+        <ChangeTheme />
+        <QuitGameBtn callBack={resetGameContext} />
       </div>
-    ))}
+    </>
+  );
+};
+
+const OpponentsPreview = memo(({ opponents, nbOpponents }) => (
+  <div className="game__opponents">
+    <p className="game__label">{`Your opponent${
+      nbOpponents > 1 ? "s" : ""
+    }:`}</p>
+    <div
+      className="game__opponents-container"
+      style={{ height: opponentsContainerHeight[nbOpponents] }}
+    >
+      {Object.keys(opponents).map((opponentName, index) => (
+        <OpponentPreview
+          nbOpponents={nbOpponents}
+          key={index}
+          name={opponentName}
+          score={opponents[opponentName].score}
+          board={opponents[opponentName].board}
+        />
+      ))}
+    </div>
   </div>
 ));
+
+const OpponentPreview = memo(({ score, board, name, nbOpponents }) => (
+  <div className="game__opponent-container">
+    <p>{name}</p>
+    <Board
+      customDims={opponentsDims[nbOpponents]}
+      board={board}
+      colors={false}
+    />
+    <p>{`Score : ${score}`}</p>
+  </div>
+));
+
+const Score = memo(({ score }) => (
+  <div className="game__score-container">
+    <p className="game__label">Your score:</p>
+    <p className="game__score">{score}</p>
+  </div>
+));
+
+const opponentsDims = {
+  1: { width: "12.5vh", height: "25vh" },
+  2: { width: "10vh", height: "20vh" },
+  3: { width: "8vh", height: "16vh" }
+};
+
+const opponentsContainerHeight = {
+  1: "31vh",
+  2: "55vh",
+  3: "55vh"
+};

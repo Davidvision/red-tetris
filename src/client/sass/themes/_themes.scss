@@ -1,12 +1,14 @@
 $themes: (
   1: (
-    backgroundColor: black,
-    textColor: white,
-    containerColor: rgb(77, 77, 77)
+    backgroundColor: $red,
+    textColor: white
   ),
   2: (
-    backgroundColor: white,
-    textColor: black,
-    containerColor: rgb(197, 197, 197)
+    backgroundColor: $blue,
+    textColor: white
+  ),
+  3: (
+    backgroundColor: $purple,
+    textColor: white
   )
 );

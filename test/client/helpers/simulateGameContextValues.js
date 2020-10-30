@@ -40,7 +40,11 @@ export const sampleGameScores = {
   scores: { 1: { voltery: 0 } }
 };
 
-export const sampleNextPieces = [1, 3, 4];
+export const sampleNextPieces = [0, 1, 2];
+
+export const sampleNextPieces2 = [3, 4, 5];
+
+export const sampleNextPieces3 = [6];
 
 export const sampleLobbyInfo = {
   players: [

@@ -17,3 +17,51 @@
     }
   }
 }
+
+@mixin for-size($range) {
+  $phone-upper-boundary: 800px;
+  $tablet-portrait-upper-boundary: 900px;
+  $tablet-landscape-upper-boundary: 1200px;
+  $desktop-upper-boundary: 1800px;
+
+  @if $range == phone-only {
+    @media (max-width: #{$phone-upper-boundary - 1}) {
+      @content;
+    }
+  } @else if $range == tablet-portrait-up {
+    @media (min-width: $phone-upper-boundary) {
+      @content;
+    }
+  } @else if $range == tablet-landscape-up {
+    @media (min-width: $tablet-portrait-upper-boundary) {
+      @content;
+    }
+  } @else if $range == desktop-up {
+    @media (min-width: $tablet-landscape-upper-boundary) {
+      @content;
+    }
+  } @else if $range == big-desktop-up {
+    @media (min-width: $desktop-upper-boundary) {
+      @content;
+    }
+  }
+}
+
+@mixin white-shadow-inset {
+  box-shadow: inset 0px 0px 8px 1px rgba(255, 255, 255, 0.35);
+}
+
+@mixin white-shadow {
+  box-shadow: 0px 0px 8px 1px rgba(255, 255, 255, 0.35);
+}
+
+@mixin fifteen-percent-white-bg {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+@mixin white-bg-transparent-text {
+  background-color: white;
+  @include themify($themes) {
+    color: themed("backgroundColor");
+  }
+}

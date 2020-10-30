@@ -1,0 +1,53 @@
+.btn {
+  transition: all 0.2s;
+  padding-top: 7px;
+  padding-bottom: 3px;
+  text-align: center;
+  border: none;
+  text-decoration: none;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.btn:link,
+.btn:visited {
+  text-decoration: none;
+}
+
+.btn:focus {
+  outline: none;
+  @include white-shadow-inset;
+}
+
+.btn-outline {
+  border: 1px solid white;
+  background-color: transparent;
+  color: white;
+  border-radius: 2px;
+  &--selected {
+    @include white-bg-transparent-text;
+  }
+}
+
+.btn-disabled {
+  cursor: none;
+  pointer-events: none;
+}
+
+.quit-game-btn {
+  width: 130px;
+  height: 34px;
+  border-radius: 2px;
+  color: white;
+  background-color: $error;
+  &:hover {
+    @include white-shadow-inset;
+  }
+}
+// .btn:hover {
+//   transform: scale(1.03);
+// }
+
+// .btn:active {
+//   transform: scale(0.99);
+// }

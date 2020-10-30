@@ -1,0 +1,51 @@
+.checkbox {
+  position: relative;
+  padding-right: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  & input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+    &:focus ~ .checkmark {
+      @include white-shadow;
+    }
+    &:checked {
+      & ~ .checkmark:after {
+        display: block;
+      }
+      & ~ .checkmark {
+        @include fifteen-percent-white-bg;
+      }
+    }
+  }
+  & .checkmark {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 15px;
+    width: 15px;
+    background: transparent;
+    border: 1px solid white;
+    border-radius: 2px;
+  }
+  & .checkmark:after {
+    left: 1px;
+    top: -5px;
+    width: 12px;
+    height: 18px;
+    border: solid $green;
+    border-width: 0 5px 5px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}

@@ -1,3 +1,11 @@
+// html,
+// body,
+// #tetris {
+//   height: 100%;
+//   margin: 0;
+//   overflow: hidden;
+// }
+
 *,
 ::after,
 ::before {
@@ -7,50 +15,10 @@
 }
 
 body {
-  font-family: "Muli", sans-serif;
-  font-weight: 400;
-  font-size: 13px;
+  font-family: "Half-39";
+  font-size: 18px;
   line-height: 1.7;
   box-sizing: border-box;
-}
-
-//TEXT SIZES
-
-.t1 {
-  font-size: 30px;
-  line-height: 1.4;
-}
-
-.t2 {
-  font-size: 20px;
-  line-height: 25px;
-}
-
-.t3 {
-  font-size: 15px;
-  line-height: 20px;
-}
-
-//TEXT WEIGHTS
-
-.bold {
-  font-weight: bold;
-}
-
-//TEXT COLORS
-
-.upp {
-  text-transform: uppercase;
-}
-
-.center {
-  justify-content: center;
-}
-
-//TEXT DECORATION
-
-.underline {
-  text-decoration: underline;
 }
 
 .noSelect {
@@ -64,4 +32,28 @@ body {
 
 button {
   cursor: pointer;
+}
+
+@font-face {
+  font-family: "Half-39";
+  src: url("../assets/fonts/Half-39.eot");
+  src: local("Half-39"),
+    url("../assets/fonts/Half-39.eot?#iefix") format("embedded-opentype"),
+    url("../assets/fonts/Half-39.woff2") format("woff2"),
+    url("../assets/fonts/Half-39.woff") format("woff"),
+    url("../assets/fonts/Half-39.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Half-75";
+  src: url("../assets/fonts/Half-75.eot");
+  src: local("Half-75"),
+    url("../assets/fonts/Half-75.eot?#iefix") format("embedded-opentype"),
+    url("../assets/fonts/Half-75.woff2") format("woff2"),
+    url("../assets/fonts/Half-75.woff") format("woff"),
+    url("../assets/fonts/Half-75.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
