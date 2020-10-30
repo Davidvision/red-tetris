@@ -17,7 +17,7 @@ export default () => {
 
   return (
     <div className="main" style={isMobile ? { minHeight: winHeight } : {}}>
-      {currentPage}
+      {currentPage()}
     </div>
   );
 };
