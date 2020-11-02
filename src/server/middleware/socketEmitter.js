@@ -1,27 +1,27 @@
 const emitAvailableRooms = (socket, games) => {
-  const availableRooms = Object.keys(games).map(k => {
+  const availableRooms = Object.keys(games).map((k) => {
     const { name, players, isPrivate } = games[k];
-    const playersNames = players.map(p => p.name);
+    const playersNames = players.map((p) => p.name);
     return { name, nb: players.length, players: playersNames, isPrivate };
   });
   socket.emit("availableRooms", availableRooms);
 };
 
-const emitRedirectToHome = socket => {
+const emitRedirectToHome = (socket) => {
   socket.emit("redirectToHome");
 };
 
 const emitAvailableRoomsToAll = (io, games) => {
-  const availableRooms = Object.keys(games).map(k => {
+  const availableRooms = Object.keys(games).map((k) => {
     const { name, players, isPrivate } = games[k];
-    const playersNames = players.map(p => p.name);
+    const playersNames = players.map((p) => p.name);
     return { name, nb: players.length, players: playersNames, isPrivate };
   });
   io.emit("availableRooms", availableRooms);
 };
 
 const emitLobbyInfoToRoom = (io, roomName, playerName, game) => {
-  const players = game.players.map(p => {
+  const players = game.players.map((p) => {
     return { name: p.name, score: p.score };
   });
   const nbPlayers = game.players.length;
@@ -29,7 +29,7 @@ const emitLobbyInfoToRoom = (io, roomName, playerName, game) => {
 };
 
 const emitPlayingPlayers = (io, roomName, playingPlayers) => {
-  const players = playingPlayers.map(p => p.name);
+  const players = playingPlayers.map((p) => p.name);
   io.to(roomName).emit("playingPlayers", players);
 };
 
@@ -76,6 +76,10 @@ const emitGameScores = (io, roomName, scores, playersHistory) => {
   io.to(roomName).emit("gameScores", { scores, playersHistory });
 };
 
+const emitLeftGame = (io, roomName, name) => {
+  io.to(roomName).emit("opponentLeft", name);
+};
+
 module.exports = {
   emitAvailableRooms,
   emitRedirectToHome,
@@ -89,5 +93,6 @@ module.exports = {
   emitScore,
   emitNextPieces,
   emitMessageToRoom,
-  emitGameScores
+  emitGameScores,
+  emitLeftGame,
 };
