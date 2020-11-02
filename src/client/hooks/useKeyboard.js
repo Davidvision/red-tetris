@@ -4,24 +4,23 @@ import { keyDown, keyUp } from "../middleware/sockets";
 
 const allowedKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "];
 
-export default isPlaying => {
+export default (isPlaying) => {
   const { socketIOClient } = useContext(SocketContext);
 
   useEffect(() => {
     let isListenerSet = false;
-    const handleKeyDown = e => {
+    const handleKeyDown = (e) => {
       if (
         document.activeElement.id !== "chatInput" &&
-        allowedKeys.findIndex(allowedKey => allowedKey === e.key) > -1
+        allowedKeys.findIndex((allowedKey) => allowedKey === e.key) > -1
       ) {
         keyDown(socketIOClient, e.key);
-        console.log(e.key);
       }
     };
-    const handleKeyUp = e => {
+    const handleKeyUp = (e) => {
       if (
         document.activeElement.id !== "chatInput" &&
-        allowedKeys.findIndex(allowedKey => allowedKey === e.key) > -1
+        allowedKeys.findIndex((allowedKey) => allowedKey === e.key) > -1
       ) {
         keyUp(socketIOClient, e.key);
       }
