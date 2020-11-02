@@ -2,7 +2,8 @@ const random = require("lodash").random;
 const Player = require("../Player/Player");
 const {
   emitMessageToRoom,
-  emitGameScores
+  emitGameScores,
+  emitGameStatus
 } = require("../../middleware/socketEmitter");
 
 class Game {
@@ -18,6 +19,7 @@ class Game {
     this.nbGames = 0;
     this.scores = {};
     this.playersHistory = {};
+    this.isRunning = false;
   }
 
   generatePieces(n) {
@@ -63,6 +65,8 @@ class Game {
 
   startGame() {
     if (this.players.length > 0) {
+      this.isRunning = true;
+      emitGameStatus(this.io, this.name, true);
       this.nbGames++;
       this.scores[this.nbGames] = {};
       this.generatePieces(20);
@@ -91,7 +95,9 @@ class Game {
   endGame() {
     emitGameScores(this.io, this.name, this.scores, this.playersHistory);
     emitMessageToRoom(this.io, this.name, "Game Master: ", `end of the game!`);
+    emitGameStatus(this.io, this.name, false);
     clearInterval(this.interval);
+    this.isRunning = false;
     this.pieces = [];
     this.startTime = null;
     this.clock = null;

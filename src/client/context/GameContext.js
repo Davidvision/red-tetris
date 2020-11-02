@@ -47,6 +47,8 @@ const gameReducer = (state, action) => {
       return { ...state, nextPieces: action.payload };
     case "set_is_playing":
       return { ...state, isPlaying: action.payload };
+    case "set_is_running":
+      return { ...state, isRunning: action.payload };
     case "set_lobby_info":
       return {
         ...state,
@@ -100,6 +102,9 @@ const setMessage = dispatch => newMessage =>
 const setGameScores = dispatch => newGameScores =>
   dispatch({ type: "set_game_scores", payload: newGameScores });
 
+const setIsRunning = dispatch => newIsRunning =>
+  dispatch({ type: "set_is_running", payload: newIsRunning });
+
 const resetGameContext = dispatch => () => dispatch({ type: "reset_state" });
 
 export const { Provider, Context } = createDataContext(
@@ -115,7 +120,8 @@ export const { Provider, Context } = createDataContext(
     setOpponentScore,
     deleteOpponent,
     setMessage,
-    setGameScores
+    setGameScores,
+    setIsRunning
   },
   initValues
 );

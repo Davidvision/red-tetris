@@ -11,7 +11,7 @@ export default () => {
     state: { userName }
   } = useContext(HomeContext);
   const {
-    state: { players, resetGameContext, gameScores }
+    state: { players, resetGameContext, gameScores, isRunning }
   } = useContext(GameContext);
   const { socketIOClient } = useContext(SocketContext);
 
@@ -39,9 +39,14 @@ export default () => {
               Start game
             </button>
           )}
-          {!isLeader && (
+          {isRunning && (
             <p style={{ margin: "0 10px 10px 10px" }}>
-              wait for the leader to start the game
+              Game is currently played
+            </p>
+          )}
+          {!isRunning && !isLeader && (
+            <p style={{ margin: "0 10px 10px 10px" }}>
+              Wait for the leader to start the game
             </p>
           )}
           <QuitGameBtn callBack={resetGameContext} />

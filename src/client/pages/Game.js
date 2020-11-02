@@ -15,10 +15,10 @@ import MobileControls from "../components/MobileControls";
 
 export default () => {
   const {
-    state: { isLoading, isPlaying },
+    state: { isLoading, isPlaying }
   } = useContext(GameContext);
   const {
-    state: { isMobile },
+    state: { isMobile }
   } = useContext(HomeContext);
 
   useInitGame(isPlaying);
@@ -31,7 +31,7 @@ export default () => {
 const DesktopGameLayout = () => {
   const {
     resetGameContext,
-    state: { opponents, score, nextPieces, players, isPlaying },
+    state: { opponents, score, nextPieces, players, isPlaying }
   } = useContext(GameContext);
 
   return (
@@ -64,10 +64,10 @@ const DesktopGameLayout = () => {
 
 const MobileGameLayout = () => {
   const {
-    state: { score, nextPieces, isPlaying },
+    state: { score, nextPieces, isPlaying }
   } = useContext(GameContext);
   const {
-    state: { winHeight },
+    state: { winHeight }
   } = useContext(HomeContext);
 
   return (
@@ -99,7 +99,7 @@ const MobileMenu = () => {
   const [open, setOpen] = useState(false);
   const {
     resetGameContext,
-    state: { isPlaying },
+    state: { isPlaying }
   } = useContext(GameContext);
 
   useEffect(() => {
@@ -160,7 +160,7 @@ const OpponentPreview = memo(({ score, board, name, nbOpponents }) => (
       board={board}
       colors={false}
     />
-    <p>{`Score : ${score}`}</p>
+    <p>{`Score : ${score === undefined ? 0 : score}`}</p>
   </div>
 ));
 
@@ -174,11 +174,11 @@ const Score = memo(({ score }) => (
 const opponentsDims = {
   1: { width: "12.5vh", height: "25vh" },
   2: { width: "10vh", height: "20vh" },
-  3: { width: "8vh", height: "16vh" },
+  3: { width: "8vh", height: "16vh" }
 };
 
 const opponentsContainerHeight = {
   1: "31vh",
   2: "55vh",
-  3: "55vh",
+  3: "55vh"
 };

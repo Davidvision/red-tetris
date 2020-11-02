@@ -4,6 +4,7 @@ const {
   emitLobbyInfoToRoom,
   emitMessageToRoom,
   emitLeftGame,
+  emitGameStatusSocket
 } = require("../middleware/socketEmitter");
 const Game = require("../classes/Game/Game");
 
@@ -40,7 +41,7 @@ const handleConnectToGame = (
   console.log(
     `Client ${socket.id}: name: ${playerName} asks to join ${roomName} room`
   );
-  const roomExists = Object.keys(games).some((n) => n === roomName);
+  const roomExists = Object.keys(games).some(n => n === roomName);
   if (roomExists) {
     const game = games[roomName];
     if (
@@ -51,10 +52,12 @@ const handleConnectToGame = (
       emitRedirectToHome(socket);
     } else {
       addPlayer(io, socket, clientsIds, games, playerName, roomName);
+      emitGameStatusSocket(socket, game.isRunning);
     }
   } else {
     games[roomName] = new Game(roomName, io);
     addPlayer(io, socket, clientsIds, games, playerName, roomName);
+    emitGameStatusSocket(socket, false);
   }
 };
 
@@ -69,7 +72,7 @@ const addPlayer = (io, socket, clientsIds, games, playerName, roomName) => {
 
 const handleCreatePrivateGame = ({ io, socket, games }, { roomName }) => {
   console.log(`Client ${socket.id}: private '${roomName}' room created`);
-  const roomExists = Object.keys(games).some((n) => n === roomName);
+  const roomExists = Object.keys(games).some(n => n === roomName);
   if (roomExists) {
     emitRedirectToHome(socket);
   } else {
@@ -86,7 +89,7 @@ const handleStartGame = ({ io, socket, games, clientsIds }) => {
     !game.players ||
     game.players.length === 0 ||
     playerName !== game.players[0].name ||
-    game.players.filter((p) => p.isPlaying).length > 0
+    game.players.filter(p => p.isPlaying).length > 0
   ) {
     return;
   }
@@ -128,5 +131,5 @@ module.exports = {
   handleStartGame,
   handleKeyDown,
   handleKeyUp,
-  handleChatMessage,
+  handleChatMessage
 };

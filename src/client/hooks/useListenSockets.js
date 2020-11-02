@@ -20,9 +20,11 @@ export default () => {
     setNextPieces,
     setMessage,
     setGameScores,
+    setIsRunning
   } = useContext(GameContext);
+
   useEffect(() => {
-    socketIOClient.on("availableRooms", (availableRooms) =>
+    socketIOClient.on("availableRooms", availableRooms =>
       setAvailableRooms(availableRooms)
     );
 
@@ -31,41 +33,41 @@ export default () => {
       changePage(pages[0].title, pages[0].path);
     });
 
-    socketIOClient.on("lobbyInfo", (data) => setLobbyInfo(data));
+    socketIOClient.on("lobbyInfo", data => setLobbyInfo(data));
 
-    socketIOClient.on("playingPlayers", (playingPlayers) =>
+    socketIOClient.on("playingPlayers", playingPlayers =>
       setPlayingPlayers(playingPlayers)
     );
 
-    socketIOClient.on("boardUpdate", (board) => setBoard(board));
+    socketIOClient.on("boardUpdate", board => setBoard(board));
 
-    socketIOClient.on("score", (newScore) => setScore(newScore));
+    socketIOClient.on("score", newScore => setScore(newScore));
 
-    socketIOClient.on("opponentBoard", (newOpponentBoard) =>
+    socketIOClient.on("opponentBoard", newOpponentBoard =>
       setOpponentBoard(newOpponentBoard)
     );
 
-    socketIOClient.on("opponentScore", (newOpponentScore) =>
+    socketIOClient.on("opponentScore", newOpponentScore =>
       setOpponentScore(newOpponentScore)
     );
 
-    socketIOClient.on("opponentLeft", (formerOpponentName) =>
+    socketIOClient.on("opponentLeft", formerOpponentName =>
       deleteOpponent(formerOpponentName)
     );
 
-    socketIOClient.on("isPlaying", (newIsPlaying) =>
-      setIsPlaying(newIsPlaying)
-    );
+    socketIOClient.on("isPlaying", newIsPlaying => setIsPlaying(newIsPlaying));
 
-    socketIOClient.on("nextPieces", (newNextPieces) =>
+    socketIOClient.on("nextPieces", newNextPieces =>
       setNextPieces(newNextPieces)
     );
 
-    socketIOClient.on("chatMessage", (newMessage) => setMessage(newMessage));
+    socketIOClient.on("chatMessage", newMessage => setMessage(newMessage));
 
-    socketIOClient.on("gameScores", (newGameScores) =>
+    socketIOClient.on("gameScores", newGameScores =>
       setGameScores(newGameScores)
     );
+
+    socketIOClient.on("isRunning", newIsRunning => setIsRunning(newIsRunning));
 
     return () => socketClient.disconnect();
   }, []);
