@@ -10,8 +10,8 @@
     "scss-compile": "node-sass src/client/sass/main.scss ./public/assets/styles/main.css && sed -i '' 's/assets\\///g' ./public/assets/styles/main.css",
     "srv-dev": "nodemon src/server/index.js",
     "srv": "node src/server/index.js",
-    "test": "jest",
-    "coverage": "jest --coverage"
+    "test": "jest --silent",
+    "coverage": "jest --coverage --silent"
   },
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.11.5",
@@ -62,5 +62,10 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-dev-server": "3.11.0"
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "arrowParens": "avoid",
+    "printWidth": 80
   }
 }

@@ -19,7 +19,10 @@ const setUserName = dispatch => newUserName =>
   dispatch({ type: "set_username", payload: newUserName });
 
 const setAvailableRooms = dispatch => newAvailableRooms => {
-  dispatch({ type: "set_available_rooms", payload: newAvailableRooms });
+  dispatch({
+    type: "set_available_rooms",
+    payload: newAvailableRooms
+  });
 };
 
 const setIsMobile = dispatch => isMobile => {

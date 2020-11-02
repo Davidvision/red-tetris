@@ -28,45 +28,32 @@ describe("<Chat />", () => {
     wrapper = mount(<Wrapper />);
   });
 
+  afterEach(() => {
+    wrapper.unmount();
+  });
+
   test("displays properly when changing input value", () => {
     wrapper
       .find("input")
       .at(0)
-      .simulate("change", { target: { value: "Axel" } });
-    expect(
-      wrapper
-        .find("input")
-        .at(0)
-        .props().value
-    ).toBe("Axel");
+      .simulate("change", {
+        target: { value: "Axel" }
+      });
+    expect(wrapper.find("input").at(0).props().value).toBe("Axel");
   });
   test("clicking on submit button triggers handleSubmit function and input becomes empty", () => {
     wrapper
       .find("input")
       .at(0)
-      .simulate("change", { target: { value: "Axel" } });
-    wrapper
-      .find("form")
-      .at(0)
-      .simulate("submit");
-    expect(
-      wrapper
-        .find("input")
-        .at(0)
-        .props().value.length
-    ).toBe(0);
+      .simulate("change", {
+        target: { value: "Axel" }
+      });
+    wrapper.find("form").at(0).simulate("submit");
+    expect(wrapper.find("input").at(0).props().value.length).toBe(0);
   });
   test("clicking on submit button without providing value in the input returns", () => {
-    wrapper
-      .find("form")
-      .at(0)
-      .simulate("submit");
-    expect(
-      wrapper
-        .find("input")
-        .at(0)
-        .props().value.length
-    ).toBe(0);
+    wrapper.find("form").at(0).simulate("submit");
+    expect(wrapper.find("input").at(0).props().value.length).toBe(0);
   });
 });
 

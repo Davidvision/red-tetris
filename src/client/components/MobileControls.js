@@ -24,7 +24,7 @@ export default () => {
         onTouchStart={() => handleTouchStart("ArrowLeft")}
         onTouchEnd={() => handleTouchEnd("ArrowLeft")}
       >
-        <p className="game__label">Left</p>
+        <p className="noSelect game__label">Left</p>
       </div>
       <div
         className="mobile-controls__middle"
@@ -39,14 +39,14 @@ export default () => {
             onTouchStart={() => handleTouchStart("ArrowUp")}
             onTouchEnd={() => handleTouchEnd("ArrowUp")}
           >
-            <p className="game__label">Rotate</p>
+            <p className="noSelect game__label">Rotate</p>
           </div>
           <div
             className="noSelect mobile-controls__control"
             onTouchStart={() => handleTouchStart("ArrowDown")}
             onTouchEnd={() => handleTouchEnd("ArrowDown")}
           >
-            <p className="game__label">Down</p>
+            <p className="noSelect game__label">Down</p>
           </div>
         </div>
         <div
@@ -55,7 +55,7 @@ export default () => {
           onTouchStart={() => handleTouchStart(" ")}
           onTouchEnd={() => handleTouchEnd(" ")}
         >
-          <p className="game__label">To bottom</p>
+          <p className="noSelect game__label">To bottom</p>
         </div>
       </div>
       <div
@@ -64,7 +64,7 @@ export default () => {
         onTouchStart={() => handleTouchStart("ArrowRight")}
         onTouchEnd={() => handleTouchEnd("ArrowRight")}
       >
-        <p className="game__label">Right</p>
+        <p className="noSelect game__label">Right</p>
       </div>
     </div>
   );

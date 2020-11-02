@@ -4,7 +4,7 @@ const {
   expect,
   test,
   beforeAll,
-  afterAll,
+  afterAll
 } = require("@jest/globals");
 const { startTestServer } = require("./utils/server");
 const socketIOClient = require("socket.io-client");
@@ -21,9 +21,9 @@ describe("sockets", () => {
   const { host, port } = params.server;
 
   beforeAll(function (done) {
-    startTestServer(params, (initServ) => {
+    startTestServer(params, initServ => {
       server = initServ;
-      server.io.on("connection", (socket) => {
+      server.io.on("connection", socket => {
         socketObject = socket;
       });
       socketClient = socketIOClient(`http://${host}:${port}`);
@@ -33,21 +33,21 @@ describe("sockets", () => {
     });
   });
 
-  afterAll((done) => {
+  afterAll(done => {
     if (socketClient.connected) {
       socketClient.disconnect();
     }
     server.stop(done);
   });
 
-  test("Start game - Handle keys", (done) => {
+  test("Start game - Handle keys", done => {
     const data = { playerName: "axel", roomName: "La Meinau" };
     socketClient.emit("connectToGame", data);
     socketClient.on("lobbyInfo", () => {
       socketClient.emit("startGame");
-      socketClient.on("isPlaying", (data) => {
+      socketClient.on("isPlaying", data => {
         socketClient.emit("keyDown", "ArrowLeft");
-        socketClient.on("boardUpdate", (data) => {
+        socketClient.on("boardUpdate", data => {
           if (
             data[0][0] != 0 ||
             data[1][0] != 0 ||
@@ -70,7 +70,7 @@ describe("sockets", () => {
       });
     });
   });
-  test("Connect to game and quit Game", (done) => {
+  test("Connect to game and quit Game", done => {
     const socketClient2 = socketIOClient(`http://${host}:${port}`);
     socketClient2.on("connect", () => {
       const data = { playerName: "axel", roomName: "Axel Room" };
@@ -89,13 +89,13 @@ describe("sockets", () => {
             socketClient3.emit("connectToGame", data3);
             socketClient4.emit("connectToGame", data4);
             socketClient5.emit("connectToGame", data5);
-            socketClient.on("lobbyInfo", (data) => {
+            socketClient.on("lobbyInfo", data => {
               if (data.nbPlayers === 4) {
                 expect(
-                  data.players.findIndex((p) => p.name === "axel")
+                  data.players.findIndex(p => p.name === "axel")
                 ).toBeGreaterThan(-1);
                 socketClient.emit("quitGame");
-                socketClient.on("availableRooms", (data) => {
+                socketClient.on("availableRooms", data => {
                   socketClient2.disconnect();
                   socketClient3.disconnect();
                   socketClient4.disconnect();
@@ -109,14 +109,14 @@ describe("sockets", () => {
       });
     });
   });
-  test("Create private game", (done) => {
+  test("Create private game", done => {
     const socketClient2 = socketIOClient(`http://${host}:${port}`);
     socketClient2.on("connect", () => {
       const data = { playerName: "axel", roomName: "Alpha Room" };
       const data2 = { playerName: "axel2", roomName: "Alpha Room" };
       socketClient.emit("createPrivateGame", data);
       socketClient2.emit("connectToGame", data2);
-      socketClient.on("availableRooms", (data) => {
+      socketClient.on("availableRooms", data => {
         socketClient2.emit("connectToGame", data2);
         socketClient2.on("redirectToHome", () => {
           socketClient2.disconnect();
@@ -127,13 +127,13 @@ describe("sockets", () => {
       });
     });
   });
-  test("Create private game", (done) => {
+  test("Create private game", done => {
     const socketClient2 = socketIOClient(`http://${host}:${port}`);
     socketClient2.on("connect", () => {
       const data = { playerName: "axel", roomName: "Lambda Room" };
       const data2 = { playerName: "axel2", roomName: "Lambda Room" };
       socketClient.emit("connectToGame", data);
-      socketClient.on("lobbyInfo", (data) => {
+      socketClient.on("lobbyInfo", data => {
         socketClient2.emit("createPrivateGame", data2);
         socketClient2.on("redirectToHome", () => {
           socketClient2.disconnect();
@@ -144,13 +144,13 @@ describe("sockets", () => {
       });
     });
   });
-  test("Create private game - name exists", (done) => {
+  test("Create private game - name exists", done => {
     const socketClient2 = socketIOClient(`http://${host}:${port}`);
     socketClient2.on("connect", () => {
       const data = { playerName: "axel", roomName: "Beta Room" };
       const data2 = { playerName: "axel2", roomName: "Beta Room" };
       socketClient.emit("connectToGame", data);
-      socketClient.on("lobbyInfo", (data) => {
+      socketClient.on("lobbyInfo", data => {
         socketClient2.emit("createPrivateGame", data2);
         socketClient2.on("redirectToHome", () => {
           socketClient2.disconnect();
@@ -160,12 +160,12 @@ describe("sockets", () => {
       });
     });
   });
-  test("Create game - Start game", (done) => {
+  test("Create game - Start game", done => {
     const data = { playerName: "axel", roomName: "Start Room" };
     socketClient.emit("connectToGame", data);
     socketClient.on("lobbyInfo", () => {
       socketClient.emit("startGame");
-      socketClient.on("isPlaying", (data) => {
+      socketClient.on("isPlaying", data => {
         expect(data).toEqual(true);
         socketClient.emit("quitGame");
         socketClient.on("redirectToHome", () => {
@@ -174,16 +174,16 @@ describe("sockets", () => {
       });
     });
   });
-  test("Start Game - not leader", (done) => {
+  test("Start Game - not leader", done => {
     const socketClient2 = socketIOClient(`http://${host}:${port}`);
     socketClient2.on("connect", () => {
       const data = { playerName: "axel", roomName: "Theta Room" };
       const data2 = { playerName: "axel2", roomName: "Theta Room" };
       socketClient.emit("connectToGame", data);
-      socketClient.on("lobbyInfo", (data) => {
+      socketClient.on("lobbyInfo", data => {
         socketClient2.emit("startGame");
         socketClient2.emit("connectToGame", data2);
-        socketClient2.on("lobbyInfo", (data) => {
+        socketClient2.on("lobbyInfo", data => {
           if (data.nbPlayers == 1) {
             socketClient.emit("quitGame");
             socketClient2.disconnect();
@@ -193,13 +193,13 @@ describe("sockets", () => {
       });
     });
   });
-  test("Chat", (done) => {
+  test("Chat", done => {
     const data = { playerName: "axel", roomName: "Chat Room" };
     socketClient.emit("connectToGame", data);
-    socketClient.on("lobbyInfo", (data) => {
+    socketClient.on("lobbyInfo", data => {
       socketClient.emit("chatMessage", "axel", "coucou la room");
     });
-    socketClient.on("chatMessage", (data) => {
+    socketClient.on("chatMessage", data => {
       expect(data.sender).toEqual("axel");
       done();
     });
