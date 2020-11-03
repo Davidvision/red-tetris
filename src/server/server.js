@@ -5,7 +5,8 @@ const initReqHandler = (server, params, cb) => {
   const { host, port } = params.server;
   const handler = (req, res) => {
     const isAsset =
-      req.url.split("/").findIndex(path => path === "assets") === 1;
+      req.url.split("/").findIndex(path => path === "assets") === 1 ||
+      req.url === "/favicon.ico";
     let file = "/../../public";
     if (isAsset) {
       file += req.url;
