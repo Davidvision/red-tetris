@@ -32,7 +32,7 @@
     transition: all 0.2s;
     border-radius: 2px;
     &--open {
-      height: 94px;
+      height: 133px;
     }
     & .change-theme {
       position: relative;
@@ -45,6 +45,17 @@
     }
     & .btn {
       width: auto;
+    }
+    & .hint__btn {
+      position: relative;
+      top: unset;
+      left: unset;
+      align-self: center;
+      width: 30px;
+    }
+    & .hint-container {
+      left: 10px;
+      margin-right: 120px;
     }
   }
 }

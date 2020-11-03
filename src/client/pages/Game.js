@@ -12,6 +12,7 @@ import QuitGameBtn from "../components/QuitGameButton";
 import Chat from "../components/Chat";
 import CatContainer from "../components/CatContainer";
 import MobileControls from "../components/MobileControls";
+import Hints from "../components/Hints";
 
 export default () => {
   const {
@@ -37,6 +38,7 @@ const DesktopGameLayout = () => {
   return (
     <div className="game-container">
       <ChangeTheme />
+      <Hints />
       <CatContainer cClass="game__left">
         {players.length > 1 && (
           <>
@@ -125,6 +127,7 @@ const MobileMenu = () => {
       >
         <ChangeTheme />
         <QuitGameBtn callBack={resetGameContext} />
+        <Hints />
       </div>
     </>
   );

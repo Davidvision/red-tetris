@@ -1,0 +1,30 @@
+.hint {
+  &__btn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-family: "Half-75";
+    width: 30px;
+    height: 30px;
+    border-radius: 25px;
+    color: white;
+    padding: 5px 0 0 1px;
+    z-index: 4;
+    &:hover {
+      @include white-bg-transparent-text;
+    }
+  }
+
+  &-container {
+    background-color: rgba(0, 0, 0, 0.87);
+    border-radius: 2px;
+    padding: 10px;
+    z-index: 3;
+    position: fixed;
+    top: 10px;
+    left: 50px;
+    @include for-size(phone-only) {
+      margin-right: 10px;
+    }
+  }
+}

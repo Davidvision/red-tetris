@@ -4,6 +4,7 @@ import { changePage, pages } from "../utils/router";
 import { Context as HomeContext } from "../context/HomeContext";
 import { SocketContext } from "../context/SocketContext";
 import Logo from "../assets/images/logo.png";
+import Hints from "../components/Hints";
 import { createPrivateGame } from "../middleware/sockets";
 
 export default () => {
@@ -80,6 +81,7 @@ export default () => {
   return (
     <>
       <ChangeTheme />
+      <Hints page="home" />
       <div className="home-container">
         <img className="home__logo" src={Logo} />
         <form className="home-form-container" onSubmit={handleSubmit}>

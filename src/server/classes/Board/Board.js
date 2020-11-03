@@ -52,18 +52,27 @@ class Board {
   }
 
   moveRight(p) {
+    if (p === undefined) {
+      return;
+    }
     if (noRightOverflow(p, this.grid)) {
       p.translate(1, 0);
     }
   }
 
   moveLeft(p) {
+    if (p === undefined) {
+      return;
+    }
     if (noLeftOverflow(p, this.grid)) {
       p.translate(-1, 0);
     }
   }
 
   moveDown(p) {
+    if (p === undefined) {
+      return;
+    }
     if (noDownOverflow(p, this.grid)) {
       p.translate(0, 1);
       return false;
@@ -110,6 +119,9 @@ class Board {
   }
 
   rotate(p) {
+    if (p === undefined) {
+      return;
+    }
     p.rotate();
     let lateralOf = isOutLateral(p);
     while (lateralOf !== 0) {
@@ -134,6 +146,9 @@ class Board {
   }
 
   pieceToBottom(p) {
+    if (p === undefined) {
+      return;
+    }
     while (!this.moveDown(p)) {}
   }
 
