@@ -440,7 +440,7 @@ input[type="text"] {
   transition: all 0.2s;
   border-radius: 2px; }
   .mobile-menu-container--open {
-    height: 94px; }
+    height: 133px; }
   .mobile-menu-container .change-theme {
     position: relative;
     top: unset;
@@ -450,6 +450,15 @@ input[type="text"] {
     margin: 0 10px 10px 10px; }
   .mobile-menu-container .btn {
     width: auto; }
+  .mobile-menu-container .hint__btn {
+    position: relative;
+    top: unset;
+    left: unset;
+    align-self: center;
+    width: 30px; }
+  .mobile-menu-container .hint-container {
+    left: 10px;
+    margin-right: 120px; }
 
 .bar1 {
   top: 8px; }
@@ -471,6 +480,38 @@ input[type="text"] {
   border-radius: 1px;
   position: absolute;
   left: 9px; }
+
+.hint__btn {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  font-family: "Half-75";
+  width: 30px;
+  height: 30px;
+  border-radius: 25px;
+  color: white;
+  padding: 5px 0 0 1px;
+  z-index: 4; }
+  .hint__btn:hover {
+    background-color: white; }
+    .theme-1 .hint__btn:hover {
+      color: #cb5c48; }
+    .theme-2 .hint__btn:hover {
+      color: #4c5fa3; }
+    .theme-3 .hint__btn:hover {
+      color: #7d5b9c; }
+
+.hint-container {
+  background-color: rgba(0, 0, 0, 0.87);
+  border-radius: 2px;
+  padding: 10px;
+  z-index: 3;
+  position: fixed;
+  top: 10px;
+  left: 50px; }
+  @media (max-width: 799px) {
+    .hint-container {
+      margin-right: 10px; } }
 
 .main {
   min-height: 100vh;
