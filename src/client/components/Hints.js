@@ -24,8 +24,8 @@ export default ({ page }) => {
             </>
           ) : (
             <>
-              <p>↓ → ←: move</p>
-              <p>↑: rotation</p>
+              <p>arrows: move</p>
+              <p>up: rotation</p>
               <p>space: move piece to bottom</p>
               <p>
                 If a player breaks more than one line, he will send penalty to
