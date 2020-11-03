@@ -17,7 +17,7 @@ export const pages = [
     title: "Red Tetris"
   },
   {
-    regex: /^\/\#[a-zA-Z0-9]{3,15}\[[a-zA-Z0-9]{3,15}\]$/gm,
+    regex: /^\/\#[a-zA-Z0-9-_]{3,15}\[[a-zA-Z0-9-_]{3,15}\]$/gm,
     component: () => <Game />,
     title: "Red Tetris - Game"
   }

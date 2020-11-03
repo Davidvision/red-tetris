@@ -482,6 +482,7 @@ input[type="text"] {
   left: 9px; }
 
 .hint__btn {
+  font-size: 80%;
   position: fixed;
   top: 10px;
   left: 10px;
@@ -502,6 +503,7 @@ input[type="text"] {
       color: #7d5b9c; }
 
 .hint-container {
+  font-size: 80%;
   background-color: rgba(0, 0, 0, 0.87);
   border-radius: 2px;
   padding: 10px;

@@ -1,5 +1,6 @@
 .hint {
   &__btn {
+    font-size: 80%;
     position: fixed;
     top: 10px;
     left: 10px;
@@ -16,6 +17,7 @@
   }
 
   &-container {
+    font-size: 80%;
     background-color: rgba(0, 0, 0, 0.87);
     border-radius: 2px;
     padding: 10px;

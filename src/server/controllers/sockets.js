@@ -42,6 +42,7 @@ const handleConnectToGame = (
     `Client ${socket.id}: name: ${playerName} asks to join ${roomName} room`
   );
   const roomExists = Object.keys(games).some(n => n === roomName);
+  console.log(roomName);
   if (roomExists) {
     const game = games[roomName];
     if (
