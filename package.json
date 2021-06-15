@@ -10,7 +10,8 @@
     "scss-compile": "node-sass src/client/sass/main.scss ./public/assets/styles/main.css && sed -i '' 's/assets\\///g' ./public/assets/styles/main.css",
     "srv-dev": "nodemon src/server/index.js",
     "srv": "node src/server/index.js",
-    "test": "jest --silent",
+    "start": "node src/server/index.js",
+    "test": "jest --silent test/client &&  jest --silent test/server",
     "coverage": "jest --coverage --silent"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "enzyme-adapter-react-16": "^1.15.5",
     "file-loader": "^6.1.1",
     "fs": "^0.0.1-security",
+    "helmet": "^4.6.0",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",

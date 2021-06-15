@@ -1,6 +1,9 @@
 const fs = require("fs");
 const socketListener = require("./middleware/socketListener");
 
+const csp =
+  "base-uri 'self'; connect-src 'self' ws: *.haaskr.com haaskr.com www.google-analytics.com; img-src 'self' data: ; style-src 'self' 'unsafe-inline'; object-src 'none'; font-src 'self' data: ;";
+
 const initReqHandler = (server, params, cb) => {
   const { host, port } = params.server;
   const handler = (req, res) => {
@@ -19,6 +22,15 @@ const initReqHandler = (server, params, cb) => {
         res.writeHead(500);
         return res.end("Error transferring file");
       }
+      res.setHeader("content-security-policy", csp);
+      res.setHeader(
+        "strict-transport-security",
+        "max-age=63072000; includeSubdomains; preload"
+      );
+      // res.setHeader("x-content-type-options", "nosniff");
+      res.setHeader("x-frame-options", "DENY");
+      res.setHeader("x-xss-protection", "1; mode=block");
+      res.setHeader("referrer-policy", "origin");
       res.writeHead(200);
       res.end(data);
     });
