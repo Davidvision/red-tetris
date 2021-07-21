@@ -1,3 +1,3 @@
 hklein and arumpler's Red Tetris
 
-online at : https://red-tetris-multi.herokuapp.com/
+online at : https://tetris.haaskr.com/
